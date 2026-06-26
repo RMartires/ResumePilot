@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://resume-builder.local/schema/resume.schema.json",
+  "title": "Resume",
+  "type": "object",
+  "required": ["header", "summary", "skills", "experience", "projects", "education"],
+  "properties": {
+    "header": {
+      "type": "object",
+      "required": ["name", "location", "phone", "email", "links"],
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "links": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "summary": { "type": "string" },
+    "skills": { "type": "string" },
+    "experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "company", "dates", "bullets"],
+        "properties": {
+          "title": { "type": "string" },
+          "company": { "type": "string" },
+          "dates": { "type": "string" },
+          "bullets": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "bullets"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "bullets": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "education": {
+      "type": "object",
+      "required": ["school", "degree", "year"],
+      "properties": {
+        "school": { "type": "string" },
+        "degree": { "type": "string" },
+        "year": { "type": "string" }
+      }
+    }
+  }
+}

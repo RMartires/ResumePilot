@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Builder</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Resume Builder</h1>
+      <p>JSON source of truth · export to Markdown for PDF</p>
+    </div>
+    <div class="actions">
+      <label class="btn btn-secondary" for="load-json-input">Load JSON</label>
+      <input id="load-json-input" type="file" accept=".json,application/json" hidden />
+      <button id="load-sample-btn" class="btn btn-secondary" type="button">Load sample</button>
+      <button id="save-json-btn" class="btn btn-primary" type="button">Save JSON</button>
+      <button id="export-md-btn" class="btn btn-secondary" type="button">Export MD</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="editor" aria-label="Resume editor">
+      <form id="resume-form" novalidate>
+        <fieldset class="panel" id="header-panel">
+          <legend>Header</legend>
+          <div class="grid two-col">
+            <label>Name<input name="header.name" type="text" autocomplete="name" /></label>
+            <label>Location<input name="header.location" type="text" autocomplete="address-level2" /></label>
+            <label>Phone<input name="header.phone" type="tel" autocomplete="tel" /></label>
+            <label>Email<input name="header.email" type="email" autocomplete="email" /></label>
+          </div>
+          <div id="links-container" class="list-editor"></div>
+          <button type="button" class="btn btn-ghost add-link-btn">+ Add link</button>
+        </fieldset>
+
+        <fieldset class="panel">
+          <legend>Professional Summary</legend>
+          <label class="full-width">
+            Summary
+            <textarea name="summary" rows="3" placeholder="1–2 line professional summary"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset class="panel">
+          <legend>Skills</legend>
+          <label class="full-width">
+            Skills (comma-separated groups)
+            <textarea name="skills" rows="2" placeholder="Backend: Node.js, Python | Data: PostgreSQL, Redis"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset class="panel">
+          <legend>Experience</legend>
+          <div id="experience-container" class="cards"></div>
+          <button type="button" id="add-job-btn" class="btn btn-ghost">+ Add role</button>
+        </fieldset>
+
+        <fieldset class="panel">
+          <legend>Projects</legend>
+          <div id="projects-container" class="cards"></div>
+          <button type="button" id="add-project-btn" class="btn btn-ghost">+ Add project</button>
+        </fieldset>
+
+        <fieldset class="panel">
+          <legend>Education</legend>
+          <div class="grid two-col">
+            <label>School<input name="education.school" type="text" /></label>
+            <label>Year<input name="education.year" type="text" /></label>
+            <label class="full-width">Degree<input name="education.degree" type="text" /></label>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+
+    <aside class="preview" aria-label="Live preview">
+      <div class="preview-header">
+        <h2>Preview</h2>
+        <span id="autosave-status" class="status">Draft saved locally</span>
+      </div>
+      <article id="resume-preview" class="resume-doc"></article>
+      <details class="json-panel">
+        <summary>JSON output</summary>
+        <pre id="json-preview"></pre>
+      </details>
+    </aside>
+  </main>
+
+  <template id="link-row-template">
+    <div class="list-row">
+      <label class="full-width">
+        Link URL
+        <input type="url" placeholder="https://github.com/you" />
+      </label>
+      <button type="button" class="btn btn-icon remove-btn" title="Remove link" aria-label="Remove link">×</button>
+    </div>
+  </template>
+
+  <template id="job-card-template">
+    <article class="card">
+      <div class="card-header">
+        <h3>Role</h3>
+        <button type="button" class="btn btn-icon remove-btn" title="Remove role" aria-label="Remove role">×</button>
+      </div>
+      <div class="grid two-col">
+        <label>Title<input data-field="title" type="text" /></label>
+        <label>Dates<input data-field="dates" type="text" placeholder="Dec 2023 - Present" /></label>
+        <label class="full-width">Company<input data-field="company" type="text" /></label>
+      </div>
+      <div class="bullets" data-bullets></div>
+      <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
+    </article>
+  </template>
+
+  <template id="project-card-template">
+    <article class="card">
+      <div class="card-header">
+        <h3>Project</h3>
+        <button type="button" class="btn btn-icon remove-btn" title="Remove project" aria-label="Remove project">×</button>
+      </div>
+      <div class="grid two-col">
+        <label>Name<input data-field="name" type="text" /></label>
+        <label>URL<input data-field="url" type="url" /></label>
+      </div>
+      <div class="bullets" data-bullets></div>
+      <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
+    </article>
+  </template>
+
+  <template id="bullet-row-template">
+    <div class="list-row bullet-row">
+      <label class="full-width">
+        Bullet
+        <input type="text" placeholder="Built X using Y, achieving Z metric" />
+      </label>
+      <button type="button" class="btn btn-icon remove-btn" title="Remove bullet" aria-label="Remove bullet">×</button>
+    </div>
+  </template>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
