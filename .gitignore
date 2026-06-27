@@ -1,3 +1,6 @@
 .DS_Store
 *.pdf
 data/*.md
+.env
+.stitch/
+.cursor/mcp.json
