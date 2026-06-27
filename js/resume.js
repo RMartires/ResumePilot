@@ -1,4 +1,4 @@
-/** @typedef {{ name: string, location: string, phone: string, email: string, links: string[] }} Header */
+/** @typedef {{ name: string, location: string, phone: string, email: string, gender: string, links: string[] }} Header */
 /** @typedef {{ title: string, company: string, dates: string, bullets: string[] }} Job */
 /** @typedef {{ name: string, url: string, bullets: string[] }} Project */
 /** @typedef {{ school: string, degree: string, year: string }} Education */
@@ -14,6 +14,7 @@ export function emptyResume() {
       location: "",
       phone: "",
       email: "",
+      gender: "",
       links: [""],
     },
     summary: "",
@@ -52,6 +53,7 @@ export function normalizeResume(data) {
       location: String(h.location ?? ""),
       phone: String(h.phone ?? ""),
       email: String(h.email ?? ""),
+      gender: String(h.gender ?? ""),
       links: Array.isArray(h.links)
         ? h.links.map((l) => String(l)).filter(Boolean)
         : [""],

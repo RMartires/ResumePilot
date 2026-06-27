@@ -4,83 +4,258 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resume Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <h1>Resume Builder</h1>
-      <p>JSON source of truth · export to Markdown for PDF</p>
+    <div class="topbar-left">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="#2563eb"/>
+          <path d="M8 9h12v2H8V9zm0 4.5h12v2H8v-2zm0 4.5h8v2H8v-2z" fill="#fff"/>
+        </svg>
+      </div>
+      <span class="topbar-title">ResumeBuilder</span>
     </div>
     <div class="actions">
-      <label class="btn btn-secondary" for="load-json-input">Load JSON</label>
+      <label class="btn btn-secondary btn-sm" for="load-json-input">Load JSON</label>
       <input id="load-json-input" type="file" accept=".json,application/json" hidden />
-      <button id="load-sample-btn" class="btn btn-secondary" type="button">Load sample</button>
-      <button id="save-json-btn" class="btn btn-primary" type="button">Save JSON</button>
-      <button id="export-md-btn" class="btn btn-secondary" type="button">Export MD</button>
+      <button id="load-sample-btn" class="btn btn-secondary btn-sm" type="button">Load sample</button>
+      <button id="save-json-btn" class="btn btn-outline btn-sm" type="button">Save JSON</button>
+      <button id="export-md-btn" class="btn btn-primary btn-sm" type="button">Export MD</button>
     </div>
   </header>
 
-  <main class="layout">
+  <main class="workspace">
     <section class="editor" aria-label="Resume editor">
       <form id="resume-form" novalidate>
-        <fieldset class="panel" id="header-panel">
-          <legend>Header</legend>
-          <div class="grid two-col">
-            <label>Name<input name="header.name" type="text" autocomplete="name" /></label>
-            <label>Location<input name="header.location" type="text" autocomplete="address-level2" /></label>
-            <label>Phone<input name="header.phone" type="tel" autocomplete="tel" /></label>
-            <label>Email<input name="header.email" type="email" autocomplete="email" /></label>
+        <div class="section-timeline">
+
+          <!-- Personal Info -->
+          <div class="timeline-step is-expanded" data-section="personal">
+            <div class="timeline-rail" aria-hidden="true">
+              <div class="checkpoint"></div>
+            </div>
+            <article class="section-box">
+              <button type="button" class="section-header" aria-expanded="true" aria-controls="section-personal">
+                <span class="section-header-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <span class="section-header-text">
+                  <strong>Personal Info and Socials</strong>
+                  <span class="section-status" data-status-for="personal">Add your contact details</span>
+                </span>
+                <span class="section-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="section-body" id="section-personal">
+                <p class="section-desc">The header is the first thing hiring managers see. Make it clear, accurate, and professional.</p>
+
+                <label class="field-label full-width">
+                  Full Name
+                  <input name="header.name" type="text" autocomplete="name" placeholder="Rohit Martires" />
+                </label>
+
+                <div class="grid two-col">
+                  <label class="field-label">
+                    Contact Number
+                    <div class="phone-input">
+                      <select name="header.phoneCode" class="phone-code" aria-label="Country code">
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+49">🇩🇪 +49</option>
+                      </select>
+                      <input name="header.phoneNumber" type="tel" autocomplete="tel" placeholder="98765 43210" />
+                    </div>
+                  </label>
+                  <label class="field-label">
+                    Current City
+                    <input name="header.location" type="text" autocomplete="address-level2" placeholder="Margao, India" />
+                  </label>
+                </div>
+
+                <div class="grid two-col">
+                  <label class="field-label">
+                    Email Address
+                    <input name="header.email" type="email" autocomplete="email" placeholder="you@example.com" />
+                  </label>
+                  <label class="field-label">
+                    Gender
+                    <select name="header.gender">
+                      <option value="">Select gender</option>
+                      <option value="Female">Female</option>
+                      <option value="Male">Male</option>
+                      <option value="Non-binary">Non-binary</option>
+                      <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="social-links-block">
+                  <h3 class="subsection-title">Social Links</h3>
+                  <div id="links-container" class="social-links"></div>
+                  <button type="button" class="btn btn-add-profile add-link-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    Add Profile
+                  </button>
+                </div>
+
+                <label class="field-label full-width summary-field">
+                  Professional Summary
+                  <textarea name="summary" rows="3" placeholder="1–2 line professional summary"></textarea>
+                </label>
+
+                <div class="section-actions">
+                  <button type="button" id="save-compile-btn" class="btn btn-primary">Save and Compile</button>
+                  <button type="button" id="save-next-btn" class="btn btn-outline">Save and Next</button>
+                </div>
+              </div>
+            </article>
           </div>
-          <div id="links-container" class="list-editor"></div>
-          <button type="button" class="btn btn-ghost add-link-btn">+ Add link</button>
-        </fieldset>
 
-        <fieldset class="panel">
-          <legend>Professional Summary</legend>
-          <label class="full-width">
-            Summary
-            <textarea name="summary" rows="3" placeholder="1–2 line professional summary"></textarea>
-          </label>
-        </fieldset>
-
-        <fieldset class="panel">
-          <legend>Skills</legend>
-          <label class="full-width">
-            Skills (comma-separated groups)
-            <textarea name="skills" rows="2" placeholder="Backend: Node.js, Python | Data: PostgreSQL, Redis"></textarea>
-          </label>
-        </fieldset>
-
-        <fieldset class="panel">
-          <legend>Experience</legend>
-          <div id="experience-container" class="cards"></div>
-          <button type="button" id="add-job-btn" class="btn btn-ghost">+ Add role</button>
-        </fieldset>
-
-        <fieldset class="panel">
-          <legend>Projects</legend>
-          <div id="projects-container" class="cards"></div>
-          <button type="button" id="add-project-btn" class="btn btn-ghost">+ Add project</button>
-        </fieldset>
-
-        <fieldset class="panel">
-          <legend>Education</legend>
-          <div class="grid two-col">
-            <label>School<input name="education.school" type="text" /></label>
-            <label>Year<input name="education.year" type="text" /></label>
-            <label class="full-width">Degree<input name="education.degree" type="text" /></label>
+          <!-- Skills -->
+          <div class="timeline-step" data-section="skills">
+            <div class="timeline-rail" aria-hidden="true">
+              <div class="checkpoint"></div>
+            </div>
+            <article class="section-box">
+              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-skills">
+                <span class="section-header-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </span>
+                <span class="section-header-text">
+                  <strong>Skills and Expertise</strong>
+                  <span class="section-status" data-status-for="skills">Add your technical skills</span>
+                </span>
+                <span class="section-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="section-body" id="section-skills" hidden>
+                <p class="section-desc">Group skills by category for easy scanning.</p>
+                <label class="field-label full-width">
+                  Skills (pipe-separated groups)
+                  <textarea name="skills" rows="4" placeholder="Backend: Node.js, Python | Data: PostgreSQL, Redis"></textarea>
+                </label>
+                <div class="section-actions">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+                  <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
+                </div>
+              </div>
+            </article>
           </div>
-        </fieldset>
+
+          <!-- Projects -->
+          <div class="timeline-step" data-section="projects">
+            <div class="timeline-rail" aria-hidden="true">
+              <div class="checkpoint"></div>
+            </div>
+            <article class="section-box">
+              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-projects">
+                <span class="section-header-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                <span class="section-header-text">
+                  <strong>Projects</strong>
+                  <span class="section-status" data-status-for="projects">0 projects added</span>
+                </span>
+                <span class="section-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="section-body" id="section-projects" hidden>
+                <p class="section-desc">Showcase side projects, open source, or portfolio work.</p>
+                <div id="projects-container" class="cards"></div>
+                <button type="button" id="add-project-btn" class="btn btn-ghost">+ Add project</button>
+                <div class="section-actions">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+                  <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Experience -->
+          <div class="timeline-step" data-section="experience">
+            <div class="timeline-rail" aria-hidden="true">
+              <div class="checkpoint"></div>
+            </div>
+            <article class="section-box">
+              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-experience">
+                <span class="section-header-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                </span>
+                <span class="section-header-text">
+                  <strong>Work Experience</strong>
+                  <span class="section-status" data-status-for="experience">Add jobs and internships</span>
+                </span>
+                <span class="section-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="section-body" id="section-experience" hidden>
+                <p class="section-desc">Highlight your roles, companies, and measurable achievements.</p>
+                <div id="experience-container" class="cards"></div>
+                <button type="button" id="add-job-btn" class="btn btn-ghost">+ Add role</button>
+                <div class="section-actions">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+                  <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Education -->
+          <div class="timeline-step" data-section="education">
+            <div class="timeline-rail" aria-hidden="true">
+              <div class="checkpoint"></div>
+            </div>
+            <article class="section-box">
+              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-education">
+                <span class="section-header-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
+                </span>
+                <span class="section-header-text">
+                  <strong>Education</strong>
+                  <span class="section-status" data-status-for="education">Add academic background</span>
+                </span>
+                <span class="section-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="section-body" id="section-education" hidden>
+                <p class="section-desc">Add your academic background and credentials.</p>
+                <div class="grid two-col">
+                  <label class="field-label">School<input name="education.school" type="text" /></label>
+                  <label class="field-label">Year<input name="education.year" type="text" /></label>
+                  <label class="field-label full-width">Degree<input name="education.degree" type="text" /></label>
+                </div>
+                <div class="section-actions">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+                  <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+        </div>
       </form>
     </section>
 
     <aside class="preview" aria-label="Live preview">
       <div class="preview-header">
-        <h2>Preview</h2>
+        <h2>Live Preview</h2>
         <span id="autosave-status" class="status">Draft saved locally</span>
       </div>
-      <article id="resume-preview" class="resume-doc"></article>
+      <div class="preview-canvas">
+        <article id="resume-preview" class="resume-doc"></article>
+      </div>
       <details class="json-panel">
         <summary>JSON output</summary>
         <pre id="json-preview"></pre>
@@ -89,11 +264,12 @@
   </main>
 
   <template id="link-row-template">
-    <div class="list-row">
-      <label class="full-width">
-        Link URL
-        <input type="url" placeholder="https://github.com/you" />
-      </label>
+    <div class="social-link-row">
+      <div class="social-link-icon" data-icon="website" aria-hidden="true"></div>
+      <div class="social-link-fields">
+        <span class="social-link-label">Website</span>
+        <input type="url" placeholder="https://linkedin.com/in/you" />
+      </div>
       <button type="button" class="btn btn-icon remove-btn" title="Remove link" aria-label="Remove link">×</button>
     </div>
   </template>
@@ -105,9 +281,9 @@
         <button type="button" class="btn btn-icon remove-btn" title="Remove role" aria-label="Remove role">×</button>
       </div>
       <div class="grid two-col">
-        <label>Title<input data-field="title" type="text" /></label>
-        <label>Dates<input data-field="dates" type="text" placeholder="Dec 2023 - Present" /></label>
-        <label class="full-width">Company<input data-field="company" type="text" /></label>
+        <label class="field-label">Title<input data-field="title" type="text" /></label>
+        <label class="field-label">Dates<input data-field="dates" type="text" placeholder="Dec 2023 - Present" /></label>
+        <label class="field-label full-width">Company<input data-field="company" type="text" /></label>
       </div>
       <div class="bullets" data-bullets></div>
       <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
@@ -121,8 +297,8 @@
         <button type="button" class="btn btn-icon remove-btn" title="Remove project" aria-label="Remove project">×</button>
       </div>
       <div class="grid two-col">
-        <label>Name<input data-field="name" type="text" /></label>
-        <label>URL<input data-field="url" type="url" /></label>
+        <label class="field-label">Name<input data-field="name" type="text" /></label>
+        <label class="field-label">URL<input data-field="url" type="url" /></label>
       </div>
       <div class="bullets" data-bullets></div>
       <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
@@ -131,7 +307,7 @@
 
   <template id="bullet-row-template">
     <div class="list-row bullet-row">
-      <label class="full-width">
+      <label class="field-label full-width">
         Bullet
         <input type="text" placeholder="Built X using Y, achieving Z metric" />
       </label>
