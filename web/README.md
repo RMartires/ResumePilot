@@ -34,7 +34,19 @@ Open **http://localhost:3000**
 
 ### 3. Create an account
 
-Sign up at `/signup`, then create resumes from the dashboard.
+Sign up at `/signup` (email/password or Google), then create resumes from the dashboard.
+
+### 4. Google OAuth (optional)
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), create OAuth 2.0 credentials (Web application).
+2. Add **Authorized redirect URI**: `https://<your-project-ref>.supabase.co/auth/v1/callback`  
+   (find your project ref in Supabase → Project Settings → General)
+3. In Supabase → **Authentication → Providers → Google**, enable Google and paste the Client ID + Client Secret.
+4. In Supabase → **Authentication → URL Configuration**, add:
+   - `http://localhost:3000/auth/callback` (local)
+   - `https://your-domain.com/auth/callback` (production)
+
+No extra env vars are needed in the Next.js app — Google OAuth is configured entirely in Supabase.
 
 ## Scripts
 

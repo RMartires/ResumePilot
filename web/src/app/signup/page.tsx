@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AuthDivider } from "@/components/auth/AuthDivider";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -66,6 +68,8 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleSignInButton label="Sign up with Google" />
+          <AuthDivider />
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
