@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { ResumeDiffPanel } from "@/components/ai/ResumeDiffPanel";
 import { SectionTimeline } from "@/components/editor/SectionTimeline";
 import { PersonalInfoSection } from "@/components/editor/PersonalInfoSection";
 import { SkillsSection } from "@/components/editor/SkillsSection";
@@ -9,6 +10,7 @@ import { ProjectsSection } from "@/components/editor/ProjectsSection";
 import { ExperienceSection } from "@/components/editor/ExperienceSection";
 import { EducationSection } from "@/components/editor/EducationSection";
 import { ResumePreview } from "@/components/preview/ResumePreview";
+import { ResumeAiChatPanel } from "@/components/ai/ResumeAiChatPanel";
 import { EditorToolbar } from "@/components/editor/EditorToolbar";
 import { useDebouncedSave } from "@/hooks/useDebouncedSave";
 import { resumeToJson } from "@/lib/resume";
@@ -19,6 +21,8 @@ import {
 } from "@/lib/section-status";
 import type { Resume } from "@/lib/validations/resume";
 import type { TemplateConfig } from "@/lib/validations/resume";
+import { computeResumeDiff } from "@/lib/ai/diff-resume";
+import type { PendingPatch } from "@/lib/ai/extract-proposals";
 
 type ResumeEditorProps = {
   resumeId: string;
@@ -46,6 +50,7 @@ export function ResumeEditor({
     null,
   );
   const [saveStatus, setSaveStatus] = useState("Saved");
+  const [aiPreviewResume, setAiPreviewResume] = useState<Resume | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const skillCount = getSkillCountFromResume(resume);
@@ -68,6 +73,20 @@ export function ResumeEditor({
     setResume((prev) => ({ ...prev, ...patch }));
   };
 
+  const handleActivePatchChange = useCallback(
+    (_patch: PendingPatch | null, proposed: Resume | null) => {
+      setAiPreviewResume(proposed);
+    },
+    [],
+  );
+
+  const previewDiffs = useMemo(() => {
+    if (!aiPreviewResume) return null;
+    return computeResumeDiff(resume, aiPreviewResume);
+  }, [aiPreviewResume, resume]);
+
+  const displayedPreview = aiPreviewResume ?? resume;
+
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
       <EditorToolbar
@@ -83,7 +102,7 @@ export function ResumeEditor({
         }}
       />
 
-      <div className="grid flex-1 lg:grid-cols-2">
+      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)_minmax(0,1fr)]">
         <section className="overflow-y-auto border-r p-6">
           <SectionTimeline
             activeSection={activeSection}
@@ -142,15 +161,41 @@ export function ResumeEditor({
           </SectionTimeline>
         </section>
 
-        <aside className="flex flex-col bg-[#e8edf4] p-5">
+        <ResumeAiChatPanel
+          resumeId={resumeId}
+          resume={resume}
+          onApplyResume={(data) => {
+            setResume(data);
+            setAiPreviewResume(null);
+          }}
+          onActivePatchChange={handleActivePatchChange}
+        />
+
+        <aside className="flex min-h-0 flex-col bg-[#e8edf4] p-5">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              Live Preview
+              {aiPreviewResume ? "AI Preview" : "Live Preview"}
             </h2>
-            <span className="text-xs text-muted-foreground">{saveStatus}</span>
+            <span className="text-xs text-muted-foreground">
+              {aiPreviewResume ? "Pending approval" : saveStatus}
+            </span>
           </div>
           <div className="flex-1 overflow-y-auto pb-4" ref={previewRef}>
-            <ResumePreview resume={resumeToJson(resume)} template={templateConfig} />
+            {aiPreviewResume && previewDiffs && (
+              <ResumeDiffPanel diffs={previewDiffs} />
+            )}
+            <div
+              className={
+                aiPreviewResume
+                  ? "rounded-lg ring-2 ring-amber-400/70 ring-offset-2 ring-offset-[#e8edf4]"
+                  : undefined
+              }
+            >
+              <ResumePreview
+                resume={resumeToJson(displayedPreview)}
+                template={templateConfig}
+              />
+            </div>
           </div>
         </aside>
       </div>
