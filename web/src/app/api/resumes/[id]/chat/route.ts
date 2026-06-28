@@ -1,5 +1,4 @@
 import {
-  convertToModelMessages,
   stepCountIs,
   type UIMessage,
 } from "ai";
@@ -10,6 +9,7 @@ import {
   streamText,
 } from "@/lib/ai/langsmith";
 import { buildResumeChatSystemPrompt } from "@/lib/ai/prompts";
+import { prepareChatModelMessages } from "@/lib/ai/prepare-messages";
 import { getChatModel } from "@/lib/ai/openrouter";
 import { createResumeTools } from "@/lib/ai/tools";
 import { normalizeResume, resumeToJson } from "@/lib/resume";
@@ -76,11 +76,14 @@ export async function POST(
       normalizeResume(body.resumeSnapshot ?? {}),
     ) as Resume;
 
+    const tools = createResumeTools(resume);
+    const modelMessages = prepareChatModelMessages(body.messages);
+
     const result = streamText({
       model: getChatModel(body.model),
       system: buildResumeChatSystemPrompt(resume),
-      messages: await convertToModelMessages(body.messages),
-      tools: createResumeTools(resume),
+      messages: modelMessages,
+      tools,
       stopWhen: stepCountIs(5),
       onError({ error }) {
         console.error("[resume-chat]", error);

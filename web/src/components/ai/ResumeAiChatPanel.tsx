@@ -66,17 +66,42 @@ export function ResumeAiChatPanel({
     return latest;
   }, [messages, handledPatchIds]);
 
-  useEffect(() => {
-    if (!onActivePatchChange) return;
+  const onActivePatchChangeRef = useRef(onActivePatchChange);
+  onActivePatchChangeRef.current = onActivePatchChange;
+  const lastNotifiedPatchIdRef = useRef<string | null>(null);
+  const lastNotifiedPreviewKeyRef = useRef<string | null>(null);
 
-    if (!activePatch) {
-      onActivePatchChange(null, null);
+  useEffect(() => {
+    const notify = onActivePatchChangeRef.current;
+    if (!notify) return;
+
+    const latest = getLatestPatch(messages);
+    const patch =
+      latest && !handledPatchIds.has(latest.toolCallId) ? latest : null;
+    const nextId = patch?.toolCallId ?? null;
+
+    if (!patch) {
+      if (lastNotifiedPatchIdRef.current === null) return;
+      lastNotifiedPatchIdRef.current = null;
+      lastNotifiedPreviewKeyRef.current = null;
+      notify(null, null);
       return;
     }
 
-    const proposed = applyResumePatch(resumeRef.current, activePatch);
-    onActivePatchChange(activePatch, proposed);
-  }, [activePatch, onActivePatchChange]);
+    const proposed = applyResumePatch(resumeRef.current, patch);
+    const previewKey = JSON.stringify(proposed);
+
+    if (
+      nextId === lastNotifiedPatchIdRef.current &&
+      previewKey === lastNotifiedPreviewKeyRef.current
+    ) {
+      return;
+    }
+
+    lastNotifiedPatchIdRef.current = nextId;
+    lastNotifiedPreviewKeyRef.current = previewKey;
+    notify(patch, proposed);
+  }, [messages, handledPatchIds, resume]);
 
   const markHandled = useCallback((toolCallId: string) => {
     setHandledPatchIds((prev) => new Set(prev).add(toolCallId));
@@ -87,18 +112,22 @@ export function ResumeAiChatPanel({
       const next = applyResumePatch(resumeRef.current, patch);
       onApplyResume(next);
       markHandled(patch.toolCallId);
-      onActivePatchChange?.(null, null);
+      lastNotifiedPatchIdRef.current = null;
+      lastNotifiedPreviewKeyRef.current = null;
+      onActivePatchChangeRef.current?.(null, null);
       toast.success("Resume updated");
     },
-    [markHandled, onApplyResume, onActivePatchChange],
+    [markHandled, onApplyResume],
   );
 
   const handleDismissPatch = useCallback(
     (patch: PendingPatch) => {
       markHandled(patch.toolCallId);
-      onActivePatchChange?.(null, null);
+      lastNotifiedPatchIdRef.current = null;
+      lastNotifiedPreviewKeyRef.current = null;
+      onActivePatchChangeRef.current?.(null, null);
     },
-    [markHandled, onActivePatchChange],
+    [markHandled],
   );
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -109,7 +138,9 @@ export function ResumeAiChatPanel({
     // Stale unapplied proposals from earlier turns are dismissed when the user continues chatting.
     if (activePatch) {
       markHandled(activePatch.toolCallId);
-      onActivePatchChange?.(null, null);
+      lastNotifiedPatchIdRef.current = null;
+      lastNotifiedPreviewKeyRef.current = null;
+      onActivePatchChangeRef.current?.(null, null);
     }
 
     setInput("");

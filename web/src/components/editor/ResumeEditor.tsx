@@ -75,10 +75,26 @@ export function ResumeEditor({
 
   const handleActivePatchChange = useCallback(
     (_patch: PendingPatch | null, proposed: Resume | null) => {
-      setAiPreviewResume(proposed);
+      setAiPreviewResume((current) => {
+        if (proposed === null) {
+          return current === null ? current : null;
+        }
+        if (
+          current &&
+          JSON.stringify(current) === JSON.stringify(proposed)
+        ) {
+          return current;
+        }
+        return proposed;
+      });
     },
     [],
   );
+
+  const handleApplyResume = useCallback((data: Resume) => {
+    setResume(data);
+    setAiPreviewResume(null);
+  }, []);
 
   const previewDiffs = useMemo(() => {
     if (!aiPreviewResume) return null;
@@ -164,10 +180,7 @@ export function ResumeEditor({
         <ResumeAiChatPanel
           resumeId={resumeId}
           resume={resume}
-          onApplyResume={(data) => {
-            setResume(data);
-            setAiPreviewResume(null);
-          }}
+          onApplyResume={handleApplyResume}
           onActivePatchChange={handleActivePatchChange}
         />
 
