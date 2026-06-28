@@ -123,10 +123,13 @@ h1, h2, h3, p {
   top: 57px;
   height: calc(100vh - 57px);
   overflow: auto;
-  padding: 24px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
   background: #e8edf4;
   min-width: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .preview-header {
@@ -150,10 +153,10 @@ h1, h2, h3, p {
 }
 
 .preview-canvas {
-  display: flex;
-  justify-content: center;
-  padding: 8px 0 16px;
+  flex: 1;
   width: 100%;
+  min-height: 0;
+  padding-bottom: 16px;
 }
 
 /* ── Section timeline (vertical stepper) ── */
@@ -2098,8 +2101,7 @@ select {
 
 .resume-doc {
   width: 100%;
-  max-width: min(100%, 420px);
-  min-height: 480px;
+  min-height: 100%;
   border-radius: 2px;
   padding: 32px 28px;
   background: #fff;
@@ -2108,6 +2110,7 @@ select {
   font-size: 0.72rem;
   line-height: 1.45;
   color: #1a1a1a;
+  box-sizing: border-box;
 }
 
 .resume-doc h1 {

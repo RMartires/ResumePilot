@@ -19,11 +19,10 @@ import {
   loadDraft,
   normalizeResume,
   resumeToJson,
-  resumeToMarkdown,
   saveDraft,
   downloadJson,
-  downloadMarkdown,
 } from "./resume.js";
+import { downloadPreviewPdf } from "./pdf.js";
 
 const form = document.getElementById("resume-form");
 const customLinksContainer = document.getElementById("custom-links-container");
@@ -115,18 +114,30 @@ function init() {
     scheduleAutosave();
   });
 
-  document.getElementById("save-json-btn")?.addEventListener("click", () => {
+  document.getElementById("export-json-btn")?.addEventListener("click", () => {
     const resume = readForm();
     const slug = slugify(resume.header.name || "resume");
     downloadJson(resume, `${slug}.json`);
-    flashStatus("JSON downloaded");
+    flashStatus("JSON exported");
   });
 
-  document.getElementById("export-md-btn")?.addEventListener("click", () => {
+  document.getElementById("export-pdf-btn")?.addEventListener("click", async () => {
+    const btn = document.getElementById("export-pdf-btn");
+    if (!previewEl || !btn) return;
     const resume = readForm();
     const slug = slugify(resume.header.name || "resume");
-    downloadMarkdown(resume, `${slug}.md`);
-    flashStatus("Markdown exported");
+
+    btn.disabled = true;
+    flashStatus("Generating PDF…");
+    try {
+      await downloadPreviewPdf(previewEl, `${slug}.pdf`);
+      flashStatus("PDF downloaded");
+    } catch (err) {
+      console.error(err);
+      flashStatus("PDF export failed");
+    } finally {
+      btn.disabled = false;
+    }
   });
 
   document.getElementById("save-compile-btn")?.addEventListener("click", saveAndCompile);
@@ -159,22 +170,11 @@ function init() {
     try {
       const text = await file.text();
       renderResume(normalizeResume(JSON.parse(text)));
-      flashStatus(`Loaded ${file.name}`);
+      flashStatus(`Imported ${file.name}`);
     } catch {
       flashStatus("Invalid JSON file");
     } finally {
       input.value = "";
-    }
-  });
-
-  document.getElementById("load-sample-btn")?.addEventListener("click", async () => {
-    try {
-      const response = await fetch("data/sample-resume.json");
-      if (!response.ok) throw new Error("sample not found");
-      renderResume(normalizeResume(await response.json()));
-      flashStatus("Sample loaded");
-    } catch {
-      flashStatus("Could not load sample (use a local server)");
     }
   });
 }
