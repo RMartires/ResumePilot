@@ -1,0 +1,56 @@
+{
+  "header": {
+    "name": "Rohit Martires",
+    "location": "Margao, India",
+    "phone": "+91-9881611398",
+    "email": "rohitmartires14@gmail.com",
+    "links": [
+      "https://github.com/RMartires",
+      "https://www.linkedin.com/in/rohit-martires-31697b179"
+    ]
+  },
+  "summary": "Senior Backend Engineer with 6+ years building high-throughput backend systems, production GenAI features, and e-commerce platforms. Shipped systems processing 100k events/second, 50k+ orders/day, and 100k+ requests/day with sub-1s P95 latency.",
+  "skills": "Backend: Node.js, TypeScript, Python, Flask, Java, Spring Boot, REST APIs | Data: SQL, PostgreSQL, MongoDB, Redis, ETL, Snowplow, Event Systems | AI/LLM: GenAI, LLMs, LangChain, LangGraph, RAG, OpenRouter | Infra/Observability: Docker, Git, AWS, New Relic, LangSmith, Langfuse",
+  "experience": [
+    {
+      "title": "Senior Software Engineer (Backend / AI Systems)",
+      "company": "Primathon",
+      "dates": "Dec 2023 - Present",
+      "bullets": [
+        "Architected and authored system design for Snowplow-based event ingestion pipelines processing 100k events/second (Node.js, TypeScript), aligning 3 cross-functional teams.",
+        "Built GenAI-powered ad creative generation APIs (Flask, OpenRouter), automating personalized ad content generation for large product catalogs with model-routing support.",
+        "Established GenAI observability standards and integrated tracing (LangSmith, Langfuse) across request flows, reducing debugging time for prompt and model failures by 35%."
+      ]
+    },
+    {
+      "title": "Software Engineer (Backend)",
+      "company": "SWIFT",
+      "dates": "Aug 2022 - Nov 2023",
+      "bullets": [
+        "Led a team of 3 developers to architect an in-house order management system processing 50k orders/day (Java, Spring Boot, MongoDB).",
+        "Built and maintained integrations across Shopify, Amazon, WooCommerce, and other e-commerce providers, handling 100k+ requests/day."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Hindsight",
+      "url": "https://github.com/RMartires/hindsight",
+      "bullets": [
+        "Built a multi-agent market analysis platform (LangGraph, FastAPI, Next.js) with an AI Trader agent and specialist analysts for point-in-time stock analysis.",
+        "Streamed agent pipeline runs over SSE with Langfuse tracing and Supabase-backed replay for debugging completed analyses."
+      ]
+    }
+  ],
+  "education": {
+    "school": "Don Bosco College of Engineering",
+    "degree": "BE/B.Tech/BS",
+    "fieldOfStudy": "Computer Engineering",
+    "year": "2020",
+    "graduationDate": "2020-04-30",
+    "marks": "",
+    "marksType": "CGPA",
+    "description": "",
+    "secondary": []
+  }
+}

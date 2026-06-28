@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve the resume builder locally (needed for ES modules and sample JSON fetch)."""
+"""Serve the resume builder locally — DEPRECATED. Use `cd web && npm run dev` instead."""
 
 from __future__ import annotations
 

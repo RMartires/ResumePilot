@@ -2,5 +2,14 @@
 *.pdf
 data/*.md
 .env
+.env.local
 .stitch/
 .cursor/mcp.json
+
+# Next.js
+web/node_modules/
+web/.next/
+web/out/
+web/playwright-report/
+web/test-results/
+.gstack/
