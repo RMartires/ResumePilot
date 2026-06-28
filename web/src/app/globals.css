@@ -128,3 +128,29 @@
     @apply font-sans;
   }
 }
+
+/* Tiptap editor */
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap u {
+  text-decoration: underline;
+}
+
+.tiptap s,
+.tiptap del {
+  text-decoration: line-through;
+}
+
+.tiptap strong {
+  font-weight: 700;
+}
+
+.tiptap em {
+  font-style: italic;
+}

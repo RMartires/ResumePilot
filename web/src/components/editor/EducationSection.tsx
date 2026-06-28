@@ -4,7 +4,7 @@ import { Plus, Trash2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 import {
   Select,
   SelectContent,
@@ -101,14 +101,15 @@ function EducationCardFields({
           </Select>
         </div>
       </div>
-      <div className="space-y-2">
-        <Label>Description</Label>
-        <Textarea
-          value={entry.description}
-          onChange={(e) => update({ description: e.target.value })}
-          rows={3}
-        />
-      </div>
+      <RichTextEditor
+        label="Description"
+        variant="text"
+        value={entry.description}
+        onChange={(description) =>
+          update({ description: typeof description === "string" ? description : "" })
+        }
+        placeholder="Coursework, honors, thesis topic…"
+      />
     </div>
   );
 }

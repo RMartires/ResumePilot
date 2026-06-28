@@ -37,7 +37,9 @@ export function ResumeEditor({
 }: ResumeEditorProps) {
   const [resume, setResume] = useState<Resume>(initialData);
   const [title, setTitle] = useState(initialTitle);
-  const [activeSection, setActiveSection] = useState<SectionId>("personal");
+  const [activeSection, setActiveSection] = useState<SectionId | null>(
+    "personal",
+  );
   const [expandedJob, setExpandedJob] = useState<number | null>(0);
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
   const [expandedEducation, setExpandedEducation] = useState<number | null>(

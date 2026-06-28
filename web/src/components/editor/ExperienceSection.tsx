@@ -1,10 +1,10 @@
 "use client";
 
-import { Plus, Trash2, ChevronDown } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,50 +20,6 @@ type ExperienceSectionProps = {
   expandedIndex: number | null;
   onExpandedChange: (index: number | null) => void;
 };
-
-function BulletsEditor({
-  bullets,
-  onChange,
-}: {
-  bullets: string[];
-  onChange: (bullets: string[]) => void;
-}) {
-  return (
-    <div className="space-y-2">
-      {bullets.map((bullet, i) => (
-        <div key={i} className="flex gap-2">
-          <Textarea
-            value={bullet}
-            rows={2}
-            onChange={(e) => {
-              const next = [...bullets];
-              next[i] = e.target.value;
-              onChange(next);
-            }}
-            placeholder="Built X using Y, achieving Z metric"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => onChange(bullets.filter((_, idx) => idx !== i))}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      ))}
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => onChange([...bullets, ""])}
-      >
-        <Plus className="mr-1 h-4 w-4" />
-        Add bullet
-      </Button>
-    </div>
-  );
-}
 
 export function ExperienceSection({
   jobs,
@@ -178,19 +134,20 @@ export function ExperienceSection({
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label>Key achievements</Label>
-                <BulletsEditor
-                  bullets={job.bullets.length ? job.bullets : [""]}
-                  onChange={(bullets) =>
-                    updateJob(index, {
-                      bullets: bullets.filter(Boolean).length
+              <RichTextEditor
+                label="Key Points"
+                variant="bullets"
+                value={job.bullets.length ? job.bullets : [""]}
+                onChange={(bullets) =>
+                  updateJob(index, {
+                    bullets:
+                      Array.isArray(bullets) && bullets.filter(Boolean).length
                         ? bullets
                         : [""],
-                    })
-                  }
-                />
-              </div>
+                  })
+                }
+                placeholder="Built X using Y, achieving Z metric"
+              />
 
               {jobs.length > 1 ? (
                 <Button

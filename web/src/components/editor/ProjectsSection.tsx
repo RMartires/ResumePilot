@@ -1,10 +1,10 @@
 "use client";
 
-import { Plus, Trash2, ChevronDown } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/editor/RichTextEditor";
 import {
   Collapsible,
   CollapsibleContent,
@@ -73,51 +73,17 @@ export function ProjectsSection({
                   placeholder="https://github.com/..."
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Description bullets</Label>
-                {(project.bullets.length ? project.bullets : [""]).map(
-                  (bullet, bi) => (
-                    <div key={bi} className="flex gap-2">
-                      <Textarea
-                        rows={2}
-                        value={bullet}
-                        onChange={(e) => {
-                          const next = [...project.bullets];
-                          next[bi] = e.target.value;
-                          updateProject(index, { bullets: next });
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() =>
-                          updateProject(index, {
-                            bullets: project.bullets.filter(
-                              (_, idx) => idx !== bi,
-                            ),
-                          })
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ),
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    updateProject(index, {
-                      bullets: [...project.bullets, ""],
-                    })
-                  }
-                >
-                  <Plus className="mr-1 h-4 w-4" />
-                  Add bullet
-                </Button>
-              </div>
+              <RichTextEditor
+                label="Key Points"
+                variant="bullets"
+                value={project.bullets.length ? project.bullets : [""]}
+                onChange={(bullets) =>
+                  updateProject(index, {
+                    bullets: Array.isArray(bullets) ? bullets : [bullets],
+                  })
+                }
+                placeholder="Describe your project impact, tech stack, and outcomes…"
+              />
               {projects.length > 1 ? (
                 <Button
                   type="button"

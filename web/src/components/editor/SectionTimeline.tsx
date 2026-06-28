@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -11,9 +10,9 @@ import {
 } from "@/lib/section-status";
 
 type SectionTimelineProps = {
-  activeSection: SectionId;
+  activeSection: SectionId | null;
   statuses: Record<SectionId, SectionStatus>;
-  onSectionChange: (section: SectionId) => void;
+  onSectionChange: (section: SectionId | null) => void;
   children: (section: SectionId) => React.ReactNode;
 };
 
@@ -43,6 +42,34 @@ const SECTION_META: Record<
   },
 };
 
+function SectionIndicator({
+  expanded,
+  complete,
+}: {
+  expanded: boolean;
+  complete: boolean;
+}) {
+  if (expanded) {
+    return (
+      <div className="relative z-10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-green-600 bg-background">
+        <Loader2 className="h-3.5 w-3.5 animate-spin text-green-600" />
+      </div>
+    );
+  }
+
+  if (complete) {
+    return (
+      <div className="relative z-10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-green-600 bg-green-600 text-white">
+        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative z-10 mt-1 flex h-6 w-6 shrink-0 rounded-full border-2 border-muted-foreground/25 bg-background" />
+  );
+}
+
 export function SectionTimeline({
   activeSection,
   statuses,
@@ -59,31 +86,17 @@ export function SectionTimeline({
         return (
           <div key={sectionId} className="relative flex gap-4 pb-6 last:pb-0">
             {index < SECTION_ORDER.length - 1 ? (
-              <div
-                className={cn(
-                  "absolute left-[11px] top-6 h-[calc(100%-12px)] w-0.5",
-                  status.complete ? "bg-blue-600" : "bg-border",
-                )}
-              />
+              <div className="absolute left-[11px] top-6 h-[calc(100%-12px)] w-0.5 bg-border" />
             ) : null}
 
-            <div
-              className={cn(
-                "relative z-10 mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 bg-background",
-                status.complete
-                  ? "border-blue-600 bg-blue-600 text-white"
-                  : expanded
-                    ? "border-blue-600"
-                    : "border-muted-foreground/30",
-              )}
-            >
-              {status.complete ? <Check className="h-3.5 w-3.5" /> : null}
-            </div>
+            <SectionIndicator expanded={expanded} complete={status.complete} />
 
             <div className="min-w-0 flex-1">
               <button
                 type="button"
-                onClick={() => onSectionChange(sectionId)}
+                onClick={() =>
+                  onSectionChange(expanded ? null : sectionId)
+                }
                 className="flex w-full items-start justify-between gap-2 text-left"
               >
                 <div>

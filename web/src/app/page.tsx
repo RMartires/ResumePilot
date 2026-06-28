@@ -24,15 +24,9 @@ export default async function HomePage() {
           Build professional resumes with live preview, cloud sync, and
           one-click PDF export.
         </p>
-        <div className="mt-8 flex justify-center gap-4">
-          <Link href="/signup" className={cn(buttonVariants({ size: "lg" }))}>
-            Get started
-          </Link>
-          <Link
-            href="/login"
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
-          >
-            Sign in
+        <div className="mt-8 flex justify-center">
+          <Link href="/login" className={cn(buttonVariants({ size: "lg" }))}>
+            Get started with Google
           </Link>
         </div>
       </div>
