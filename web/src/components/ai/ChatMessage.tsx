@@ -2,6 +2,7 @@
 
 import type { UIMessage } from "ai";
 import { isToolUIPart } from "ai";
+import { AiMarkdown } from "@/components/ai/AiMarkdown";
 import { cn } from "@/lib/utils";
 
 type ChatMessageProps = {
@@ -31,13 +32,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
     >
       <div
         className={cn(
-          "max-w-[90%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap",
+          "max-w-[90%] rounded-lg px-3 py-2 text-sm",
           isUser
-            ? "bg-primary text-primary-foreground"
+            ? "bg-primary text-primary-foreground whitespace-pre-wrap"
             : "bg-muted text-foreground",
         )}
       >
-        {text && <p>{text}</p>}
+        {text &&
+          (isUser ? <p>{text}</p> : <AiMarkdown content={text} />)}
         {!isUser && toolParts.length > 0 && !text && (
           <p className="text-muted-foreground italic">
             Preparing resume changes…
