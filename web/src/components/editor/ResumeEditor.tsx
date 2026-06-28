@@ -104,7 +104,7 @@ export function ResumeEditor({
   const displayedPreview = aiPreviewResume ?? resume;
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
+    <div className="flex h-[calc(100vh-3.5rem)] min-h-0 flex-col overflow-hidden">
       <EditorToolbar
         resumeId={resumeId}
         title={title}
@@ -118,8 +118,8 @@ export function ResumeEditor({
         }}
       />
 
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)_minmax(0,1fr)]">
-        <section className="overflow-y-auto border-r p-6">
+      <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
+        <section className="min-h-0 overflow-y-auto border-r p-6">
           <SectionTimeline
             activeSection={activeSection}
             statuses={statuses}
@@ -184,7 +184,7 @@ export function ResumeEditor({
           onActivePatchChange={handleActivePatchChange}
         />
 
-        <aside className="flex min-h-0 flex-col bg-[#e8edf4] p-5">
+        <aside className="flex min-h-0 flex-col overflow-hidden bg-[#e8edf4] p-5">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
               {aiPreviewResume ? "AI Preview" : "Live Preview"}

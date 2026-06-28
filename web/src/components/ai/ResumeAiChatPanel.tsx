@@ -148,9 +148,14 @@ export function ResumeAiChatPanel({
   };
 
   const isBusy = status === "streaming" || status === "submitted";
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, status, activePatch]);
 
   return (
-    <aside className="flex min-h-0 flex-col border-r bg-background">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-r bg-background">
       <div className="shrink-0 border-b px-4 py-3">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
@@ -163,7 +168,8 @@ export function ResumeAiChatPanel({
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
+        <div className="space-y-3">
         {messages.length === 0 && (
           <div className="rounded-lg border border-dashed p-3 text-xs leading-relaxed text-muted-foreground">
             Ask me to improve your summary, rewrite bullets, tailor your resume
@@ -198,6 +204,8 @@ export function ResumeAiChatPanel({
         {error && (
           <p className="text-xs text-destructive">{error.message}</p>
         )}
+        <div ref={messagesEndRef} aria-hidden />
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="shrink-0 border-t p-3">
