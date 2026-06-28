@@ -1,8 +1,32 @@
+const MARGIN_IN = 0.5;
+const PAGE_WIDTH_IN = 8.5;
+const PAGE_HEIGHT_IN = 11;
+
+export function pageContentHeightIn(): number {
+  return PAGE_HEIGHT_IN - MARGIN_IN * 2;
+}
+
+async function loadPdfLibraries() {
+  const [html2canvasMod, jspdfMod] = await Promise.all([
+    import("html2canvas-pro"),
+    import("jspdf"),
+  ]);
+
+  const html2canvas = html2canvasMod.default;
+  const { jsPDF } = jspdfMod;
+
+  if (typeof html2canvas !== "function" || typeof jsPDF !== "function") {
+    throw new Error("PDF libraries failed to load");
+  }
+
+  return { html2canvas, jsPDF };
+}
+
 export async function downloadPreviewPdf(
   element: HTMLElement,
   filename: string,
 ): Promise<void> {
-  const html2pdf = (await import("html2pdf.js")).default;
+  const { html2canvas, jsPDF } = await loadPdfLibraries();
 
   const clone = element.cloneNode(true) as HTMLElement;
   clone.style.boxShadow = "none";
@@ -15,24 +39,43 @@ export async function downloadPreviewPdf(
   container.style.position = "fixed";
   container.style.left = "-10000px";
   container.style.top = "0";
-  container.style.background = "#fff";
+  container.style.background = "#ffffff";
+  container.style.width = "8.5in";
   container.appendChild(clone);
   document.body.appendChild(container);
 
   try {
-    await html2pdf()
-      .set({
-        margin: [0.5, 0.5, 0.5, 0.5],
-        filename,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-        pagebreak: { mode: ["css", "legacy"] },
-      // html2pdf.js types are incomplete
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any)
-      .from(clone)
-      .save();
+    const canvas = await html2canvas(clone, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+    });
+
+    const printableWidth = PAGE_WIDTH_IN - MARGIN_IN * 2;
+    const printableHeight = pageContentHeightIn();
+    const imgWidth = printableWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgData = canvas.toDataURL("image/jpeg", 0.98);
+
+    const pdf = new jsPDF({
+      unit: "in",
+      format: "letter",
+      orientation: "portrait",
+    });
+
+    let heightLeft = imgHeight;
+    pdf.addImage(imgData, "JPEG", MARGIN_IN, MARGIN_IN, imgWidth, imgHeight);
+    heightLeft -= printableHeight;
+
+    while (heightLeft > 0) {
+      const position = MARGIN_IN - (imgHeight - heightLeft);
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", MARGIN_IN, position, imgWidth, imgHeight);
+      heightLeft -= printableHeight;
+    }
+
+    pdf.save(filename);
   } finally {
     document.body.removeChild(container);
   }

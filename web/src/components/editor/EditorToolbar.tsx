@@ -46,7 +46,8 @@ export function EditorToolbar({
       await downloadPreviewPdf(previewEl, `${slug}.pdf`);
       toast.dismiss();
       toast.success("PDF downloaded");
-    } catch {
+    } catch (err) {
+      console.error("PDF export failed:", err);
       toast.dismiss();
       toast.error("PDF export failed");
     }
