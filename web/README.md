@@ -48,6 +48,16 @@ Sign up at `/signup` (email/password or Google), then create resumes from the da
 
 No extra env vars are needed in the Next.js app — Google OAuth is configured entirely in Supabase.
 
+### 5. AI assistant (optional)
+
+Copy AI keys from `.env.local.example` into `.env.local`:
+
+- `OPENROUTER_API_KEY` — required for chat
+- `OPENROUTER_DEFAULT_MODEL` — model slug (e.g. `deepseek/deepseek-v4-flash`, `qwen/qwen-2.5-72b-instruct`)
+- `LANGSMITH_TRACING` + `LANGSMITH_API_KEY` — optional observability
+
+The AI panel is pinned between the form and live preview in the editor. The model is configured via `OPENROUTER_DEFAULT_MODEL` only (no in-app picker). Proposed edits appear as patch cards — click **Apply to resume** to load them into the editor.
+
 ## Scripts
 
 | Command | Description |
