@@ -1,4 +1,10 @@
 import type { EducationEntry, Job, Project, Resume } from "@/lib/validations/resume";
+import {
+  DEFAULT_SECTION_ORDER,
+  normalizeActiveSections,
+  isSectionActive,
+  ResumeSection,
+} from "@/lib/sections";
 
 export const STORAGE_KEY = "resume-builder-draft";
 
@@ -57,6 +63,7 @@ export function emptyResume(): Resume {
       description: "",
       secondary: [],
     },
+    activeSections: [...DEFAULT_SECTION_ORDER],
   };
 }
 
@@ -159,77 +166,90 @@ export function normalizeResume(data: unknown): Resume {
     }
   }
 
+  base.activeSections = normalizeActiveSections(raw.activeSections);
+
   return base;
 }
 
 export function resumeToMarkdown(resume: Resume): string {
-  const links = resume.header.links.filter(Boolean).join(" | ");
+  const normalized = normalizeResume(resume);
+  const links = normalized.header.links.filter(Boolean).join(" | ");
   const lines = [
-    `# ${resume.header.name || "Resume"} (generated from JSON)`,
+    `# ${normalized.header.name || "Resume"} (generated from JSON)`,
     `# Edit in the resume builder, then export MD for PDF generation.`,
     "",
     "[header]",
-    `name: ${resume.header.name}`,
-    `location: ${resume.header.location}`,
-    `phone: ${resume.header.phone}`,
-    `email: ${resume.header.email}`,
+    `name: ${normalized.header.name}`,
+    `location: ${normalized.header.location}`,
+    `phone: ${normalized.header.phone}`,
+    `email: ${normalized.header.email}`,
     `links: ${links}`,
     "",
-    "[summary]",
-    resume.summary,
-    "",
-    "[skills]",
-    resume.skills,
-    "",
-    "[experience]",
   ];
 
-  for (const job of resume.experience) {
-    if (!job.title && !job.company && job.bullets.every((b) => !b)) continue;
-    lines.push(`title: ${job.title}`);
-    lines.push(`company: ${job.company}`);
-    lines.push(`dates: ${job.dates}`);
-    lines.push("bullets:");
-    for (const bullet of job.bullets.filter(Boolean)) {
-      lines.push(`- ${bullet}`);
+  if (isSectionActive(normalized.activeSections, ResumeSection.Personal)) {
+    lines.push("[summary]", normalized.summary, "");
+  }
+
+  if (isSectionActive(normalized.activeSections, ResumeSection.Skills)) {
+    lines.push("[skills]", normalized.skills, "");
+  }
+
+  if (isSectionActive(normalized.activeSections, ResumeSection.Experience)) {
+    lines.push("[experience]");
+    for (const job of normalized.experience) {
+      if (!job.title && !job.company && job.bullets.every((b) => !b)) continue;
+      lines.push(`title: ${job.title}`);
+      lines.push(`company: ${job.company}`);
+      lines.push(`dates: ${job.dates}`);
+      lines.push("bullets:");
+      for (const bullet of job.bullets.filter(Boolean)) {
+        lines.push(`- ${bullet}`);
+      }
+      lines.push("");
+    }
+  }
+
+  if (isSectionActive(normalized.activeSections, ResumeSection.Projects)) {
+    lines.push("[projects]");
+    for (const project of normalized.projects) {
+      if (!project.name && !project.url && project.bullets.every((b) => !b)) {
+        continue;
+      }
+      lines.push(`name: ${project.name}`);
+      lines.push(`url: ${project.url}`);
+      lines.push("bullets:");
+      for (const bullet of project.bullets.filter(Boolean)) {
+        lines.push(`- ${bullet}`);
+      }
+      lines.push("");
+    }
+  }
+
+  if (isSectionActive(normalized.activeSections, ResumeSection.Education)) {
+    lines.push("[education]");
+    lines.push(`school: ${normalized.education.school}`);
+    lines.push(`degree: ${normalized.education.degree}`);
+    lines.push(`fieldOfStudy: ${normalized.education.fieldOfStudy}`);
+    lines.push(`year: ${normalized.education.year}`);
+    lines.push(`graduationDate: ${normalized.education.graduationDate}`);
+    lines.push(`marks: ${normalized.education.marks}`);
+    lines.push(`marksType: ${normalized.education.marksType}`);
+    lines.push(`description: ${normalized.education.description}`);
+    for (const item of normalized.education.secondary) {
+      if (!item.school && !item.description && !item.degree) continue;
+      lines.push("secondary:");
+      lines.push(`school: ${item.school}`);
+      lines.push(`degree: ${item.degree}`);
+      lines.push(`fieldOfStudy: ${item.fieldOfStudy}`);
+      lines.push(`year: ${item.year}`);
+      lines.push(`graduationDate: ${item.graduationDate}`);
+      lines.push(`marks: ${item.marks}`);
+      lines.push(`marksType: ${item.marksType}`);
+      lines.push(`description: ${item.description}`);
     }
     lines.push("");
   }
-
-  lines.push("[projects]");
-  for (const project of resume.projects) {
-    if (!project.name && !project.url && project.bullets.every((b) => !b)) continue;
-    lines.push(`name: ${project.name}`);
-    lines.push(`url: ${project.url}`);
-    lines.push("bullets:");
-    for (const bullet of project.bullets.filter(Boolean)) {
-      lines.push(`- ${bullet}`);
-    }
-    lines.push("");
-  }
-
-  lines.push("[education]");
-  lines.push(`school: ${resume.education.school}`);
-  lines.push(`degree: ${resume.education.degree}`);
-  lines.push(`fieldOfStudy: ${resume.education.fieldOfStudy}`);
-  lines.push(`year: ${resume.education.year}`);
-  lines.push(`graduationDate: ${resume.education.graduationDate}`);
-  lines.push(`marks: ${resume.education.marks}`);
-  lines.push(`marksType: ${resume.education.marksType}`);
-  lines.push(`description: ${resume.education.description}`);
-  for (const item of resume.education.secondary) {
-    if (!item.school && !item.description && !item.degree) continue;
-    lines.push("secondary:");
-    lines.push(`school: ${item.school}`);
-    lines.push(`degree: ${item.degree}`);
-    lines.push(`fieldOfStudy: ${item.fieldOfStudy}`);
-    lines.push(`year: ${item.year}`);
-    lines.push(`graduationDate: ${item.graduationDate}`);
-    lines.push(`marks: ${item.marks}`);
-    lines.push(`marksType: ${item.marksType}`);
-    lines.push(`description: ${item.description}`);
-  }
-  lines.push("");
 
   return lines.join("\n");
 }
@@ -245,6 +265,7 @@ export function resumeToJson(resume: Resume): Resume {
     bullets: project.bullets.filter(Boolean),
   }));
   cleaned.header.links = cleaned.header.links.filter(Boolean);
+  cleaned.activeSections = normalizeActiveSections(cleaned.activeSections);
   return cleaned;
 }
 

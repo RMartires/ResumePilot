@@ -1,15 +1,8 @@
 import type { Resume } from "@/lib/validations/resume";
 import { parseSkillsString } from "@/lib/skills";
+import { ResumeSection } from "@/lib/sections";
 
-export const SECTION_ORDER = [
-  "personal",
-  "skills",
-  "projects",
-  "experience",
-  "education",
-] as const;
-
-export type SectionId = (typeof SECTION_ORDER)[number];
+export type SectionId = ResumeSection;
 
 export type SectionStatus = {
   complete: boolean;
@@ -19,7 +12,7 @@ export type SectionStatus = {
 export function getSectionStatuses(
   resume: Resume,
   skillCount: number,
-): Record<SectionId, SectionStatus> {
+): Record<ResumeSection, SectionStatus> {
   const personalComplete = Boolean(
     resume.header.name &&
       resume.header.email &&
@@ -37,30 +30,30 @@ export function getSectionStatuses(
   const educationComplete = Boolean(resume.education.school);
 
   return {
-    personal: {
+    [ResumeSection.Personal]: {
       complete: personalComplete,
       label: personalComplete ? "Looks Good ✓" : "Add your contact details",
     },
-    skills: {
+    [ResumeSection.Skills]: {
       complete: skillCount > 0,
       label:
         skillCount > 0 ? "Looks Good ✓" : "Add your technical skills",
     },
-    projects: {
+    [ResumeSection.Projects]: {
       complete: projectCount > 0,
       label:
         projectCount > 0
           ? `${projectCount} project${projectCount > 1 ? "s" : ""} added ✓`
           : "0 projects added",
     },
-    experience: {
+    [ResumeSection.Experience]: {
       complete: experienceCount > 0,
       label:
         experienceCount > 0
           ? `${experienceCount} role${experienceCount > 1 ? "s" : ""} added ✓`
           : "Add jobs and internships",
     },
-    education: {
+    [ResumeSection.Education]: {
       complete: educationComplete,
       label: educationComplete ? "Looks Good ✓" : "Add academic background",
     },

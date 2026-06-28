@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ResumeSection } from "@/lib/sections";
 
 export const educationEntrySchema = z.object({
   school: z.string(),
@@ -41,6 +42,8 @@ export const educationSchema = educationEntrySchema.extend({
   secondary: z.array(educationEntrySchema),
 });
 
+export const resumeSectionSchema = z.nativeEnum(ResumeSection);
+
 export const resumeSchema = z.object({
   header: headerSchema,
   summary: z.string(),
@@ -48,6 +51,7 @@ export const resumeSchema = z.object({
   experience: z.array(jobSchema),
   projects: z.array(projectSchema),
   education: educationSchema,
+  activeSections: z.array(resumeSectionSchema),
 });
 
 export type EducationEntry = z.infer<typeof educationEntrySchema>;

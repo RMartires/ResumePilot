@@ -13,6 +13,7 @@ describe("resume", () => {
     expect(resume.header.name).toBe("");
     expect(resume.experience).toHaveLength(1);
     expect(resume.projects).toHaveLength(1);
+    expect(resume.activeSections.length).toBeGreaterThan(0);
   });
 
   it("normalizeResume handles sample data", () => {

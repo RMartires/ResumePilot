@@ -1,17 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { FileDown, FileUp, LayoutTemplate } from "lucide-react";
+import { FileUp, LayoutTemplate } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  downloadJson,
-  downloadMarkdown,
-  downloadPreviewPdf,
-} from "@/lib/pdf";
-import { normalizeResume, resumeToJson, resumeToMarkdown, slugify } from "@/lib/resume";
+import { downloadPreviewPdf } from "@/lib/pdf";
+import { normalizeResume, slugify } from "@/lib/resume";
 import type { Resume } from "@/lib/validations/resume";
 
 type EditorToolbarProps = {
@@ -96,29 +92,6 @@ export function EditorToolbar({
         >
           <FileUp className="mr-1 h-4 w-4" />
           Import JSON
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            downloadJson(resumeToJson(resume), `${slug}.json`);
-            toast.success("JSON exported");
-          }}
-        >
-          <FileDown className="mr-1 h-4 w-4" />
-          Export JSON
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            downloadMarkdown(resumeToMarkdown(resume), `${slug}.md`);
-            toast.success("Markdown exported");
-          }}
-        >
-          Export MD
         </Button>
         <Button type="button" size="sm" onClick={handleExportPdf}>
           Export PDF

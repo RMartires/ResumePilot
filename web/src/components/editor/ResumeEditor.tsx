@@ -15,8 +15,12 @@ import { resumeToJson } from "@/lib/resume";
 import {
   getSectionStatuses,
   getSkillCountFromResume,
-  type SectionId,
 } from "@/lib/section-status";
+import {
+  canRemoveSection,
+  ResumeSection,
+  sortSections,
+} from "@/lib/sections";
 import type { Resume } from "@/lib/validations/resume";
 import type { TemplateConfig } from "@/lib/validations/resume";
 
@@ -37,8 +41,8 @@ export function ResumeEditor({
 }: ResumeEditorProps) {
   const [resume, setResume] = useState<Resume>(initialData);
   const [title, setTitle] = useState(initialTitle);
-  const [activeSection, setActiveSection] = useState<SectionId | null>(
-    "personal",
+  const [activeSection, setActiveSection] = useState<ResumeSection | null>(
+    ResumeSection.Personal,
   );
   const [expandedJob, setExpandedJob] = useState<number | null>(0);
   const [expandedProject, setExpandedProject] = useState<number | null>(0);
@@ -68,6 +72,30 @@ export function ResumeEditor({
     setResume((prev) => ({ ...prev, ...patch }));
   };
 
+  const handleAddSection = (section: ResumeSection) => {
+    setResume((prev) => {
+      if (prev.activeSections.includes(section)) return prev;
+      return {
+        ...prev,
+        activeSections: sortSections([...prev.activeSections, section]),
+      };
+    });
+    setActiveSection(section);
+  };
+
+  const handleRemoveSection = (section: ResumeSection) => {
+    if (!canRemoveSection(section)) return;
+
+    setResume((prev) => ({
+      ...prev,
+      activeSections: prev.activeSections.filter((item) => item !== section),
+    }));
+
+    if (activeSection === section) {
+      setActiveSection(null);
+    }
+  };
+
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
       <EditorToolbar
@@ -86,13 +114,16 @@ export function ResumeEditor({
       <div className="grid flex-1 lg:grid-cols-2">
         <section className="overflow-y-auto border-r p-6">
           <SectionTimeline
+            activeSections={resume.activeSections}
             activeSection={activeSection}
             statuses={statuses}
             onSectionChange={setActiveSection}
+            onAddSection={handleAddSection}
+            onRemoveSection={handleRemoveSection}
           >
             {(section) => {
               switch (section) {
-                case "personal":
+                case ResumeSection.Personal:
                   return (
                     <PersonalInfoSection
                       header={resume.header}
@@ -101,14 +132,14 @@ export function ResumeEditor({
                       onSummaryChange={(summary) => updateResume({ summary })}
                     />
                   );
-                case "skills":
+                case ResumeSection.Skills:
                   return (
                     <SkillsSection
                       skills={resume.skills}
                       onSkillsChange={(skills) => updateResume({ skills })}
                     />
                   );
-                case "projects":
+                case ResumeSection.Projects:
                   return (
                     <ProjectsSection
                       projects={resume.projects}
@@ -117,7 +148,7 @@ export function ResumeEditor({
                       onExpandedChange={setExpandedProject}
                     />
                   );
-                case "experience":
+                case ResumeSection.Experience:
                   return (
                     <ExperienceSection
                       jobs={resume.experience}
@@ -126,7 +157,7 @@ export function ResumeEditor({
                       onExpandedChange={setExpandedJob}
                     />
                   );
-                case "education":
+                case ResumeSection.Education:
                   return (
                     <EducationSection
                       education={resume.education}

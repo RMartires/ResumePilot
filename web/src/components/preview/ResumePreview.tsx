@@ -1,6 +1,7 @@
 import type { Resume } from "@/lib/validations/resume";
 import type { TemplateConfig } from "@/lib/validations/resume";
 import { linkLabel } from "@/lib/resume";
+import { isSectionActive, ResumeSection, sortSections } from "@/lib/sections";
 
 type ResumePreviewProps = {
   resume: Resume;
@@ -42,6 +43,7 @@ export function ResumePreview({
   const headingTransform = template?.headingTransform ?? "uppercase";
   const sectionSpacing = template?.sectionSpacing ?? "14px";
   const accentColor = template?.accentColor ?? "#1a1a1a";
+  const activeSections = sortSections(resume.activeSections);
 
   const contact = [
     resume.header.location,
@@ -58,6 +60,160 @@ export function ResumePreview({
     (p) => p.name || p.url || p.bullets.length,
   );
 
+  const sectionTitleClass =
+    "section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest";
+
+  function renderSection(section: ResumeSection) {
+    switch (section) {
+      case ResumeSection.Personal:
+        if (!resume.summary) return null;
+        return (
+          <div className="section" style={{ marginTop: sectionSpacing }}>
+            <div
+              className={sectionTitleClass}
+              style={{
+                borderColor: accentColor,
+                textTransform: headingTransform,
+              }}
+            >
+              Professional Summary
+            </div>
+            <p>{resume.summary}</p>
+          </div>
+        );
+      case ResumeSection.Skills:
+        if (!resume.skills) return null;
+        return (
+          <div className="section" style={{ marginTop: sectionSpacing }}>
+            <div
+              className={sectionTitleClass}
+              style={{
+                borderColor: accentColor,
+                textTransform: headingTransform,
+              }}
+            >
+              Skills
+            </div>
+            <p>{resume.skills}</p>
+          </div>
+        );
+      case ResumeSection.Experience:
+        if (jobs.length === 0) return null;
+        return (
+          <div className="section" style={{ marginTop: sectionSpacing }}>
+            <div
+              className={sectionTitleClass}
+              style={{
+                borderColor: accentColor,
+                textTransform: headingTransform,
+              }}
+            >
+              Experience
+            </div>
+            {jobs.map((job, i) => (
+              <div key={i} className="entry mb-2.5">
+                <div className="entry-header flex justify-between gap-3 text-[0.72rem] font-bold">
+                  <div>{job.title}</div>
+                  <div>{job.dates}</div>
+                </div>
+                <div className="entry-subtitle text-[0.68rem] italic text-[#555]">
+                  {job.company}
+                </div>
+                <ul className="mt-1 list-disc pl-4">
+                  {job.bullets.map((b, j) => (
+                    <li key={j} className="mb-0.5">
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        );
+      case ResumeSection.Projects:
+        if (projects.length === 0) return null;
+        return (
+          <div className="section" style={{ marginTop: sectionSpacing }}>
+            <div
+              className={sectionTitleClass}
+              style={{
+                borderColor: accentColor,
+                textTransform: headingTransform,
+              }}
+            >
+              Projects
+            </div>
+            {projects.map((project, i) => (
+              <div key={i} className="entry mb-2.5">
+                <div className="entry-header text-[0.72rem] font-bold">
+                  {project.name}
+                </div>
+                {project.url ? (
+                  <div className="entry-subtitle text-[0.68rem] italic text-[#555]">
+                    <a href={project.url} className="text-inherit">
+                      {project.url}
+                    </a>
+                  </div>
+                ) : null}
+                <ul className="mt-1 list-disc pl-4">
+                  {project.bullets.map((b, j) => (
+                    <li key={j} className="mb-0.5">
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        );
+      case ResumeSection.Education:
+        return (
+          <div className="section" style={{ marginTop: sectionSpacing }}>
+            <div
+              className={sectionTitleClass}
+              style={{
+                borderColor: accentColor,
+                textTransform: headingTransform,
+              }}
+            >
+              Education
+            </div>
+            <div className="entry-header flex justify-between gap-3 text-[0.72rem] font-bold">
+              <div>
+                <strong>{resume.education.school}</strong>
+                <br />
+                {resume.education.degree}
+                {resume.education.fieldOfStudy
+                  ? ` — ${resume.education.fieldOfStudy}`
+                  : ""}
+                {resume.education.marks ? (
+                  <>
+                    <br />
+                    {resume.education.marks} {resume.education.marksType}
+                  </>
+                ) : null}
+                {resume.education.description ? (
+                  <p className="font-normal">{resume.education.description}</p>
+                ) : null}
+              </div>
+              <div>
+                {resume.education.year ||
+                  resume.education.graduationDate?.slice(0, 4) ||
+                  ""}
+              </div>
+            </div>
+            {resume.education.secondary
+              .filter((s) => s.school || s.degree || s.description)
+              .map((entry, i) => (
+                <EducationPreviewEntry key={i} entry={entry} />
+              ))}
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
   return (
     <article
       className={`resume-doc w-full min-h-full rounded-sm bg-white p-8 text-[#1a1a1a] shadow-lg ${className}`}
@@ -67,171 +223,41 @@ export function ResumePreview({
         lineHeight: 1.45,
       }}
     >
-      <h1
-        className="mb-0.5 text-2xl font-bold tracking-wide"
-        style={{ textTransform: headingTransform }}
-      >
-        {resume.header.name || "Your Name"}
-      </h1>
-
-      <div className="contact mb-3.5 font-sans text-[0.62rem] leading-relaxed text-[#555]">
-        {contact.map((item, i) => {
-          if (typeof item === "string") {
-            return (
-              <span key={i}>
-                {i > 0 && " · "}
-                {item}
-              </span>
-            );
-          }
-          return (
-            <span key={item.url}>
-              {i > 0 && " · "}
-              <a href={item.url} className="text-inherit no-underline">
-                {item.label}
-              </a>
-            </span>
-          );
-        })}
-      </div>
-
-      {resume.summary ? (
-        <div className="section" style={{ marginTop: sectionSpacing }}>
-          <div
-            className="section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest"
-            style={{
-              borderColor: accentColor,
-              textTransform: headingTransform,
-            }}
+      {isSectionActive(activeSections, ResumeSection.Personal) ? (
+        <>
+          <h1
+            className="mb-0.5 text-2xl font-bold tracking-wide"
+            style={{ textTransform: headingTransform }}
           >
-            Professional Summary
-          </div>
-          <p>{resume.summary}</p>
-        </div>
-      ) : null}
+            {resume.header.name || "Your Name"}
+          </h1>
 
-      {resume.skills ? (
-        <div className="section" style={{ marginTop: sectionSpacing }}>
-          <div
-            className="section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest"
-            style={{
-              borderColor: accentColor,
-              textTransform: headingTransform,
-            }}
-          >
-            Skills
-          </div>
-          <p>{resume.skills}</p>
-        </div>
-      ) : null}
-
-      {jobs.length > 0 ? (
-        <div className="section" style={{ marginTop: sectionSpacing }}>
-          <div
-            className="section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest"
-            style={{
-              borderColor: accentColor,
-              textTransform: headingTransform,
-            }}
-          >
-            Experience
-          </div>
-          {jobs.map((job, i) => (
-            <div key={i} className="entry mb-2.5">
-              <div className="entry-header flex justify-between gap-3 text-[0.72rem] font-bold">
-                <div>{job.title}</div>
-                <div>{job.dates}</div>
-              </div>
-              <div className="entry-subtitle text-[0.68rem] italic text-[#555]">
-                {job.company}
-              </div>
-              <ul className="mt-1 list-disc pl-4">
-                {job.bullets.map((b, j) => (
-                  <li key={j} className="mb-0.5">
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {projects.length > 0 ? (
-        <div className="section" style={{ marginTop: sectionSpacing }}>
-          <div
-            className="section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest"
-            style={{
-              borderColor: accentColor,
-              textTransform: headingTransform,
-            }}
-          >
-            Projects
-          </div>
-          {projects.map((project, i) => (
-            <div key={i} className="entry mb-2.5">
-              <div className="entry-header text-[0.72rem] font-bold">
-                {project.name}
-              </div>
-              {project.url ? (
-                <div className="entry-subtitle text-[0.68rem] italic text-[#555]">
-                  <a href={project.url} className="text-inherit">
-                    {project.url}
+          <div className="contact mb-3.5 font-sans text-[0.62rem] leading-relaxed text-[#555]">
+            {contact.map((item, i) => {
+              if (typeof item === "string") {
+                return (
+                  <span key={i}>
+                    {i > 0 && " · "}
+                    {item}
+                  </span>
+                );
+              }
+              return (
+                <span key={item.url}>
+                  {i > 0 && " · "}
+                  <a href={item.url} className="text-inherit no-underline">
+                    {item.label}
                   </a>
-                </div>
-              ) : null}
-              <ul className="mt-1 list-disc pl-4">
-                {project.bullets.map((b, j) => (
-                  <li key={j} className="mb-0.5">
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+                </span>
+              );
+            })}
+          </div>
+        </>
       ) : null}
 
-      <div className="section" style={{ marginTop: sectionSpacing }}>
-        <div
-          className="section-title mb-2 border-b pb-0.5 text-[0.68rem] font-bold tracking-widest"
-          style={{
-            borderColor: accentColor,
-            textTransform: headingTransform,
-          }}
-        >
-          Education
-        </div>
-        <div className="entry-header flex justify-between gap-3 text-[0.72rem] font-bold">
-          <div>
-            <strong>{resume.education.school}</strong>
-            <br />
-            {resume.education.degree}
-            {resume.education.fieldOfStudy
-              ? ` — ${resume.education.fieldOfStudy}`
-              : ""}
-            {resume.education.marks ? (
-              <>
-                <br />
-                {resume.education.marks} {resume.education.marksType}
-              </>
-            ) : null}
-            {resume.education.description ? (
-              <p className="font-normal">{resume.education.description}</p>
-            ) : null}
-          </div>
-          <div>
-            {resume.education.year ||
-              resume.education.graduationDate?.slice(0, 4) ||
-              ""}
-          </div>
-        </div>
-        {resume.education.secondary
-          .filter((s) => s.school || s.degree || s.description)
-          .map((entry, i) => (
-            <EducationPreviewEntry key={i} entry={entry} />
-          ))}
-      </div>
+      {activeSections.map((section) => (
+        <div key={section}>{renderSection(section)}</div>
+      ))}
     </article>
   );
 }
