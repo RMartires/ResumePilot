@@ -39,54 +39,64 @@
             <div class="timeline-rail" aria-hidden="true">
               <div class="checkpoint"></div>
             </div>
-            <article class="section-box">
-              <button type="button" class="section-header" aria-expanded="true" aria-controls="section-personal">
-                <span class="section-header-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <article class="section-box section-box-personal">
+              <button type="button" class="section-header section-header-personal" aria-expanded="true" aria-controls="section-personal">
+                <span class="section-header-icon section-header-icon-round">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </span>
                 <span class="section-header-text">
-                  <strong>Personal Info and Socials</strong>
-                  <span class="section-status" data-status-for="personal">Add your contact details</span>
+                  <strong>Personal Info and Socials<span class="title-required" aria-hidden="true">*</span></strong>
+                  <span class="section-subtitle">Lets get to know you! Fill in your personal details</span>
+                  <span class="section-status" data-status-for="personal" hidden>Add your contact details</span>
                 </span>
-                <span class="section-chevron" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <span class="section-collapse" aria-hidden="true">
+                  <svg class="collapse-icon-expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg class="collapse-icon-collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
               </button>
-              <div class="section-body" id="section-personal">
-                <p class="section-desc">The header is the first thing hiring managers see. Make it clear, accurate, and professional.</p>
+              <div class="section-body section-body-personal" id="section-personal">
+                <label class="field-label">
+                  <span class="label-text"><span class="required" aria-hidden="true">*</span> Full Name</span>
+                  <div class="input-wrap">
+                    <input name="header.name" type="text" autocomplete="name" placeholder="Rohit Martires" />
+                    <span class="input-trailing-icon" aria-hidden="true" title="Required field">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect width="14" height="14" rx="2" fill="#ef4444"/><circle cx="4" cy="7" r="1" fill="#fff"/><circle cx="7" cy="7" r="1" fill="#fff"/><circle cx="10" cy="7" r="1" fill="#fff"/></svg>
+                    </span>
+                  </div>
+                </label>
 
-                <label class="field-label full-width">
-                  Full Name
-                  <input name="header.name" type="text" autocomplete="name" placeholder="Rohit Martires" />
+                <label class="field-label">
+                  <span class="label-text">
+                    <span class="required" aria-hidden="true">*</span> Contact Number
+                    <span class="info-icon" title="Include your active mobile number">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    </span>
+                  </span>
+                  <div class="phone-input">
+                    <select name="header.phoneCode" class="phone-code" aria-label="Country code">
+                      <option value="+91">+91</option>
+                      <option value="+1">+1</option>
+                      <option value="+44">+44</option>
+                      <option value="+61">+61</option>
+                      <option value="+49">+49</option>
+                    </select>
+                    <input name="header.phoneNumber" type="tel" autocomplete="tel" placeholder="9881611398" />
+                  </div>
+                </label>
+
+                <label class="field-label">
+                  <span class="label-text">
+                    <span class="required" aria-hidden="true">*</span> Email Address
+                    <span class="info-icon" title="Use a professional email address">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    </span>
+                  </span>
+                  <input name="header.email" type="email" autocomplete="email" placeholder="rohitmartires14@gmail.com" />
                 </label>
 
                 <div class="grid two-col">
                   <label class="field-label">
-                    Contact Number
-                    <div class="phone-input">
-                      <select name="header.phoneCode" class="phone-code" aria-label="Country code">
-                        <option value="+91">🇮🇳 +91</option>
-                        <option value="+1">🇺🇸 +1</option>
-                        <option value="+44">🇬🇧 +44</option>
-                        <option value="+61">🇦🇺 +61</option>
-                        <option value="+49">🇩🇪 +49</option>
-                      </select>
-                      <input name="header.phoneNumber" type="tel" autocomplete="tel" placeholder="98765 43210" />
-                    </div>
-                  </label>
-                  <label class="field-label">
-                    Current City
-                    <input name="header.location" type="text" autocomplete="address-level2" placeholder="Margao, India" />
-                  </label>
-                </div>
-
-                <div class="grid two-col">
-                  <label class="field-label">
-                    Email Address
-                    <input name="header.email" type="email" autocomplete="email" placeholder="you@example.com" />
-                  </label>
-                  <label class="field-label">
-                    Gender
+                    <span class="label-text"><span class="required" aria-hidden="true">*</span> Gender</span>
                     <select name="header.gender">
                       <option value="">Select gender</option>
                       <option value="Female">Female</option>
@@ -95,24 +105,51 @@
                       <option value="Prefer not to say">Prefer not to say</option>
                     </select>
                   </label>
+                  <label class="field-label">
+                    <span class="label-text">Current City</span>
+                    <input name="header.location" type="text" autocomplete="address-level2" placeholder="Margao" />
+                  </label>
                 </div>
 
                 <div class="social-links-block">
                   <h3 class="subsection-title">Social Links</h3>
-                  <div id="links-container" class="social-links"></div>
+
+                  <label class="field-label">
+                    <span class="label-text"><span class="required" aria-hidden="true">*</span> LinkedIn</span>
+                    <div class="input-with-icon" data-icon="linkedin">
+                      <span class="input-prefix-icon" aria-hidden="true"></span>
+                      <input name="social.linkedin" type="url" placeholder="https://www.linkedin.com/in/your-profile" />
+                    </div>
+                  </label>
+
+                  <label class="field-label">
+                    <span class="label-text">GitHub</span>
+                    <div class="input-with-icon" data-icon="github">
+                      <span class="input-prefix-icon" aria-hidden="true"></span>
+                      <input name="social.github" type="url" placeholder="https://github.com/username" />
+                    </div>
+                  </label>
+
+                  <label class="field-label">
+                    <span class="label-text">Personal Website</span>
+                    <div class="input-with-icon" data-icon="website">
+                      <span class="input-prefix-icon" aria-hidden="true"></span>
+                      <input name="social.website" type="url" placeholder="https://yoursite.com" />
+                    </div>
+                  </label>
+
+                  <div id="custom-links-container" class="custom-profiles"></div>
+
                   <button type="button" class="btn btn-add-profile add-link-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
                     Add Profile
                   </button>
                 </div>
 
-                <label class="field-label full-width summary-field">
-                  Professional Summary
-                  <textarea name="summary" rows="3" placeholder="1–2 line professional summary"></textarea>
-                </label>
+                <textarea name="summary" hidden aria-hidden="true"></textarea>
 
-                <div class="section-actions">
-                  <button type="button" id="save-compile-btn" class="btn btn-primary">Save and Compile</button>
+                <div class="section-actions section-actions-personal">
+                  <button type="button" id="save-compile-btn" class="btn btn-primary">Save and compile</button>
                   <button type="button" id="save-next-btn" class="btn btn-outline">Save and Next</button>
                 </div>
               </div>
@@ -124,27 +161,64 @@
             <div class="timeline-rail" aria-hidden="true">
               <div class="checkpoint"></div>
             </div>
-            <article class="section-box">
-              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-skills">
-                <span class="section-header-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <article class="section-box section-box-skills">
+              <button type="button" class="section-header section-header-skills" aria-expanded="false" aria-controls="section-skills">
+                <span class="section-header-icon section-header-icon-round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 </span>
                 <span class="section-header-text">
-                  <strong>Skills and Expertise</strong>
+                  <span class="section-title-row">
+                    <strong>Skills and Toolset<span class="title-required" aria-hidden="true">*</span></strong>
+                    <span class="header-status-badge" data-badge-for="skills" hidden>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                      Looks Good
+                    </span>
+                  </span>
+                  <span class="section-subtitle">Select from these industry-standard skills and tools</span>
                   <span class="section-status" data-status-for="skills">Add your technical skills</span>
                 </span>
-                <span class="section-chevron" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <span class="section-collapse" aria-hidden="true">
+                  <svg class="collapse-icon-expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg class="collapse-icon-collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
               </button>
-              <div class="section-body" id="section-skills" hidden>
-                <p class="section-desc">Group skills by category for easy scanning.</p>
-                <label class="field-label full-width">
-                  Skills (pipe-separated groups)
-                  <textarea name="skills" rows="4" placeholder="Backend: Node.js, Python | Data: PostgreSQL, Redis"></textarea>
+              <div class="section-body section-body-skills" id="section-skills" hidden>
+                <button type="button" class="skills-help-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+                  Why do we have limited number of skills here?
+                </button>
+
+                <label class="skills-group-option">
+                  <input type="checkbox" id="skills-group-toggle" />
+                  <span>Group skills as Languages, Libraries, Tools.</span>
+                  <span class="info-icon" title="Exports skills grouped by category in your resume">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  </span>
                 </label>
-                <div class="section-actions">
-                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+
+                <div class="skills-block">
+                  <h4 class="skills-block-title">Selected Skills:</h4>
+                  <div id="selected-skills" class="skill-tags skill-tags-selected"></div>
+                  <p id="selected-skills-empty" class="skills-empty-hint">No skills selected yet. Pick from suggestions below or type your own.</p>
+                </div>
+
+                <div class="skills-block">
+                  <h4 class="skills-block-title">Most popular skills across current active jobs:</h4>
+                  <div id="popular-skills" class="skill-tags skill-tags-popular"></div>
+                </div>
+
+                <div class="skills-search-wrap">
+                  <input type="text" id="skill-search" class="skills-search-input" placeholder="Search and select a skill..." autocomplete="off" aria-expanded="false" aria-controls="skill-suggestions" />
+                  <span class="skills-search-chevron" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                  </span>
+                  <ul id="skill-suggestions" class="skill-suggestions" role="listbox" hidden></ul>
+                </div>
+
+                <textarea name="skills" hidden aria-hidden="true"></textarea>
+
+                <div class="section-actions section-actions-skills">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and compile</button>
                   <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
                 </div>
               </div>
@@ -156,25 +230,35 @@
             <div class="timeline-rail" aria-hidden="true">
               <div class="checkpoint"></div>
             </div>
-            <article class="section-box">
-              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-projects">
-                <span class="section-header-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            <article class="section-box section-box-projects">
+              <button type="button" class="section-header section-header-projects" aria-expanded="false" aria-controls="section-projects">
+                <span class="section-header-icon section-header-icon-round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
                 </span>
                 <span class="section-header-text">
-                  <strong>Projects</strong>
+                  <span class="section-title-row">
+                    <strong>Projects</strong>
+                    <span class="header-status-badge" data-badge-for="projects" hidden>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                      Looks Good
+                    </span>
+                  </span>
+                  <span class="section-subtitle">Add personal projects</span>
                   <span class="section-status" data-status-for="projects">0 projects added</span>
                 </span>
-                <span class="section-chevron" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <span class="section-collapse" aria-hidden="true">
+                  <svg class="collapse-icon-expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg class="collapse-icon-collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
               </button>
-              <div class="section-body" id="section-projects" hidden>
-                <p class="section-desc">Showcase side projects, open source, or portfolio work.</p>
-                <div id="projects-container" class="cards"></div>
-                <button type="button" id="add-project-btn" class="btn btn-ghost">+ Add project</button>
-                <div class="section-actions">
-                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+              <div class="section-body section-body-projects" id="section-projects" hidden>
+                <div id="projects-container" class="project-cards"></div>
+                <button type="button" id="add-project-btn" class="btn btn-add-project">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Add Project
+                </button>
+                <div class="section-actions section-actions-projects">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and compile</button>
                   <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
                 </div>
               </div>
@@ -186,25 +270,35 @@
             <div class="timeline-rail" aria-hidden="true">
               <div class="checkpoint"></div>
             </div>
-            <article class="section-box">
-              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-experience">
-                <span class="section-header-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            <article class="section-box section-box-experience">
+              <button type="button" class="section-header section-header-experience" aria-expanded="false" aria-controls="section-experience">
+                <span class="section-header-icon section-header-icon-round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 4-9"/></svg>
                 </span>
                 <span class="section-header-text">
-                  <strong>Work Experience</strong>
+                  <span class="section-title-row">
+                    <strong>Work Experience</strong>
+                    <span class="header-status-badge" data-badge-for="experience" hidden>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                      Looks Good
+                    </span>
+                  </span>
+                  <span class="section-subtitle">Add details about jobs and internships</span>
                   <span class="section-status" data-status-for="experience">Add jobs and internships</span>
                 </span>
-                <span class="section-chevron" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <span class="section-collapse" aria-hidden="true">
+                  <svg class="collapse-icon-expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg class="collapse-icon-collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
               </button>
-              <div class="section-body" id="section-experience" hidden>
-                <p class="section-desc">Highlight your roles, companies, and measurable achievements.</p>
-                <div id="experience-container" class="cards"></div>
-                <button type="button" id="add-job-btn" class="btn btn-ghost">+ Add role</button>
-                <div class="section-actions">
-                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+              <div class="section-body section-body-experience" id="section-experience" hidden>
+                <div id="experience-container" class="experience-cards"></div>
+                <button type="button" id="add-job-btn" class="btn btn-add-experience">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Add another experience
+                </button>
+                <div class="section-actions section-actions-experience">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and compile</button>
                   <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
                 </div>
               </div>
@@ -216,28 +310,37 @@
             <div class="timeline-rail" aria-hidden="true">
               <div class="checkpoint"></div>
             </div>
-            <article class="section-box">
-              <button type="button" class="section-header" aria-expanded="false" aria-controls="section-education">
-                <span class="section-header-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
+            <article class="section-box section-box-education">
+              <button type="button" class="section-header section-header-education" aria-expanded="false" aria-controls="section-education">
+                <span class="section-header-icon section-header-icon-round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                 </span>
                 <span class="section-header-text">
-                  <strong>Education</strong>
+                  <span class="section-title-row">
+                    <strong>Education</strong>
+                    <span class="header-status-badge" data-badge-for="education" hidden>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                      Looks Good
+                    </span>
+                  </span>
+                  <span class="section-subtitle">Add academic background and certifications</span>
                   <span class="section-status" data-status-for="education">Add academic background</span>
                 </span>
-                <span class="section-chevron" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                <span class="section-collapse" aria-hidden="true">
+                  <svg class="collapse-icon-expanded" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+                  <svg class="collapse-icon-collapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
               </button>
-              <div class="section-body" id="section-education" hidden>
-                <p class="section-desc">Add your academic background and credentials.</p>
-                <div class="grid two-col">
-                  <label class="field-label">School<input name="education.school" type="text" /></label>
-                  <label class="field-label">Year<input name="education.year" type="text" /></label>
-                  <label class="field-label full-width">Degree<input name="education.degree" type="text" /></label>
-                </div>
-                <div class="section-actions">
-                  <button type="button" class="btn btn-primary section-save-btn">Save and Compile</button>
+              <div class="section-body section-body-education" id="section-education" hidden>
+                <div id="education-container" class="education-cards"></div>
+
+                <button type="button" id="add-secondary-education-btn" class="btn btn-add-education">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Add secondary education
+                </button>
+
+                <div class="section-actions section-actions-education">
+                  <button type="button" class="btn btn-primary section-save-btn">Save and compile</button>
                   <button type="button" class="btn btn-outline section-next-btn">Save and Next</button>
                 </div>
               </div>
@@ -263,45 +366,270 @@
     </aside>
   </main>
 
-  <template id="link-row-template">
-    <div class="social-link-row">
-      <div class="social-link-icon" data-icon="website" aria-hidden="true"></div>
-      <div class="social-link-fields">
-        <span class="social-link-label">Website</span>
-        <input type="url" placeholder="https://linkedin.com/in/you" />
-      </div>
-      <button type="button" class="btn btn-icon remove-btn" title="Remove link" aria-label="Remove link">×</button>
+  <template id="custom-link-template">
+    <div class="custom-profile-row">
+      <select class="profile-platform" aria-label="Platform">
+        <option value="leetcode">LeetCode</option>
+        <option value="scaler">Scaler Profile</option>
+        <option value="twitter">Twitter / X</option>
+        <option value="codeforces">Codeforces</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="url" class="profile-url" placeholder="https://scaler.com/academy" />
+      <button type="button" class="btn btn-icon remove-btn profile-remove" title="Remove profile" aria-label="Remove profile">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
   </template>
 
   <template id="job-card-template">
-    <article class="card">
-      <div class="card-header">
-        <h3>Role</h3>
-        <button type="button" class="btn btn-icon remove-btn" title="Remove role" aria-label="Remove role">×</button>
+    <article class="experience-card is-expanded">
+      <div class="experience-card-header">
+        <div class="experience-card-header-main" role="button" tabindex="0" aria-expanded="true">
+          <span class="experience-card-index">Work Experience 1</span>
+          <span class="experience-card-collapsed" hidden>
+            <strong class="experience-card-company">Company</strong>
+            <span class="experience-card-meta">Role</span>
+          </span>
+          <button type="button" class="experience-card-remove" title="Remove experience" aria-label="Remove experience">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+        <span class="experience-card-chevron" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
       </div>
-      <div class="grid two-col">
-        <label class="field-label">Title<input data-field="title" type="text" /></label>
-        <label class="field-label">Dates<input data-field="dates" type="text" placeholder="Dec 2023 - Present" /></label>
-        <label class="field-label full-width">Company<input data-field="company" type="text" /></label>
+      <div class="experience-card-body">
+        <label class="field-label">
+          <span class="label-text">Company</span>
+          <input data-field="company" type="text" placeholder="Primathon" />
+        </label>
+        <label class="field-label">
+          <span class="label-text">Position</span>
+          <input data-field="title" type="text" placeholder="Senior Software Engineer (FullStack)" />
+        </label>
+        <label class="experience-current-option">
+          <input type="checkbox" data-field="current" />
+          <span>I am currently working here</span>
+        </label>
+        <div class="grid two-col experience-dates">
+          <label class="field-label">
+            <span class="label-text">Start Date</span>
+            <div class="date-input">
+              <input data-field="startDate" type="date" />
+              <span class="date-input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </span>
+            </div>
+          </label>
+          <label class="field-label">
+            <span class="label-text">End Date</span>
+            <div class="date-input">
+              <input data-field="endDate" type="date" placeholder="Select date" />
+              <span class="date-input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </span>
+            </div>
+          </label>
+        </div>
+        <label class="field-label">
+          <span class="label-text">Location</span>
+          <input data-field="location" type="text" placeholder="Remote" />
+        </label>
+        <div class="field-label">
+          <span class="label-text"><span class="required" aria-hidden="true">*</span> Key Points</span>
+          <div class="rte-wrap">
+            <div class="rte-toolbar" role="toolbar" aria-label="Formatting">
+              <select class="rte-block-select" aria-label="Text style">
+                <option value="p">Normal</option>
+                <option value="h3">Heading</option>
+              </select>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" class="rte-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+              <button type="button" class="rte-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+              <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M4 18h1a1 1 0 0 0 0-2H4v-2h2"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="createLink" title="Insert link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear formatting">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+              </button>
+            </div>
+            <div class="rte-editor" contenteditable="true" data-field="bullets" role="textbox" aria-multiline="true"></div>
+          </div>
+        </div>
       </div>
-      <div class="bullets" data-bullets></div>
-      <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
     </article>
   </template>
 
   <template id="project-card-template">
-    <article class="card">
-      <div class="card-header">
-        <h3>Project</h3>
-        <button type="button" class="btn btn-icon remove-btn" title="Remove project" aria-label="Remove project">×</button>
+    <article class="project-card is-expanded">
+      <div class="project-card-header">
+        <div class="project-card-header-main" role="button" tabindex="0" aria-expanded="true">
+          <span class="project-card-index">Project 1</span>
+          <span class="project-card-title-collapsed" hidden>Project</span>
+          <button type="button" class="project-card-remove" title="Remove project" aria-label="Remove project">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+        <span class="project-card-chevron" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
       </div>
-      <div class="grid two-col">
-        <label class="field-label">Name<input data-field="name" type="text" /></label>
-        <label class="field-label">URL<input data-field="url" type="url" /></label>
+      <div class="project-card-body">
+        <label class="field-label">
+          <span class="label-text"><span class="required" aria-hidden="true">*</span> Project Name</span>
+          <input data-field="name" type="text" placeholder="Strix (OSS Contributor)" />
+        </label>
+        <label class="field-label">
+          <span class="label-text">Project Link</span>
+          <input data-field="url" type="url" placeholder="https://github.com/usestrix/strix" />
+        </label>
+        <div class="field-label">
+          <span class="label-text"><span class="required" aria-hidden="true">*</span> Key Points</span>
+          <div class="rte-wrap">
+            <div class="rte-toolbar" role="toolbar" aria-label="Formatting">
+              <select class="rte-block-select" aria-label="Text style">
+                <option value="p">Normal</option>
+                <option value="h3">Heading</option>
+              </select>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" class="rte-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+              <button type="button" class="rte-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+              <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M4 18h1a1 1 0 0 0 0-2H4v-2h2"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="createLink" title="Insert link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear formatting">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+              </button>
+            </div>
+            <div class="rte-editor" contenteditable="true" data-field="bullets" role="textbox" aria-multiline="true"></div>
+          </div>
+        </div>
       </div>
-      <div class="bullets" data-bullets></div>
-      <button type="button" class="btn btn-ghost add-bullet-btn">+ Add bullet</button>
+    </article>
+  </template>
+
+  <template id="education-entry-template">
+    <article class="education-card is-expanded">
+      <div class="education-card-header">
+        <div class="education-card-header-main" role="button" tabindex="0" aria-expanded="true">
+          <span class="education-card-index">Education 1</span>
+          <span class="education-card-custom-label" hidden>Custom Education</span>
+          <span class="education-card-collapsed" hidden>
+            <strong class="education-card-school">University</strong>
+          </span>
+          <button type="button" class="education-card-remove" title="Remove education" aria-label="Remove education">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+        <span class="education-card-chevron" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </div>
+      <div class="education-card-body">
+        <label class="field-label">
+          <span class="label-text">University Name</span>
+          <input data-field="school" type="text" placeholder="Don Bosco College Of Engineering" />
+        </label>
+        <div class="grid two-col">
+          <label class="field-label">
+            <span class="label-text">Degree Type</span>
+            <select data-field="degree">
+              <option value="">Select degree</option>
+              <option value="BE/B.Tech/BS">BE/B.Tech/BS</option>
+              <option value="ME/M.Tech/MS">ME/M.Tech/MS</option>
+              <option value="MBA">MBA</option>
+              <option value="PhD">PhD</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label class="field-label">
+            <span class="label-text">Field of Study</span>
+            <select data-field="fieldOfStudy">
+              <option value="">Select field</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Computer Engineering">Computer Engineering</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Mechanical">Mechanical</option>
+              <option value="Civil">Civil</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid two-col">
+          <label class="field-label">
+            <span class="label-text">Marks (Final/Current)</span>
+            <div class="marks-input">
+              <input data-field="marks" type="text" placeholder="75" inputmode="decimal" />
+              <select data-field="marksType" aria-label="Marks type">
+                <option value="CGPA">CGPA</option>
+                <option value="Percentage">Percentage</option>
+                <option value="GPA">GPA</option>
+              </select>
+            </div>
+          </label>
+          <label class="field-label">
+            <span class="label-text">Graduation (Actual/Expected)</span>
+            <div class="date-input">
+              <input data-field="graduationDate" type="date" />
+              <span class="date-input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </span>
+            </div>
+          </label>
+        </div>
+        <div class="field-label">
+          <span class="label-text">Description</span>
+          <div class="rte-wrap">
+            <div class="rte-toolbar" role="toolbar" aria-label="Formatting">
+              <select class="rte-block-select" aria-label="Text style">
+                <option value="p">Normal</option>
+                <option value="h3">Heading</option>
+              </select>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="bold" title="Bold"><strong>B</strong></button>
+              <button type="button" class="rte-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+              <button type="button" class="rte-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+              <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+              <div class="rte-toolbar-divider"></div>
+              <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered list">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M4 18h1a1 1 0 0 0 0-2H4v-2h2"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="createLink" title="Insert link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+              <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear formatting">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+              </button>
+            </div>
+            <div class="rte-editor rte-editor-description" contenteditable="true" data-field="description" role="textbox" aria-multiline="true" data-placeholder="Enter Description"></div>
+          </div>
+        </div>
+      </div>
     </article>
   </template>
 

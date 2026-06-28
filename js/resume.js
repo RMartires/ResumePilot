@@ -1,7 +1,8 @@
 /** @typedef {{ name: string, location: string, phone: string, email: string, gender: string, links: string[] }} Header */
-/** @typedef {{ title: string, company: string, dates: string, bullets: string[] }} Job */
+/** @typedef {{ title: string, company: string, dates: string, location: string, startDate: string, endDate: string, current: boolean, bullets: string[] }} Job */
 /** @typedef {{ name: string, url: string, bullets: string[] }} Project */
-/** @typedef {{ school: string, degree: string, year: string }} Education */
+/** @typedef {{ school: string, degree: string, fieldOfStudy: string, year: string, graduationDate: string, marks: string, marksType: string, description: string }} EducationEntry */
+/** @typedef {{ school: string, degree: string, fieldOfStudy: string, year: string, graduationDate: string, marks: string, marksType: string, description: string, secondary: EducationEntry[] }} Education */
 /** @typedef {{ header: Header, summary: string, skills: string, experience: Job[], projects: Project[], education: Education }} Resume */
 
 export const STORAGE_KEY = "resume-builder-draft";
@@ -24,14 +25,43 @@ export function emptyResume() {
     education: {
       school: "",
       degree: "",
+      fieldOfStudy: "",
       year: "",
+      graduationDate: "",
+      marks: "",
+      marksType: "CGPA",
+      description: "",
+      secondary: [],
     },
   };
 }
 
 /** @returns {Job} */
 export function emptyJob() {
-  return { title: "", company: "", dates: "", bullets: [""] };
+  return {
+    title: "",
+    company: "",
+    dates: "",
+    location: "",
+    startDate: "",
+    endDate: "",
+    current: false,
+    bullets: [""],
+  };
+}
+
+/** @returns {EducationEntry} */
+export function emptyEducationEntry() {
+  return {
+    school: "",
+    degree: "",
+    fieldOfStudy: "",
+    year: "",
+    graduationDate: "",
+    marks: "",
+    marksType: "CGPA",
+    description: "",
+  };
 }
 
 /** @returns {Project} */
@@ -71,6 +101,10 @@ export function normalizeResume(data) {
         title: String(j.title ?? ""),
         company: String(j.company ?? ""),
         dates: String(j.dates ?? ""),
+        location: String(j.location ?? ""),
+        startDate: String(j.startDate ?? ""),
+        endDate: String(j.endDate ?? ""),
+        current: Boolean(j.current),
         bullets: Array.isArray(j.bullets)
           ? j.bullets.map((b) => String(b)).filter((b) => b.length > 0)
           : [""],
@@ -98,11 +132,43 @@ export function normalizeResume(data) {
     base.education = {
       school: String(e.school ?? ""),
       degree: String(e.degree ?? ""),
+      fieldOfStudy: String(e.fieldOfStudy ?? ""),
       year: String(e.year ?? ""),
+      graduationDate: String(e.graduationDate ?? ""),
+      marks: String(e.marks ?? ""),
+      marksType: String(e.marksType ?? "CGPA"),
+      description: String(e.description ?? ""),
+      secondary: Array.isArray(e.secondary)
+        ? e.secondary.map((item) => normalizeEducationEntry(item))
+        : [],
     };
+    if (!base.education.graduationDate && base.education.year) {
+      base.education.graduationDate = `${base.education.year}-01-01`;
+    }
   }
 
   return base;
+}
+
+/** @param {unknown} item */
+function normalizeEducationEntry(item) {
+  const entry = emptyEducationEntry();
+  const s = /** @type {Record<string, unknown>} */ (item ?? {});
+
+  entry.school = String(s.school ?? s.name ?? "");
+  entry.degree = String(s.degree ?? "");
+  entry.fieldOfStudy = String(s.fieldOfStudy ?? "");
+  entry.year = String(s.year ?? "");
+  entry.graduationDate = String(s.graduationDate ?? "");
+  entry.marks = String(s.marks ?? "");
+  entry.marksType = String(s.marksType ?? "CGPA") || "CGPA";
+  entry.description = String(s.description ?? "");
+
+  if (!entry.graduationDate && entry.year) {
+    entry.graduationDate = /^\d{4}$/.test(entry.year) ? `${entry.year}-01-01` : entry.year;
+  }
+
+  return entry;
 }
 
 /** @param {Resume} resume */
@@ -155,7 +221,24 @@ export function resumeToMarkdown(resume) {
   lines.push("[education]");
   lines.push(`school: ${resume.education.school}`);
   lines.push(`degree: ${resume.education.degree}`);
+  lines.push(`fieldOfStudy: ${resume.education.fieldOfStudy}`);
   lines.push(`year: ${resume.education.year}`);
+  lines.push(`graduationDate: ${resume.education.graduationDate}`);
+  lines.push(`marks: ${resume.education.marks}`);
+  lines.push(`marksType: ${resume.education.marksType}`);
+  lines.push(`description: ${resume.education.description}`);
+  for (const item of resume.education.secondary) {
+    if (!item.school && !item.description && !item.degree) continue;
+    lines.push("secondary:");
+    lines.push(`school: ${item.school}`);
+    lines.push(`degree: ${item.degree}`);
+    lines.push(`fieldOfStudy: ${item.fieldOfStudy}`);
+    lines.push(`year: ${item.year}`);
+    lines.push(`graduationDate: ${item.graduationDate}`);
+    lines.push(`marks: ${item.marks}`);
+    lines.push(`marksType: ${item.marksType}`);
+    lines.push(`description: ${item.description}`);
+  }
   lines.push("");
 
   return lines.join("\n");

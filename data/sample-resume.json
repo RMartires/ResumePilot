@@ -44,7 +44,13 @@
   ],
   "education": {
     "school": "Don Bosco College of Engineering",
-    "degree": "B.E. / B.Tech (Computer Engineering)",
-    "year": "2020"
+    "degree": "BE/B.Tech/BS",
+    "fieldOfStudy": "Computer Engineering",
+    "year": "2020",
+    "graduationDate": "2020-04-30",
+    "marks": "",
+    "marksType": "CGPA",
+    "description": "",
+    "secondary": []
   }
 }

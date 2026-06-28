@@ -31,6 +31,10 @@
           "title": { "type": "string" },
           "company": { "type": "string" },
           "dates": { "type": "string" },
+          "location": { "type": "string" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" },
+          "current": { "type": "boolean" },
           "bullets": {
             "type": "array",
             "items": { "type": "string" }
@@ -59,7 +63,29 @@
       "properties": {
         "school": { "type": "string" },
         "degree": { "type": "string" },
-        "year": { "type": "string" }
+        "fieldOfStudy": { "type": "string" },
+        "year": { "type": "string" },
+        "graduationDate": { "type": "string" },
+        "marks": { "type": "string" },
+        "marksType": { "type": "string" },
+        "description": { "type": "string" },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "school": { "type": "string" },
+              "degree": { "type": "string" },
+              "fieldOfStudy": { "type": "string" },
+              "year": { "type": "string" },
+              "graduationDate": { "type": "string" },
+              "marks": { "type": "string" },
+              "marksType": { "type": "string" },
+              "description": { "type": "string" },
+              "name": { "type": "string" }
+            }
+          }
+        }
       }
     }
   }
