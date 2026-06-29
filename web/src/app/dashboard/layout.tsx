@@ -18,9 +18,11 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-dvh overflow-hidden">
       <AppSidebar userEmail={user.email} />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        {children}
+      </main>
       <LocalStorageImportDialog />
     </div>
   );

@@ -7,3 +7,8 @@ export type ResumePatchProposal = {
   patch?: Partial<Resume>;
   resume?: Resume;
 };
+
+export type PatchReviewHandlers = {
+  accept: () => void;
+  decline: () => void;
+};

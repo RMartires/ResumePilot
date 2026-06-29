@@ -2,45 +2,60 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+import { DefaultChatTransport, zodSchema } from "ai";
 import { Loader2, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { ChatMessage } from "@/components/ai/ChatMessage";
-import { ResumePatchCard } from "@/components/ai/ResumePatchCard";
+import { ChatMessage, AssistantTypingBubble } from "@/components/ai/ChatMessage";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { applyResumePatch } from "@/lib/ai/apply-patch";
 import {
-  extractPatchesFromMessage,
-  getLatestPatch,
-  type PendingPatch,
-} from "@/lib/ai/extract-proposals";
+  isAcceptIntent,
+  isDeclineIntent,
+} from "@/lib/ai/chat-intent";
+import {
+  getLatestStructuredProposal,
+  type StructuredResumeProposal,
+} from "@/lib/ai/extract-structured-proposal";
+import type { ResumeChatUIMessage } from "@/lib/ai/resume-chat-ui-message";
+import { resumeChangeDataSchema } from "@/lib/ai/schemas/resume-chat-response";
 import type { Resume } from "@/lib/validations/resume";
+import type { PatchReviewHandlers } from "@/lib/ai/types";
 
 type ResumeAiChatPanelProps = {
   resumeId: string;
   resume: Resume;
   onApplyResume: (resume: Resume) => void;
-  onActivePatchChange?: (patch: PendingPatch | null, proposed: Resume | null) => void;
+  onActiveProposalChange?: (
+    proposal: StructuredResumeProposal | null,
+    proposed: Resume | null,
+  ) => void;
+  patchReviewHandlersRef?: React.MutableRefObject<PatchReviewHandlers | null>;
 };
 
 export function ResumeAiChatPanel({
   resumeId,
   resume,
   onApplyResume,
-  onActivePatchChange,
+  onActiveProposalChange,
+  patchReviewHandlersRef,
 }: ResumeAiChatPanelProps) {
   const [input, setInput] = useState("");
-  const [handledPatchIds, setHandledPatchIds] = useState<Set<string>>(
+  const [handledProposalIds, setHandledProposalIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [messageTimestamps, setMessageTimestamps] = useState<
+    Record<string, number>
+  >({});
+  const [pendingAssistantTimestamp, setPendingAssistantTimestamp] = useState<
+    number | null
+  >(null);
 
   const resumeRef = useRef(resume);
   resumeRef.current = resume;
 
   const transport = useMemo(
     () =>
-      new DefaultChatTransport({
+      new DefaultChatTransport<ResumeChatUIMessage>({
         api: `/api/resumes/${resumeId}/chat`,
         prepareSendMessagesRequest: ({ messages, body }) => ({
           body: {
@@ -53,94 +68,150 @@ export function ResumeAiChatPanel({
     [resumeId],
   );
 
-  const { messages, sendMessage, status, error, stop } = useChat({
-    transport,
-    onError: (err) => {
-      toast.error(err.message || "AI chat failed");
-    },
-  });
+  const { messages, sendMessage, status, error, stop } =
+    useChat<ResumeChatUIMessage>({
+      transport,
+      dataPartSchemas: {
+        "resume-change": zodSchema(resumeChangeDataSchema),
+      },
+      onError: (err) => {
+        toast.error(err.message || "AI chat failed");
+      },
+    });
 
-  const activePatch = useMemo(() => {
-    const latest = getLatestPatch(messages);
-    if (!latest || handledPatchIds.has(latest.toolCallId)) return null;
+  useEffect(() => {
+    setMessageTimestamps((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      for (const message of messages) {
+        if (!next[message.id]) {
+          next[message.id] = Date.now();
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [messages]);
+
+  useEffect(() => {
+    if (status === "submitted" || status === "streaming") {
+      setPendingAssistantTimestamp((prev) => prev ?? Date.now());
+      return;
+    }
+    setPendingAssistantTimestamp(null);
+  }, [status]);
+
+  const activeProposal = useMemo(() => {
+    const latest = getLatestStructuredProposal(messages);
+    if (!latest || handledProposalIds.has(latest.proposalId)) return null;
     return latest;
-  }, [messages, handledPatchIds]);
+  }, [messages, handledProposalIds]);
 
-  const onActivePatchChangeRef = useRef(onActivePatchChange);
-  onActivePatchChangeRef.current = onActivePatchChange;
-  const lastNotifiedPatchIdRef = useRef<string | null>(null);
+  const onActiveProposalChangeRef = useRef(onActiveProposalChange);
+  onActiveProposalChangeRef.current = onActiveProposalChange;
+  const lastNotifiedProposalIdRef = useRef<string | null>(null);
   const lastNotifiedPreviewKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const notify = onActivePatchChangeRef.current;
+    const notify = onActiveProposalChangeRef.current;
     if (!notify) return;
 
-    const latest = getLatestPatch(messages);
-    const patch =
-      latest && !handledPatchIds.has(latest.toolCallId) ? latest : null;
-    const nextId = patch?.toolCallId ?? null;
+    const latest = getLatestStructuredProposal(messages);
+    const proposal =
+      latest && !handledProposalIds.has(latest.proposalId) ? latest : null;
+    const nextId = proposal?.proposalId ?? null;
 
-    if (!patch) {
-      if (lastNotifiedPatchIdRef.current === null) return;
-      lastNotifiedPatchIdRef.current = null;
+    if (!proposal) {
+      if (lastNotifiedProposalIdRef.current === null) return;
+      lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
       notify(null, null);
       return;
     }
 
-    const proposed = applyResumePatch(resumeRef.current, patch);
-    const previewKey = JSON.stringify(proposed);
+    const previewKey = JSON.stringify(proposal.resume);
 
     if (
-      nextId === lastNotifiedPatchIdRef.current &&
+      nextId === lastNotifiedProposalIdRef.current &&
       previewKey === lastNotifiedPreviewKeyRef.current
     ) {
       return;
     }
 
-    lastNotifiedPatchIdRef.current = nextId;
+    lastNotifiedProposalIdRef.current = nextId;
     lastNotifiedPreviewKeyRef.current = previewKey;
-    notify(patch, proposed);
-  }, [messages, handledPatchIds, resume]);
+    notify(proposal, proposal.resume);
+  }, [messages, handledProposalIds, resume]);
 
-  const markHandled = useCallback((toolCallId: string) => {
-    setHandledPatchIds((prev) => new Set(prev).add(toolCallId));
+  const markHandled = useCallback((proposalId: string) => {
+    setHandledProposalIds((prev) => new Set(prev).add(proposalId));
   }, []);
 
-  const handleApplyPatch = useCallback(
-    (patch: PendingPatch) => {
-      const next = applyResumePatch(resumeRef.current, patch);
-      onApplyResume(next);
-      markHandled(patch.toolCallId);
-      lastNotifiedPatchIdRef.current = null;
+  const handleApplyProposal = useCallback(
+    (proposal: StructuredResumeProposal) => {
+      onApplyResume(proposal.resume);
+      markHandled(proposal.proposalId);
+      lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
-      onActivePatchChangeRef.current?.(null, null);
+      onActiveProposalChangeRef.current?.(null, null);
       toast.success("Resume updated");
     },
     [markHandled, onApplyResume],
   );
 
-  const handleDismissPatch = useCallback(
-    (patch: PendingPatch) => {
-      markHandled(patch.toolCallId);
-      lastNotifiedPatchIdRef.current = null;
+  const handleDismissProposal = useCallback(
+    (proposal: StructuredResumeProposal) => {
+      markHandled(proposal.proposalId);
+      lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
-      onActivePatchChangeRef.current?.(null, null);
+      onActiveProposalChangeRef.current?.(null, null);
+      toast.message("AI changes declined");
     },
     [markHandled],
   );
+
+  useEffect(() => {
+    if (!patchReviewHandlersRef) return;
+
+    patchReviewHandlersRef.current = activeProposal
+      ? {
+          accept: () => handleApplyProposal(activeProposal),
+          decline: () => handleDismissProposal(activeProposal),
+        }
+      : null;
+
+    return () => {
+      patchReviewHandlersRef.current = null;
+    };
+  }, [
+    activeProposal,
+    handleApplyProposal,
+    handleDismissProposal,
+    patchReviewHandlersRef,
+  ]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const text = input.trim();
     if (!text || status === "streaming" || status === "submitted") return;
 
-    // Stale unapplied proposals from earlier turns are dismissed when the user continues chatting.
-    if (activePatch) {
-      markHandled(activePatch.toolCallId);
-      lastNotifiedPatchIdRef.current = null;
+    if (activeProposal && isAcceptIntent(text)) {
+      handleApplyProposal(activeProposal);
+      setInput("");
+      return;
+    }
+
+    if (activeProposal && isDeclineIntent(text)) {
+      handleDismissProposal(activeProposal);
+      setInput("");
+      return;
+    }
+
+    if (activeProposal) {
+      markHandled(activeProposal.proposalId);
+      lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
-      onActivePatchChangeRef.current?.(null, null);
+      onActiveProposalChangeRef.current?.(null, null);
     }
 
     setInput("");
@@ -149,18 +220,23 @@ export function ResumeAiChatPanel({
 
   const isBusy = status === "streaming" || status === "submitted";
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastMessage = messages.at(-1);
+  const streamingAssistantId =
+    isBusy && lastMessage?.role === "assistant" ? lastMessage.id : null;
+  const waitingForAssistant =
+    isBusy && (!lastMessage || lastMessage.role === "user");
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, status, activePatch]);
+  }, [messages, status, activeProposal]);
 
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-r bg-background">
+    <aside className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r bg-background">
       <div className="shrink-0 border-b px-4 py-3">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <div>
-            <h2 className="text-sm font-semibold">AI Assistant</h2>
+            <h2 className="text-sm font-semibold">Resume Pilot</h2>
             <p className="text-xs text-muted-foreground">
               Full resume context
             </p>
@@ -168,43 +244,32 @@ export function ResumeAiChatPanel({
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-        <div className="space-y-3">
-        {messages.length === 0 && (
-          <div className="rounded-lg border border-dashed p-3 text-xs leading-relaxed text-muted-foreground">
-            Ask me to improve your summary, rewrite bullets, tailor your resume
-            for a role, or suggest skills to highlight.
-          </div>
-        )}
-
-        {messages.map((message) => {
-          const messagePatches = extractPatchesFromMessage(message).filter(
-            (patch) => !handledPatchIds.has(patch.toolCallId),
-          );
-          const showPatch =
-            activePatch &&
-            message.id === activePatch.messageId &&
-            messagePatches.some((p) => p.toolCallId === activePatch.toolCallId);
-
-          return (
-            <div key={message.id} className="space-y-2">
-              <ChatMessage message={message} />
-              {showPatch && activePatch && (
-                <ResumePatchCard
-                  patch={activePatch}
-                  isPreviewing
-                  onApply={() => handleApplyPatch(activePatch)}
-                  onDismiss={() => handleDismissPatch(activePatch)}
-                />
-              )}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4">
+        <div className="space-y-5">
+          {messages.length === 0 && (
+            <div className="rounded-lg border border-dashed p-3 text-xs leading-relaxed text-muted-foreground">
+              Ask me to improve your summary, rewrite bullets, tailor your resume
+              for a role, or suggest skills to highlight.
             </div>
-          );
-        })}
+          )}
 
-        {error && (
-          <p className="text-xs text-destructive">{error.message}</p>
-        )}
-        <div ref={messagesEndRef} aria-hidden />
+          {messages.map((message) => (
+            <ChatMessage
+              key={message.id}
+              message={message}
+              timestamp={messageTimestamps[message.id] ?? Date.now()}
+              isStreaming={message.id === streamingAssistantId}
+            />
+          ))}
+
+          {waitingForAssistant && pendingAssistantTimestamp !== null && (
+            <AssistantTypingBubble timestamp={pendingAssistantTimestamp} />
+          )}
+
+          {error && (
+            <p className="text-xs text-destructive">{error.message}</p>
+          )}
+          <div ref={messagesEndRef} aria-hidden />
         </div>
       </div>
 
@@ -213,7 +278,7 @@ export function ResumeAiChatPanel({
           <Textarea
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="Ask about your resume…"
+            placeholder="Message…"
             rows={2}
             className="min-h-[64px] resize-none text-sm"
             onKeyDown={(event) => {

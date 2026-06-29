@@ -1,17 +1,18 @@
-import {
-  stepCountIs,
-  type UIMessage,
-} from "ai";
+import { Output, createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { NextResponse } from "next/server";
 import {
   flushLangSmithTraces,
-  isLangSmithEnabled,
   streamText,
 } from "@/lib/ai/langsmith";
 import { buildResumeChatSystemPrompt } from "@/lib/ai/prompts";
 import { prepareChatModelMessages } from "@/lib/ai/prepare-messages";
+import type { ResumeChatUIMessage } from "@/lib/ai/resume-chat-ui-message";
+import {
+  RESUME_CHAT_TEMPERATURE,
+  resumeChatResponseSchema,
+} from "@/lib/ai/schemas/resume-chat-response";
 import { getChatModel } from "@/lib/ai/openrouter";
-import { createResumeTools } from "@/lib/ai/tools";
+import { streamStructuredMessageField } from "@/lib/ai/stream-message-field";
 import { normalizeResume, resumeToJson } from "@/lib/resume";
 import { createClient } from "@/lib/supabase/server";
 import type { Resume } from "@/lib/validations/resume";
@@ -19,10 +20,22 @@ import type { Resume } from "@/lib/validations/resume";
 export const maxDuration = 60;
 
 type ChatRequestBody = {
-  messages: UIMessage[];
+  messages: ResumeChatUIMessage[];
   resumeSnapshot?: Resume;
   model?: string;
 };
+
+function resumesEqual(a: Resume, b: Resume): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function streamErrorMessage(error: unknown): string {
+  console.error("[resume-chat]", error);
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return "Failed to generate AI response.";
+}
 
 export async function POST(
   request: Request,
@@ -76,35 +89,74 @@ export async function POST(
       normalizeResume(body.resumeSnapshot ?? {}),
     ) as Resume;
 
-    const tools = createResumeTools(resume);
     const modelMessages = prepareChatModelMessages(body.messages);
 
-    const result = streamText({
-      model: getChatModel(body.model),
-      system: buildResumeChatSystemPrompt(resume),
-      messages: modelMessages,
-      tools,
-      stopWhen: stepCountIs(5),
-      onError({ error }) {
-        console.error("[resume-chat]", error);
+    const stream = createUIMessageStream<ResumeChatUIMessage>({
+      originalMessages: body.messages,
+      onError: streamErrorMessage,
+      execute: async ({ writer }) => {
+        const result = streamText({
+          model: getChatModel(body.model),
+          temperature: RESUME_CHAT_TEMPERATURE,
+          system: buildResumeChatSystemPrompt(resume),
+          messages: modelMessages,
+          output: Output.object({
+            schema: resumeChatResponseSchema,
+          }),
+          onError({ error }) {
+            console.error("[resume-chat] model error", error);
+          },
+        });
+
+        const textPartId = crypto.randomUUID();
+        let streamedMessage = "";
+
+        streamedMessage = await streamStructuredMessageField(
+          result.partialOutputStream,
+          (delta) => {
+            writer.write({ type: "text-delta", id: textPartId, delta });
+          },
+          () => {
+            writer.write({ type: "text-start", id: textPartId });
+          },
+          () => {
+            writer.write({ type: "text-end", id: textPartId });
+          },
+        );
+
+        const output = await result.output;
+
+        if (!streamedMessage && output.message.trim()) {
+          writer.write({ type: "text-start", id: textPartId });
+          writer.write({
+            type: "text-delta",
+            id: textPartId,
+            delta: output.message,
+          });
+          writer.write({ type: "text-end", id: textPartId });
+        }
+
+        const proposed = resumeToJson(
+          normalizeResume(output.resume),
+        ) as Resume;
+        const changed =
+          output.has_resume_changed && !resumesEqual(resume, proposed);
+
+        writer.write({
+          type: "data-resume-change",
+          id: crypto.randomUUID(),
+          data: {
+            has_resume_changed: changed,
+            resume: proposed,
+          },
+        });
       },
-    });
-
-    // Keep the stream alive server-side so LangSmith can finish tracing.
-    void result.consumeStream().then(() => {
-      void flushLangSmithTraces();
-    });
-
-    return result.toUIMessageStreamResponse({
-      messageMetadata: () => ({
-        resumeId,
-        userId: user.id,
-        langsmith: isLangSmithEnabled(),
-      }),
       onFinish: async () => {
         await flushLangSmithTraces();
       },
     });
+
+    return createUIMessageStreamResponse({ stream });
   } catch (error) {
     await flushLangSmithTraces();
     console.error("[resume-chat] failed", error);

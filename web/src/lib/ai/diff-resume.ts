@@ -6,8 +6,110 @@ export type ResumeDiffItem = {
   detail: string;
 };
 
+export type PreviewHighlightId =
+  | "header"
+  | "summary"
+  | "skills"
+  | "experience"
+  | "projects"
+  | "education"
+  | `experience:${number}`
+  | `project:${number}`;
+
+export type PreviewHighlight = {
+  id: PreviewHighlightId;
+  change: "added" | "removed" | "modified";
+};
+
 function norm(s: string) {
   return s.trim();
+}
+
+export function computePreviewHighlights(
+  before: Resume,
+  after: Resume,
+): PreviewHighlight[] {
+  const highlights: PreviewHighlight[] = [];
+
+  const headerChanged =
+    norm(before.header.name) !== norm(after.header.name) ||
+    norm(before.header.location) !== norm(after.header.location) ||
+    norm(before.header.phone) !== norm(after.header.phone) ||
+    norm(before.header.email) !== norm(after.header.email) ||
+    JSON.stringify(before.header.links) !== JSON.stringify(after.header.links);
+
+  if (headerChanged) {
+    highlights.push({ id: "header", change: "modified" });
+  }
+
+  if (norm(before.summary) !== norm(after.summary)) {
+    highlights.push({
+      id: "summary",
+      change: norm(before.summary) ? "modified" : "added",
+    });
+  }
+
+  if (norm(before.skills) !== norm(after.skills)) {
+    highlights.push({
+      id: "skills",
+      change: norm(before.skills) ? "modified" : "added",
+    });
+  }
+
+  const beforeJobs = before.experience.filter((j) => j.title || j.company);
+  const afterJobs = after.experience.filter((j) => j.title || j.company);
+
+  for (let i = 0; i < afterJobs.length; i += 1) {
+    const job = afterJobs[i]!;
+    const match = beforeJobs.find(
+      (b) => b.title === job.title && b.company === job.company,
+    );
+    if (!match) {
+      highlights.push({ id: `experience:${i}`, change: "added" });
+    } else if (JSON.stringify(match) !== JSON.stringify(job)) {
+      highlights.push({ id: `experience:${i}`, change: "modified" });
+    }
+  }
+
+  if (highlights.some((h) => h.id.startsWith("experience:"))) {
+    highlights.push({ id: "experience", change: "modified" });
+  }
+
+  const beforeProjects = before.projects.filter((p) => p.name);
+  const afterProjects = after.projects.filter((p) => p.name);
+
+  for (let i = 0; i < afterProjects.length; i += 1) {
+    const project = afterProjects[i]!;
+    const prev = beforeProjects.find((b) => b.name === project.name);
+    if (!prev) {
+      highlights.push({ id: `project:${i}`, change: "added" });
+    } else if (JSON.stringify(prev) !== JSON.stringify(project)) {
+      highlights.push({ id: `project:${i}`, change: "modified" });
+    }
+  }
+
+  if (highlights.some((h) => h.id.startsWith("project:"))) {
+    highlights.push({ id: "projects", change: "modified" });
+  }
+
+  if (
+    norm(before.education.school) !== norm(after.education.school) ||
+    norm(before.education.degree) !== norm(after.education.degree) ||
+    norm(before.education.description) !== norm(after.education.description) ||
+    JSON.stringify(before.education.secondary) !==
+      JSON.stringify(after.education.secondary)
+  ) {
+    highlights.push({ id: "education", change: "modified" });
+  }
+
+  return highlights;
+}
+
+export function isHighlightActive(
+  highlights: PreviewHighlight[],
+  id: PreviewHighlightId,
+): PreviewHighlight | undefined {
+  return highlights.find((item) => item.id === id);
 }
 
 export function computeResumeDiff(

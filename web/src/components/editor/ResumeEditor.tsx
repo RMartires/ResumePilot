@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { ResumeDiffPanel } from "@/components/ai/ResumeDiffPanel";
+import { AiChangeReviewBar } from "@/components/ai/AiChangeReviewBar";
+import { ResumeAiChatPanel } from "@/components/ai/ResumeAiChatPanel";
 import { SectionTimeline } from "@/components/editor/SectionTimeline";
 import { PersonalInfoSection } from "@/components/editor/PersonalInfoSection";
 import { SkillsSection } from "@/components/editor/SkillsSection";
@@ -10,7 +11,6 @@ import { ProjectsSection } from "@/components/editor/ProjectsSection";
 import { ExperienceSection } from "@/components/editor/ExperienceSection";
 import { EducationSection } from "@/components/editor/EducationSection";
 import { ResumePreview } from "@/components/preview/ResumePreview";
-import { ResumeAiChatPanel } from "@/components/ai/ResumeAiChatPanel";
 import { EditorToolbar } from "@/components/editor/EditorToolbar";
 import { useDebouncedSave } from "@/hooks/useDebouncedSave";
 import { resumeToJson } from "@/lib/resume";
@@ -25,8 +25,9 @@ import {
 } from "@/lib/sections";
 import type { Resume } from "@/lib/validations/resume";
 import type { TemplateConfig } from "@/lib/validations/resume";
-import { computeResumeDiff } from "@/lib/ai/diff-resume";
-import type { PendingPatch } from "@/lib/ai/extract-proposals";
+import { computePreviewHighlights } from "@/lib/ai/diff-resume";
+import type { StructuredResumeProposal } from "@/lib/ai/extract-structured-proposal";
+import type { PatchReviewHandlers } from "@/lib/ai/types";
 
 type ResumeEditorProps = {
   resumeId: string;
@@ -55,7 +56,11 @@ export function ResumeEditor({
   );
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [aiPreviewResume, setAiPreviewResume] = useState<Resume | null>(null);
+  const [activeProposal, setActiveProposal] =
+    useState<StructuredResumeProposal | null>(null);
+  const [showAiHighlights, setShowAiHighlights] = useState(true);
   const previewRef = useRef<HTMLDivElement>(null);
+  const patchReviewHandlersRef = useRef<PatchReviewHandlers | null>(null);
 
   const skillCount = getSkillCountFromResume(resume);
   const statuses = getSectionStatuses(resume, skillCount);
@@ -101,8 +106,13 @@ export function ResumeEditor({
     }
   };
 
-  const handleActivePatchChange = useCallback(
-    (_patch: PendingPatch | null, proposed: Resume | null) => {
+  const handleActiveProposalChange = useCallback(
+    (proposal: StructuredResumeProposal | null, proposed: Resume | null) => {
+      setActiveProposal(proposal);
+      if (proposal) {
+        setShowAiHighlights(true);
+      }
+
       setAiPreviewResume((current) => {
         if (proposed === null) {
           return current === null ? current : null;
@@ -122,18 +132,35 @@ export function ResumeEditor({
   const handleApplyResume = useCallback((data: Resume) => {
     setResume(data);
     setAiPreviewResume(null);
+    setActiveProposal(null);
   }, []);
 
-  const previewDiffs = useMemo(() => {
-    if (!aiPreviewResume) return null;
-    return computeResumeDiff(resume, aiPreviewResume);
+  const previewHighlights = useMemo(() => {
+    if (!aiPreviewResume) return [];
+    return computePreviewHighlights(resume, aiPreviewResume);
   }, [aiPreviewResume, resume]);
 
+  const uniqueHighlightCount = useMemo(() => {
+    const ids = new Set(
+      previewHighlights
+        .map((item) => item.id)
+        .filter(
+          (id) =>
+            !id.startsWith("experience:") &&
+            !id.startsWith("project:") &&
+            id !== "experience" &&
+            id !== "projects",
+        ),
+    );
+    return ids.size;
+  }, [previewHighlights]);
+
   const displayedPreview = aiPreviewResume ?? resume;
+  const hasPendingAiChanges = Boolean(aiPreviewResume && activeProposal);
 
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] min-h-0 flex-col overflow-hidden">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
       <EditorToolbar
         resumeId={resumeId}
         title={title}
@@ -147,8 +174,8 @@ export function ResumeEditor({
         }}
       />
 
-      <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_minmax(280px,22rem)_minmax(0,1fr)] lg:grid-rows-[minmax(0,1fr)]">
-        <section className="min-h-0 overflow-y-auto border-r p-6">
+      <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-3 lg:grid-rows-[minmax(0,1fr)]">
+        <section className="min-h-0 min-w-0 overflow-y-auto border-r p-6">
           <SectionTimeline
             activeSections={resume.activeSections}
             activeSection={activeSection}
@@ -213,31 +240,50 @@ export function ResumeEditor({
           resumeId={resumeId}
           resume={resume}
           onApplyResume={handleApplyResume}
-          onActivePatchChange={handleActivePatchChange}
+          onActiveProposalChange={handleActiveProposalChange}
+          patchReviewHandlersRef={patchReviewHandlersRef}
         />
 
-        <aside className="flex min-h-0 flex-col overflow-hidden bg-[#e8edf4] p-5">
-          <div className="mb-4 flex items-center justify-between">
+        <aside className="flex min-h-0 min-w-0 flex-col overflow-hidden bg-[#e8edf4] px-4 py-4">
+          <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
             <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              {aiPreviewResume ? "AI Preview" : "Live Preview"}
+              {hasPendingAiChanges ? "AI Preview" : "Live Preview"}
             </h2>
-            <span className="text-xs text-muted-foreground">
-              {aiPreviewResume ? "Pending approval" : saveStatus}
+            <span className="truncate text-xs text-muted-foreground">
+              {hasPendingAiChanges ? "Pending approval" : saveStatus}
             </span>
           </div>
-          <div className="flex-1 overflow-y-auto pb-4" ref={previewRef}>
-            {aiPreviewResume && previewDiffs && (
-              <ResumeDiffPanel diffs={previewDiffs} />
-            )}
+
+          {hasPendingAiChanges && (
+            <AiChangeReviewBar
+              changeCount={uniqueHighlightCount || 1}
+              showHighlights={showAiHighlights}
+              onAccept={() => patchReviewHandlersRef.current?.accept()}
+              onToggleHighlights={() =>
+                setShowAiHighlights((current) => !current)
+              }
+              onDecline={() => patchReviewHandlersRef.current?.decline()}
+            />
+          )}
+
+          <div
+            className="min-h-0 flex-1 overflow-y-auto pb-4"
+            ref={previewRef}
+          >
             <div
               className={
-                aiPreviewResume
-                  ? "rounded-lg ring-2 ring-amber-400/70 ring-offset-2 ring-offset-[#e8edf4]"
+                hasPendingAiChanges
+                  ? "rounded-lg ring-2 ring-emerald-400/50 ring-offset-2 ring-offset-[#e8edf4]"
                   : undefined
               }
             >
               <ResumePreview
                 resume={resumeToJson(displayedPreview)}
+                compareResume={
+                  hasPendingAiChanges ? resumeToJson(resume) : undefined
+                }
+                highlights={previewHighlights}
+                showHighlights={hasPendingAiChanges && showAiHighlights}
                 template={templateConfig}
               />
             </div>

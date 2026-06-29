@@ -50,7 +50,7 @@ export function EditorToolbar({
   };
 
   return (
-    <header className="flex flex-wrap items-center gap-3 border-b bg-background px-4 py-3">
+    <header className="flex shrink-0 flex-wrap items-center gap-3 border-b bg-background px-4 py-3">
       <Input
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
