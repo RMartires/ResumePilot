@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+// import { redirect } from "next/navigation";
+// import { createClient } from "@/lib/supabase/server";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    redirect("/dashboard");
-  }
+  // Supabase auth bypassed for local template testing
+  // const supabase = await createClient();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+  // if (user) {
+  //   redirect("/dashboard");
+  // }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#eef1f6] px-4">
@@ -24,9 +24,18 @@ export default async function HomePage() {
           Build professional resumes with live preview, cloud sync, and
           one-click PDF export.
         </p>
-        <div className="mt-8 flex justify-center">
-          <Link href="/login" className={cn(buttonVariants({ size: "lg" }))}>
-            Get started with Google
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/dashboard/templates"
+            className={cn(buttonVariants({ size: "lg" }))}
+          >
+            Browse templates
+          </Link>
+          <Link
+            href="/preview"
+            className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+          >
+            Sample preview
           </Link>
         </div>
       </div>
