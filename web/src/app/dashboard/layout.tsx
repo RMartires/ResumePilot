@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+// import { redirect } from "next/navigation";
+// import { createClient } from "@/lib/supabase/server";
 import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { LocalStorageImportDialog } from "@/components/dashboard/LocalStorageImportDialog";
 
@@ -8,18 +8,19 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  // Supabase auth bypassed for local template testing
+  const userEmail = "dev@local.test";
+  // const supabase = await createClient();
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+  // if (!user) {
+  //   redirect("/login");
+  // }
 
   return (
     <div className="flex h-dvh overflow-hidden">
-      <AppSidebar userEmail={user.email} />
+      <AppSidebar userEmail={userEmail} />
       <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {children}
       </main>

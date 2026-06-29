@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FileText, LayoutTemplate, LogOut, Plus } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/client";
+// import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 type AppSidebarProps = {
@@ -15,10 +15,13 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
   const router = useRouter();
 
   const signOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
+    // Supabase bypassed for local template testing
+    router.push("/");
     router.refresh();
+    // const supabase = createClient();
+    // await supabase.auth.signOut();
+    // router.push("/login");
+    // router.refresh();
   };
 
   return (

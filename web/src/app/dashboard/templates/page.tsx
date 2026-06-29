@@ -1,7 +1,15 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+// import { createClient } from "@/lib/supabase/server";
 import { TemplateGallery } from "@/components/templates/TemplateGallery";
-import type { Template } from "@/lib/templates";
+import { DEFAULT_TEMPLATES, type Template } from "@/lib/templates";
+
+function localTemplates(): Template[] {
+  return DEFAULT_TEMPLATES.map((t, i) => ({
+    ...t,
+    id: `local-${t.slug}`,
+    created_at: new Date(2026, 0, i + 1).toISOString(),
+  }));
+}
 
 export default async function TemplatesPage({
   searchParams,
@@ -9,22 +17,24 @@ export default async function TemplatesPage({
   searchParams: Promise<{ resume?: string }>;
 }) {
   const { resume: resumeId } = await searchParams;
-  const supabase = await createClient();
 
-  const { data: templates } = await supabase
-    .from("templates")
-    .select("*")
-    .order("is_default", { ascending: false });
-
-  let activeTemplateId: string | null = null;
-  if (resumeId) {
-    const { data: resume } = await supabase
-      .from("resumes")
-      .select("template_id")
-      .eq("id", resumeId)
-      .maybeSingle();
-    activeTemplateId = resume?.template_id ?? null;
-  }
+  // Supabase bypassed — use in-code DEFAULT_TEMPLATES
+  const templates = localTemplates();
+  const activeTemplateId: string | null = null;
+  // const supabase = await createClient();
+  // const { data: templates } = await supabase
+  //   .from("templates")
+  //   .select("*")
+  //   .order("is_default", { ascending: false });
+  // let activeTemplateId: string | null = null;
+  // if (resumeId) {
+  //   const { data: resume } = await supabase
+  //     .from("resumes")
+  //     .select("template_id")
+  //     .eq("id", resumeId)
+  //     .maybeSingle();
+  //   activeTemplateId = resume?.template_id ?? null;
+  // }
 
   return (
     <div className="p-8">

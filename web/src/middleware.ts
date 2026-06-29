@@ -1,8 +1,10 @@
-import { updateSession } from "@/lib/supabase/middleware";
-import { type NextRequest } from "next/server";
+// import { updateSession } from "@/lib/supabase/middleware";
+import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  return updateSession(request);
+export async function middleware(_request: NextRequest) {
+  // Supabase auth bypassed for local template testing
+  return NextResponse.next();
+  // return updateSession(request);
 }
 
 export const config = {
