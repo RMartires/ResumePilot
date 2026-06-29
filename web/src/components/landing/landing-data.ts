@@ -142,5 +142,4 @@ export const faqs = [
   },
 ];
 
-export const DEMO_VIDEO_URL =
-  "https://jobsuitmedia.blob.core.windows.net/jobsuitmedia/Finalcompanyvid.webm";
+export const DEMO_VIDEO_URL = "/videos/resumepilot_demo.mp4";

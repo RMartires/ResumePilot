@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DEMO_VIDEO_URL } from "@/components/landing/landing-data";
 
@@ -13,6 +13,7 @@ type ProductDemoProps = {
 export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
 
   const togglePlayback = () => {
     const video = videoRef.current;
@@ -25,6 +26,14 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
       video.pause();
       setPlaying(false);
     }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = !video.muted;
+    setMuted(video.muted);
   };
 
   return (
@@ -53,21 +62,35 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
           >
-            <source src={DEMO_VIDEO_URL} type="video/webm" />
+            <source src={DEMO_VIDEO_URL} type="video/mp4" />
             Your browser does not support video playback.
           </video>
-          <button
-            type="button"
-            onClick={togglePlayback}
-            className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"
-            aria-label={playing ? "Pause demo" : "Play demo"}
-          >
-            {playing ? (
-              <Pause className="h-4 w-4" aria-hidden />
-            ) : (
-              <Play className="h-4 w-4" aria-hidden />
-            )}
-          </button>
+          <div className="absolute right-4 bottom-4 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"
+              aria-label={muted ? "Unmute demo" : "Mute demo"}
+            >
+              {muted ? (
+                <VolumeX className="h-4 w-4" aria-hidden />
+              ) : (
+                <Volume2 className="h-4 w-4" aria-hidden />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={togglePlayback}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"
+              aria-label={playing ? "Pause demo" : "Play demo"}
+            >
+              {playing ? (
+                <Pause className="h-4 w-4" aria-hidden />
+              ) : (
+                <Play className="h-4 w-4" aria-hidden />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
