@@ -19,8 +19,16 @@ import {
   PreviewZoomControls,
 } from "@/components/preview/PreviewZoomControls";
 import { EditorToolbar } from "@/components/editor/EditorToolbar";
+import { CollapsedPanelStrip } from "@/components/editor/CollapsedPanelStrip";
+import {
+  EditorMobileNav,
+  MOBILE_NAV_BOTTOM_OFFSET,
+  type MobileEditorPanel,
+} from "@/components/editor/EditorMobileNav";
+import { PendingAiIndicator } from "@/components/editor/PendingAiIndicator";
 import { Button } from "@/components/ui/button";
 import { useDebouncedSave } from "@/hooks/useDebouncedSave";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { resumeToJson } from "@/lib/resume";
 import {
   getSectionStatuses,
@@ -52,6 +60,10 @@ function getEditorGridClassName(editorOpen: boolean, previewOpen: boolean): stri
     return "lg:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)]";
   }
   return "lg:grid-cols-[auto_minmax(0,1fr)_auto]";
+}
+
+function mobilePanelHidden(active: MobileEditorPanel, panel: MobileEditorPanel) {
+  return active !== panel ? "max-lg:hidden" : undefined;
 }
 
 type ResumeEditorProps = {
@@ -86,9 +98,11 @@ export function ResumeEditor({
   const [showAiHighlights, setShowAiHighlights] = useState(true);
   const [editorOpen, setEditorOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(true);
+  const [mobilePanel, setMobilePanel] = useState<MobileEditorPanel>("editor");
   const [previewZoom, setPreviewZoom] = useState(DEFAULT_PREVIEW_ZOOM);
   const previewRef = useRef<HTMLDivElement>(null);
   const patchReviewHandlersRef = useRef<PatchReviewHandlers | null>(null);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const skillCount = getSkillCountFromResume(resume);
   const statuses = getSectionStatuses(resume, skillCount);
@@ -217,10 +231,25 @@ export function ResumeEditor({
 
   const displayedPreview = aiPreviewResume ?? resume;
   const hasPendingAiChanges = Boolean(aiPreviewResume && activeProposal);
+  const renderPreviewDocument = isDesktop || mobilePanel === "preview";
+  const chatAutoScroll = isDesktop || mobilePanel === "chat";
+
+  const handleAcceptAiChanges = useCallback(() => {
+    patchReviewHandlersRef.current?.accept();
+  }, []);
+
+  const handleDeclineAiChanges = useCallback(() => {
+    patchReviewHandlersRef.current?.decline();
+  }, []);
+
+  const handleToggleAiHighlights = useCallback(() => {
+    setShowAiHighlights((current) => !current);
+  }, []);
 
   useEffect(() => {
     if (hasPendingAiChanges) {
       setPreviewOpen(true);
+      setMobilePanel("preview");
     }
   }, [hasPendingAiChanges]);
 
@@ -232,7 +261,6 @@ export function ResumeEditor({
         onTitleChange={setTitle}
         resume={resume}
         previewRef={previewRef}
-        saveStatus={saveStatus}
         onImport={(data) => {
           setResume(data);
           toast.success("Resume imported");
@@ -241,126 +269,114 @@ export function ResumeEditor({
 
       <div
         className={cn(
-          "grid min-h-0 flex-1 overflow-hidden lg:grid-rows-[minmax(0,1fr)]",
+          "grid min-h-0 flex-1 overflow-hidden max-lg:grid-cols-1 max-lg:grid-rows-1",
           getEditorGridClassName(editorOpen, previewOpen),
         )}
       >
         <section
           className={cn(
-            "relative flex min-h-0 min-w-0 flex-col overflow-hidden border-r bg-background",
-            editorOpen ? "p-6" : "w-10",
+            "relative flex min-h-0 min-w-0 flex-col overflow-hidden border-r bg-background max-lg:border-0",
+            mobilePanelHidden(mobilePanel, "editor"),
+            editorOpen ? "lg:p-6" : "lg:w-10",
           )}
         >
-          {editorOpen ? (
-            <>
-              <div className="mb-4 flex shrink-0 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                    Editor
-                  </h2>
-                  <span className="truncate text-xs text-muted-foreground">
-                    Resume sections
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="shrink-0 text-muted-foreground"
-                  onClick={() => setEditorOpen(false)}
-                  aria-label="Collapse editor panel"
-                >
-                  <ChevronLeft className="size-4" />
-                </Button>
+          <div className={cn("flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden", !editorOpen && "lg:hidden")}>
+            <div className="mb-4 flex shrink-0 items-center justify-between gap-2 max-lg:mb-3 max-lg:px-4 max-lg:pt-4">
+              <div className="min-w-0">
+                <h2 className="text-sm font-semibold lg:text-xs lg:font-semibold lg:tracking-wider lg:text-muted-foreground lg:uppercase">
+                  Editor
+                </h2>
+                <span className="text-xs text-muted-foreground">
+                  Resume sections
+                </span>
               </div>
-
-              <div className="min-h-0 flex-1 overflow-y-auto">
-                <SectionTimeline
-                  activeSections={resume.activeSections}
-                  activeSection={activeSection}
-                  statuses={statuses}
-                  onSectionChange={setActiveSection}
-                  onAddSection={handleAddSection}
-                  onRemoveSection={handleRemoveSection}
-                >
-                  {(section) => {
-                    switch (section) {
-                      case ResumeSection.Personal:
-                        return (
-                          <PersonalInfoSection
-                            header={resume.header}
-                            summary={resume.summary}
-                            onHeaderChange={(header) => updateResume({ header })}
-                            onSummaryChange={(summary) =>
-                              updateResume({ summary })
-                            }
-                          />
-                        );
-                      case ResumeSection.Skills:
-                        return (
-                          <SkillsSection
-                            skills={resume.skills}
-                            onSkillsChange={(skills) => updateResume({ skills })}
-                          />
-                        );
-                      case ResumeSection.Projects:
-                        return (
-                          <ProjectsSection
-                            projects={resume.projects}
-                            onChange={(projects) => updateResume({ projects })}
-                            expandedIndex={expandedProject}
-                            onExpandedChange={setExpandedProject}
-                          />
-                        );
-                      case ResumeSection.Experience:
-                        return (
-                          <ExperienceSection
-                            jobs={resume.experience}
-                            onChange={(experience) =>
-                              updateResume({ experience })
-                            }
-                            expandedIndex={expandedJob}
-                            onExpandedChange={setExpandedJob}
-                          />
-                        );
-                      case ResumeSection.Education:
-                        return (
-                          <EducationSection
-                            education={resume.education}
-                            onChange={(education) =>
-                              updateResume({ education })
-                            }
-                            expandedSecondary={expandedEducation}
-                            onExpandedSecondaryChange={setExpandedEducation}
-                          />
-                        );
-                      default:
-                        return null;
-                    }
-                  }}
-                </SectionTimeline>
-              </div>
-            </>
-          ) : (
-            <div className="flex h-full flex-col items-center py-4">
               <Button
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                className="text-muted-foreground"
-                onClick={() => setEditorOpen(true)}
-                aria-label="Expand editor panel"
+                className="hidden shrink-0 text-muted-foreground lg:inline-flex"
+                onClick={() => setEditorOpen(false)}
+                aria-label="Collapse editor panel"
               >
-                <ChevronRight className="size-4" />
+                <ChevronLeft className="size-4" />
               </Button>
-              <span
-                className="mt-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase [writing-mode:vertical-rl]"
-                aria-hidden
-              >
-                Editor
-              </span>
             </div>
-          )}
+
+            <div className="min-h-0 flex-1 overflow-y-auto max-lg:px-4 max-lg:pb-4">
+              <SectionTimeline
+                activeSections={resume.activeSections}
+                activeSection={activeSection}
+                statuses={statuses}
+                onSectionChange={setActiveSection}
+                onAddSection={handleAddSection}
+                onRemoveSection={handleRemoveSection}
+              >
+                {(section) => {
+                  switch (section) {
+                    case ResumeSection.Personal:
+                      return (
+                        <PersonalInfoSection
+                          header={resume.header}
+                          summary={resume.summary}
+                          onHeaderChange={(header) => updateResume({ header })}
+                          onSummaryChange={(summary) =>
+                            updateResume({ summary })
+                          }
+                        />
+                      );
+                    case ResumeSection.Skills:
+                      return (
+                        <SkillsSection
+                          skills={resume.skills}
+                          onSkillsChange={(skills) => updateResume({ skills })}
+                        />
+                      );
+                    case ResumeSection.Projects:
+                      return (
+                        <ProjectsSection
+                          projects={resume.projects}
+                          onChange={(projects) => updateResume({ projects })}
+                          expandedIndex={expandedProject}
+                          onExpandedChange={setExpandedProject}
+                        />
+                      );
+                    case ResumeSection.Experience:
+                      return (
+                        <ExperienceSection
+                          jobs={resume.experience}
+                          onChange={(experience) =>
+                            updateResume({ experience })
+                          }
+                          expandedIndex={expandedJob}
+                          onExpandedChange={setExpandedJob}
+                        />
+                      );
+                    case ResumeSection.Education:
+                      return (
+                        <EducationSection
+                          education={resume.education}
+                          onChange={(education) =>
+                            updateResume({ education })
+                          }
+                          expandedSecondary={expandedEducation}
+                          onExpandedSecondaryChange={setExpandedEducation}
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                }}
+              </SectionTimeline>
+            </div>
+          </div>
+
+          {!editorOpen ? (
+            <CollapsedPanelStrip
+              label="Editor"
+              expandDirection="right"
+              onExpand={() => setEditorOpen(true)}
+            />
+          ) : null}
         </section>
 
         <ResumeAiChatPanel
@@ -369,111 +385,121 @@ export function ResumeEditor({
           onApplyResume={handleApplyResume}
           onActiveProposalChange={handleActiveProposalChange}
           patchReviewHandlersRef={patchReviewHandlersRef}
+          headerClassName="hidden lg:block"
+          autoScroll={chatAutoScroll}
+          className={cn(mobilePanelHidden(mobilePanel, "chat"), "max-lg:border-0")}
         />
 
         <aside
           className={cn(
             "relative flex min-h-0 min-w-0 flex-col overflow-hidden bg-[#e8edf4]",
-            previewOpen ? "px-4 py-4" : "w-10 border-l",
+            mobilePanelHidden(mobilePanel, "preview"),
+            previewOpen ? "lg:px-4 lg:py-4" : "lg:w-10 lg:border-l",
           )}
         >
-          {previewOpen ? (
-            <>
-              <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                    {hasPendingAiChanges ? "AI Preview" : "Live Preview"}
-                  </h2>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {hasPendingAiChanges ? "Pending approval" : saveStatus}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="shrink-0 text-muted-foreground"
-                  onClick={() => setPreviewOpen(false)}
-                  aria-label="Collapse preview panel"
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
+          <div className={cn(!previewOpen && "lg:hidden")}>
+            <div className="mb-3 hidden shrink-0 items-center justify-between gap-2 lg:flex">
+              <div className="min-w-0">
+                <h2 className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  {hasPendingAiChanges ? "AI Preview" : "Live Preview"}
+                </h2>
+                <span className="truncate text-xs text-muted-foreground">
+                  {hasPendingAiChanges ? "Pending approval" : saveStatus}
+                </span>
               </div>
-
-              {hasPendingAiChanges && (
-                <AiChangeReviewBar
-                  changeCount={uniqueHighlightCount || 1}
-                  showHighlights={showAiHighlights}
-                  onAccept={() => patchReviewHandlersRef.current?.accept()}
-                  onToggleHighlights={() =>
-                    setShowAiHighlights((current) => !current)
-                  }
-                  onDecline={() => patchReviewHandlersRef.current?.decline()}
-                />
-              )}
-
-              <div className="mb-3 flex shrink-0 justify-center">
-                <PreviewZoomControls
-                  zoom={previewZoom}
-                  onZoomChange={setPreviewZoom}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="flex h-full flex-col items-center py-4">
               <Button
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                className="text-muted-foreground"
-                onClick={() => setPreviewOpen(true)}
-                aria-label="Expand preview panel"
+                className="shrink-0 text-muted-foreground"
+                onClick={() => setPreviewOpen(false)}
+                aria-label="Collapse preview panel"
               >
-                <ChevronLeft className="size-4" />
+                <ChevronRight className="size-4" />
               </Button>
-              <span
-                className="mt-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase [writing-mode:vertical-rl]"
-                aria-hidden
-              >
-                Preview
-              </span>
-              {hasPendingAiChanges && (
-                <span
-                  className="mt-2 size-2 rounded-full bg-emerald-500"
-                  aria-label="Pending AI changes"
-                />
-              )}
             </div>
-          )}
 
-          <div
-            className={cn(
-              "min-h-0 overflow-y-auto pb-4",
-              previewOpen ? "flex-1" : "sr-only",
-            )}
-            ref={previewRef}
-          >
+            {hasPendingAiChanges ? (
+              <div className="shrink-0 px-3 pt-3 lg:px-0 lg:pt-0">
+                <AiChangeReviewBar
+                  changeCount={uniqueHighlightCount || 1}
+                  showHighlights={showAiHighlights}
+                  onAccept={handleAcceptAiChanges}
+                  onToggleHighlights={handleToggleAiHighlights}
+                  onDecline={handleDeclineAiChanges}
+                />
+              </div>
+            ) : null}
+
+            <div className="mb-3 hidden shrink-0 justify-center lg:flex">
+              <PreviewZoomControls
+                zoom={previewZoom}
+                onZoomChange={setPreviewZoom}
+              />
+            </div>
+
             <div
-              className={
-                hasPendingAiChanges
-                  ? "rounded-lg ring-2 ring-emerald-400/50 ring-offset-2 ring-offset-[#e8edf4]"
-                  : undefined
-              }
-              style={{ zoom: previewZoom / 100 }}
+              className="pointer-events-none absolute inset-x-0 z-10 flex justify-center lg:hidden"
+              style={{ bottom: MOBILE_NAV_BOTTOM_OFFSET }}
             >
-              <ResumePreview
-                resume={resumeToJson(displayedPreview)}
-                compareResume={
-                  hasPendingAiChanges ? resumeToJson(resume) : undefined
-                }
-                highlights={previewHighlights}
-                showHighlights={hasPendingAiChanges && showAiHighlights}
-                template={templateConfig}
+              <PreviewZoomControls
+                zoom={previewZoom}
+                onZoomChange={setPreviewZoom}
+                className="pointer-events-auto shadow-md"
               />
             </div>
           </div>
+
+          {!previewOpen ? (
+            <CollapsedPanelStrip
+              label="Preview"
+              expandDirection="left"
+              onExpand={() => setPreviewOpen(true)}
+              indicator={
+                hasPendingAiChanges ? (
+                  <PendingAiIndicator className="mt-2" />
+                ) : undefined
+              }
+            />
+          ) : null}
+
+          <div
+            className={cn(
+              "min-h-0 flex-1 overflow-y-auto max-lg:px-3 max-lg:pb-3 lg:pb-4",
+              !previewOpen && "lg:sr-only",
+              !renderPreviewDocument && "max-lg:hidden",
+            )}
+            ref={previewRef}
+          >
+            {renderPreviewDocument ? (
+              <div
+                className={
+                  hasPendingAiChanges
+                    ? "rounded-lg ring-2 ring-emerald-400/50 ring-offset-2 ring-offset-[#e8edf4]"
+                    : undefined
+                }
+                style={{ zoom: previewZoom / 100 }}
+              >
+                <ResumePreview
+                  resume={resumeToJson(displayedPreview)}
+                  compareResume={
+                    hasPendingAiChanges ? resumeToJson(resume) : undefined
+                  }
+                  highlights={previewHighlights}
+                  showHighlights={hasPendingAiChanges && showAiHighlights}
+                  template={templateConfig}
+                />
+              </div>
+            ) : null}
+          </div>
         </aside>
       </div>
+
+      <EditorMobileNav
+        active={mobilePanel}
+        onChange={setMobilePanel}
+        hasPendingAiChanges={hasPendingAiChanges}
+      />
     </div>
   );
 }

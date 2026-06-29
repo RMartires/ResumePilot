@@ -10,6 +10,7 @@ type AiChangeReviewBarProps = {
   onAccept: () => void;
   onToggleHighlights: () => void;
   onDecline: () => void;
+  className?: string;
 };
 
 export function AiChangeReviewBar({
@@ -18,9 +19,15 @@ export function AiChangeReviewBar({
   onAccept,
   onToggleHighlights,
   onDecline,
+  className,
 }: AiChangeReviewBarProps) {
   return (
-    <div className="mb-3 shrink-0 rounded-lg border border-emerald-200/80 bg-white/90 p-2 shadow-sm backdrop-blur-sm">
+    <div
+      className={cn(
+        "mb-3 shrink-0 rounded-lg border border-emerald-200/80 bg-white/90 p-2 shadow-sm backdrop-blur-sm",
+        className,
+      )}
+    >
       <p className="mb-2 px-1 text-[11px] text-muted-foreground">
         {changeCount} AI {changeCount === 1 ? "change" : "changes"} pending review
       </p>

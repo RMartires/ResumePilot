@@ -20,6 +20,7 @@ import type { ResumeChatUIMessage } from "@/lib/ai/resume-chat-ui-message";
 import { resumeChangeDataSchema } from "@/lib/ai/schemas/resume-chat-response";
 import type { Resume } from "@/lib/validations/resume";
 import type { PatchReviewHandlers } from "@/lib/ai/types";
+import { cn } from "@/lib/utils";
 
 type ResumeAiChatPanelProps = {
   resumeId: string;
@@ -30,6 +31,9 @@ type ResumeAiChatPanelProps = {
     proposed: Resume | null,
   ) => void;
   patchReviewHandlersRef?: React.MutableRefObject<PatchReviewHandlers | null>;
+  headerClassName?: string;
+  className?: string;
+  autoScroll?: boolean;
 };
 
 export function ResumeAiChatPanel({
@@ -38,6 +42,9 @@ export function ResumeAiChatPanel({
   onApplyResume,
   onActiveProposalChange,
   patchReviewHandlersRef,
+  headerClassName,
+  className,
+  autoScroll = true,
 }: ResumeAiChatPanelProps) {
   const [input, setInput] = useState("");
   const [handledProposalIds, setHandledProposalIds] = useState<Set<string>>(
@@ -116,12 +123,7 @@ export function ResumeAiChatPanel({
     const notify = onActiveProposalChangeRef.current;
     if (!notify) return;
 
-    const latest = getLatestStructuredProposal(messages);
-    const proposal =
-      latest && !handledProposalIds.has(latest.proposalId) ? latest : null;
-    const nextId = proposal?.proposalId ?? null;
-
-    if (!proposal) {
+    if (!activeProposal) {
       if (lastNotifiedProposalIdRef.current === null) return;
       lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
@@ -129,19 +131,19 @@ export function ResumeAiChatPanel({
       return;
     }
 
-    const previewKey = JSON.stringify(proposal.resume);
+    const previewKey = JSON.stringify(activeProposal.resume);
 
     if (
-      nextId === lastNotifiedProposalIdRef.current &&
+      activeProposal.proposalId === lastNotifiedProposalIdRef.current &&
       previewKey === lastNotifiedPreviewKeyRef.current
     ) {
       return;
     }
 
-    lastNotifiedProposalIdRef.current = nextId;
+    lastNotifiedProposalIdRef.current = activeProposal.proposalId;
     lastNotifiedPreviewKeyRef.current = previewKey;
-    notify(proposal, proposal.resume);
-  }, [messages, handledProposalIds, resume]);
+    notify(activeProposal, activeProposal.resume);
+  }, [activeProposal]);
 
   const markHandled = useCallback((proposalId: string) => {
     setHandledProposalIds((prev) => new Set(prev).add(proposalId));
@@ -227,12 +229,18 @@ export function ResumeAiChatPanel({
     isBusy && (!lastMessage || lastMessage.role === "user");
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages, status, activeProposal]);
+    if (!autoScroll) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
+  }, [messages, status, activeProposal, autoScroll]);
 
   return (
-    <aside className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r bg-background">
-      <div className="shrink-0 border-b px-4 py-3">
+    <aside
+      className={cn(
+        "flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r bg-background",
+        className,
+      )}
+    >
+      <div className={cn("shrink-0 border-b px-4 py-3", headerClassName)}>
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <div>

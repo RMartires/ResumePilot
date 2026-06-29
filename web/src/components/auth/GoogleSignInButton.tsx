@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { getSiteUrl } from "@/lib/site-url";
 
 type GoogleSignInButtonProps = {
   redirectTo?: string;
@@ -34,7 +35,7 @@ function GoogleIcon() {
 
 export function authCallbackUrl(next = "/dashboard") {
   const params = new URLSearchParams({ next });
-  return `${window.location.origin}/auth/callback?${params.toString()}`;
+  return `${getSiteUrl()}/auth/callback?${params.toString()}`;
 }
 
 export function GoogleSignInButton({
@@ -49,10 +50,16 @@ export function GoogleSignInButton({
     setError("");
 
     const supabase = createClient();
+    const redirectUrl = authCallbackUrl(redirectTo);
+
+    if (process.env.NODE_ENV === "development") {
+      console.info("[auth] OAuth redirectTo:", redirectUrl);
+    }
+
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: authCallbackUrl(redirectTo),
+        redirectTo: redirectUrl,
       },
     });
 

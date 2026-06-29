@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { FileUp, LayoutTemplate } from "lucide-react";
+import { ChevronLeft, FileUp, LayoutTemplate } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ type EditorToolbarProps = {
   onTitleChange: (title: string) => void;
   resume: Resume;
   previewRef: React.RefObject<HTMLDivElement | null>;
-  saveStatus: string;
   onImport: (resume: Resume) => void;
 };
 
@@ -50,15 +49,23 @@ export function EditorToolbar({
   };
 
   return (
-    <header className="flex shrink-0 flex-wrap items-center gap-3 border-b bg-background px-4 py-3">
+    <header className="flex shrink-0 flex-wrap items-center gap-2 border-b bg-background px-3 py-2 sm:gap-3 sm:px-4 sm:py-3">
+      <Link
+        href="/dashboard"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground lg:hidden"
+        aria-label="Back to resumes"
+      >
+        <ChevronLeft className="size-5" />
+      </Link>
+
       <Input
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
-        className="max-w-xs font-medium"
+        className="min-w-0 flex-1 font-medium sm:max-w-xs lg:max-w-xs"
         aria-label="Resume title"
       />
 
-      <div className="ml-auto flex flex-wrap items-center gap-2">
+      <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto">
         <input
           ref={fileInputRef}
           type="file"
@@ -82,12 +89,13 @@ export function EditorToolbar({
           className="inline-flex h-7 items-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border px-2.5 text-[0.8rem] hover:bg-muted"
         >
           <LayoutTemplate className="h-4 w-4" />
-          Templates
+          <span className="hidden sm:inline">Templates</span>
         </Link>
         <Button
           type="button"
           variant="secondary"
           size="sm"
+          className="hidden sm:inline-flex"
           onClick={() => fileInputRef.current?.click()}
         >
           <FileUp className="mr-1 h-4 w-4" />

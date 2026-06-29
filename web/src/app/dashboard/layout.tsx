@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { AppSidebar } from "@/components/dashboard/AppSidebar";
-import { LocalStorageImportDialog } from "@/components/dashboard/LocalStorageImportDialog";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
 export default async function AppLayout({
   children,
@@ -18,12 +17,6 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="flex h-dvh overflow-hidden">
-      <AppSidebar userEmail={user.email} />
-      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-        {children}
-      </main>
-      <LocalStorageImportDialog />
-    </div>
+    <DashboardShell userEmail={user.email}>{children}</DashboardShell>
   );
 }

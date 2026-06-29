@@ -42,9 +42,16 @@ Sign up at `/signup` (email/password or Google), then create resumes from the da
 2. Add **Authorized redirect URI**: `https://<your-project-ref>.supabase.co/auth/v1/callback`  
    (find your project ref in Supabase → Project Settings → General)
 3. In Supabase → **Authentication → Providers → Google**, enable Google and paste the Client ID + Client Secret.
-4. In Supabase → **Authentication → URL Configuration**, add:
-   - `http://localhost:3000/auth/callback` (local)
+4. In Supabase → **Authentication → URL Configuration**, add these **Redirect URLs** (use wildcards — exact paths often fail for localhost):
+   - `http://localhost:3000/**`
+   - `http://127.0.0.1:3000/**` (if you open the app via 127.0.0.1 instead of localhost)
    - `https://your-domain.com/auth/callback` (production)
+
+   Keep **Site URL** as your production domain. Click **Save** after adding URLs.
+
+   For local dev, copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL=http://localhost:3000`.
+
+   **Troubleshooting:** If sign-in sends you to production, open DevTools → Console on localhost and look for `[auth] OAuth redirectTo:`. That exact URL (or its wildcard) must be in Supabase Redirect URLs. Sign in only from `http://localhost:3000`, not `resumepilot.xyz`.
 
 No extra env vars are needed in the Next.js app — Google OAuth is configured entirely in Supabase.
 
