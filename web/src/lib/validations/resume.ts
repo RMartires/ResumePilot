@@ -67,6 +67,7 @@ export const templateConfigSchema = z.object({
   accentColor: z.string().default("#2563eb"),
   sectionSpacing: z.string().default("14px"),
   headingTransform: z.enum(["uppercase", "none"]).default("uppercase"),
+  layout: z.enum(["standard", "sidebar"]).default("standard"),
 });
 
 export type TemplateConfig = z.infer<typeof templateConfigSchema>;

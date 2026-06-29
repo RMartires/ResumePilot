@@ -15,6 +15,55 @@ import { emptyResume } from "@/lib/resume";
 import type { Template } from "@/lib/templates";
 import { templateConfigSchema } from "@/lib/validations/resume";
 
+function previewResumeForTemplate(config: ReturnType<typeof templateConfigSchema.parse>) {
+  const base = {
+    ...emptyResume(),
+    header: {
+      ...emptyResume().header,
+      name: "Preview",
+      email: "you@example.com",
+      phone: "+1 555 0100",
+      location: "San Francisco, CA",
+      links: ["https://linkedin.com/in/you"],
+    },
+    summary: "Sample summary text for template preview.",
+    skills: "React, TypeScript, Node.js",
+  };
+
+  if (config.layout === "sidebar") {
+    return {
+      ...base,
+      education: {
+        ...base.education,
+        school: "State University",
+        degree: "B.S. Computer Science",
+        year: "2020",
+      },
+      experience: [
+        {
+          title: "Software Engineer",
+          company: "Acme Corp",
+          dates: "2021 – Present",
+          location: "",
+          startDate: "",
+          endDate: "",
+          current: true,
+          bullets: ["Built features used by thousands of users."],
+        },
+      ],
+      projects: [
+        {
+          name: "Sample Project",
+          url: "",
+          bullets: ["Open-source tool for resume building."],
+        },
+      ],
+    };
+  }
+
+  return base;
+}
+
 type TemplateGalleryProps = {
   templates: Template[];
   activeTemplateId?: string | null;
@@ -52,21 +101,17 @@ export function TemplateGallery({
                 {isActive ? <Check className="h-5 w-5 text-blue-600" /> : null}
               </CardTitle>
               <CardDescription>{template.description}</CardDescription>
+              {config.layout === "sidebar" ? (
+                <p className="text-xs text-muted-foreground">
+                  Default font: {config.fontFamily}
+                </p>
+              ) : null}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="overflow-hidden rounded-md border bg-[#e8edf4] p-2">
                 <div className="pointer-events-none origin-top scale-[0.45]">
                   <ResumePreview
-                    resume={{
-                      ...emptyResume(),
-                      header: {
-                        ...emptyResume().header,
-                        name: "Preview",
-                        email: "you@example.com",
-                      },
-                      summary: "Sample summary text for template preview.",
-                      skills: "React, TypeScript, Node.js",
-                    }}
+                    resume={previewResumeForTemplate(config)}
                     template={config}
                   />
                 </div>

@@ -29,21 +29,21 @@ insert into public.templates (slug, name, description, config, is_default) value
     'classic',
     'Classic',
     'Traditional serif layout with uppercase section headings.',
-    '{"fontFamily":"Libre Baskerville, Georgia, serif","fontSize":"0.72rem","accentColor":"#1a1a1a","sectionSpacing":"14px","headingTransform":"uppercase"}',
+    '{"fontFamily":"Libre Baskerville, Georgia, serif","fontSize":"0.72rem","accentColor":"#1a1a1a","sectionSpacing":"14px","headingTransform":"uppercase","layout":"standard"}',
     true
-  ),
-  (
-    'modern',
-    'Modern',
-    'Clean sans-serif with blue accents and relaxed spacing.',
-    '{"fontFamily":"Inter, system-ui, sans-serif","fontSize":"0.75rem","accentColor":"#2563eb","sectionSpacing":"18px","headingTransform":"none"}',
-    false
   ),
   (
     'compact',
     'Compact',
-    'Dense layout for fitting more content on one page.',
-    '{"fontFamily":"Georgia, serif","fontSize":"0.68rem","accentColor":"#0f172a","sectionSpacing":"10px","headingTransform":"uppercase"}',
+    'Clean sans-serif with blue accents and relaxed spacing.',
+    '{"fontFamily":"Inter, system-ui, sans-serif","fontSize":"0.75rem","accentColor":"#2563eb","sectionSpacing":"18px","headingTransform":"none","layout":"standard"}',
+    false
+  ),
+  (
+    'modern',
+    'Modern',
+    'Two-column layout with sidebar for contact info.',
+    '{"fontFamily":"Inter, system-ui, sans-serif","fontSize":"0.75rem","accentColor":"#2D9C6C","sectionSpacing":"18px","headingTransform":"uppercase","layout":"sidebar"}',
     false
   )
 on conflict (slug) do nothing;
