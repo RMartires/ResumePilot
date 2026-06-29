@@ -1,0 +1,75 @@
+"use client";
+
+import { useRef, useState } from "react";
+import { Pause, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { DEMO_VIDEO_URL } from "@/components/landing/landing-data";
+
+type ProductDemoProps = {
+  className?: string;
+  size?: "large" | "default";
+};
+
+export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(true);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      void video.play();
+      setPlaying(true);
+    } else {
+      video.pause();
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <div className={cn("w-full", className)}>
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-emerald-950/30",
+          size === "large" && "rounded-3xl",
+        )}
+      >
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+          <span className="text-sm text-zinc-400">Product demo</span>
+          <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+            ResumePilot preview
+          </span>
+        </div>
+        <div className="relative aspect-[16/10] min-h-[280px] bg-[#0a100e] sm:min-h-[420px] lg:min-h-[520px]">
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-contain"
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+          >
+            <source src={DEMO_VIDEO_URL} type="video/webm" />
+            Your browser does not support video playback.
+          </video>
+          <button
+            type="button"
+            onClick={togglePlayback}
+            className="absolute right-4 bottom-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"
+            aria-label={playing ? "Pause demo" : "Play demo"}
+          >
+            {playing ? (
+              <Pause className="h-4 w-4" aria-hidden />
+            ) : (
+              <Play className="h-4 w-4" aria-hidden />
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

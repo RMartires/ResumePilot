@@ -11,6 +11,7 @@ import {
   LogOut,
   Plus,
 } from "lucide-react";
+import { ResumePilotLogo, ResumePilotMark } from "@/components/brand/ResumePilotLogo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -54,11 +55,8 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
         {open ? (
           <div className="flex items-start justify-between gap-1">
             <div className="min-w-0">
-              <Link
-                href="/dashboard"
-                className="text-base font-semibold text-blue-600"
-              >
-                ResumeBuilder
+              <Link href="/dashboard" className="block min-w-0">
+                <ResumePilotLogo />
               </Link>
               {userEmail ? (
                 <p className="mt-1 truncate text-[11px] text-muted-foreground">
@@ -91,10 +89,11 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
             </Button>
             <Link
               href="/dashboard"
-              className="mt-2 text-xs font-bold text-blue-600"
-              title="ResumeBuilder"
+              className="mt-2"
+              title="ResumePilot"
+              aria-label="ResumePilot"
             >
-              RB
+              <ResumePilotMark className="h-7 w-7" />
             </Link>
           </>
         )}

@@ -43,6 +43,14 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  if (!user && request.nextUrl.pathname === "/login" && !request.nextUrl.searchParams.get("redirect")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    url.search = "";
+    url.hash = "sign-in";
+    return NextResponse.redirect(url);
+  }
+
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";

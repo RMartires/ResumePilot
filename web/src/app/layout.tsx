@@ -14,9 +14,26 @@ const libreBaskerville = Libre_Baskerville({
   weight: ["400", "700"],
 });
 
+const siteDescription =
+  "Build ATS-friendly resumes in minutes. AI writing, job-description tailoring, match scoring, cover letters, and application tracking in one workflow.";
+
 export const metadata: Metadata = {
-  title: "ResumeBuilder",
-  description: "Build professional resumes with live preview and cloud sync",
+  title: {
+    default: "ResumePilot — AI Resume Builder with ATS Optimization",
+    template: "%s · ResumePilot",
+  },
+  description: siteDescription,
+  applicationName: "ResumePilot",
+  openGraph: {
+    title: "ResumePilot — AI Resume Builder with ATS Optimization",
+    description: siteDescription,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "ResumePilot — AI Resume Builder with ATS Optimization",
+    description: siteDescription,
+  },
 };
 
 export default function RootLayout({
