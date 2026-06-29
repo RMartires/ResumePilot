@@ -12,6 +12,12 @@ import { ProjectsSection } from "@/components/editor/ProjectsSection";
 import { ExperienceSection } from "@/components/editor/ExperienceSection";
 import { EducationSection } from "@/components/editor/EducationSection";
 import { ResumePreview } from "@/components/preview/ResumePreview";
+import {
+  clampPreviewZoom,
+  DEFAULT_PREVIEW_ZOOM,
+  PREVIEW_ZOOM_STORAGE_KEY,
+  PreviewZoomControls,
+} from "@/components/preview/PreviewZoomControls";
 import { EditorToolbar } from "@/components/editor/EditorToolbar";
 import { Button } from "@/components/ui/button";
 import { useDebouncedSave } from "@/hooks/useDebouncedSave";
@@ -80,6 +86,7 @@ export function ResumeEditor({
   const [showAiHighlights, setShowAiHighlights] = useState(true);
   const [editorOpen, setEditorOpen] = useState(true);
   const [previewOpen, setPreviewOpen] = useState(true);
+  const [previewZoom, setPreviewZoom] = useState(DEFAULT_PREVIEW_ZOOM);
   const previewRef = useRef<HTMLDivElement>(null);
   const patchReviewHandlersRef = useRef<PatchReviewHandlers | null>(null);
 
@@ -96,6 +103,14 @@ export function ResumeEditor({
     if (storedEditor === "false") {
       setEditorOpen(false);
     }
+
+    const storedZoom = localStorage.getItem(PREVIEW_ZOOM_STORAGE_KEY);
+    if (storedZoom) {
+      const parsed = Number(storedZoom);
+      if (!Number.isNaN(parsed)) {
+        setPreviewZoom(clampPreviewZoom(parsed));
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -105,6 +120,10 @@ export function ResumeEditor({
   useEffect(() => {
     localStorage.setItem(EDITOR_OPEN_STORAGE_KEY, String(editorOpen));
   }, [editorOpen]);
+
+  useEffect(() => {
+    localStorage.setItem(PREVIEW_ZOOM_STORAGE_KEY, String(previewZoom));
+  }, [previewZoom]);
 
   useDebouncedSave(
     { resume: resumeToJson(resume), title },
@@ -392,6 +411,13 @@ export function ResumeEditor({
                   onDecline={() => patchReviewHandlersRef.current?.decline()}
                 />
               )}
+
+              <div className="mb-3 flex shrink-0 justify-center">
+                <PreviewZoomControls
+                  zoom={previewZoom}
+                  onZoomChange={setPreviewZoom}
+                />
+              </div>
             </>
           ) : (
             <div className="flex h-full flex-col items-center py-4">
@@ -433,6 +459,7 @@ export function ResumeEditor({
                   ? "rounded-lg ring-2 ring-emerald-400/50 ring-offset-2 ring-offset-[#e8edf4]"
                   : undefined
               }
+              style={{ zoom: previewZoom / 100 }}
             >
               <ResumePreview
                 resume={resumeToJson(displayedPreview)}
