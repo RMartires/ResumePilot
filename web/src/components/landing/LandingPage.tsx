@@ -58,7 +58,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div id="demo" className="mt-10 scroll-mt-24 sm:mt-12 lg:mt-14">
+            <div id="demo" className="mt-10 min-w-0 scroll-mt-24 sm:mt-12 lg:mt-14">
               <ProductDemo />
             </div>
           </div>

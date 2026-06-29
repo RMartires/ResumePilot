@@ -37,10 +37,10 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
   };
 
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full min-w-0 max-w-full", className)}>
       <div
         className={cn(
-          "relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-emerald-950/30",
+          "relative w-full max-w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-emerald-950/30",
           size === "large" && "rounded-3xl",
         )}
       >
@@ -50,7 +50,7 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             ResumePilot preview
           </span>
         </div>
-        <div className="relative aspect-[16/10] min-h-[280px] bg-[#0a100e] sm:min-h-[420px] lg:min-h-[520px]">
+        <div className="relative aspect-[16/10] w-full max-w-full bg-[#0a100e]">
           <video
             ref={videoRef}
             autoPlay
@@ -58,7 +58,7 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             muted
             playsInline
             preload="metadata"
-            className="h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-contain"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
           >
