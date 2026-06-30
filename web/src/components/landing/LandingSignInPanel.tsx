@@ -17,7 +17,7 @@ export function LandingSignInPanel({ className }: LandingSignInPanelProps) {
 
       <p className="text-xs text-zinc-400">
         By continuing, you agree to our{" "}
-        <Link href="/privacy" className="text-emerald-300 underline underline-offset-2">
+        <Link href="/privacy" className="text-blue-300 underline underline-offset-2">
           Privacy Policy
         </Link>
         .

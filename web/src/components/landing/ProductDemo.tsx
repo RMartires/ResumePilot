@@ -40,17 +40,17 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
     <div className={cn("w-full min-w-0 max-w-full", className)}>
       <div
         className={cn(
-          "relative w-full max-w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-emerald-950/30",
+          "relative w-full max-w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-blue-950/30",
           size === "large" && "rounded-3xl",
         )}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
           <span className="text-sm text-zinc-400">Product demo</span>
-          <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">
+          <span className="rounded-full bg-blue-500/15 px-3 py-1 text-xs font-medium text-blue-300">
             ResumePilot preview
           </span>
         </div>
-        <div className="relative aspect-[16/10] w-full max-w-full bg-[#0a100e]">
+        <div className="relative aspect-[16/10] w-full max-w-full bg-[#0a0e16]">
           <video
             ref={videoRef}
             autoPlay
