@@ -96,4 +96,4 @@ From the editor toolbar:
 - **Import JSON** — load a `.json` resume file
 - **Export JSON** — download canonical JSON
 - **Export MD** — Resume 13.0-compatible Markdown
-- **Export PDF** — client-side PDF from live preview
+- **Export PDF** — server-side text PDF via `/api/resumes/[id]/export?format=pdf` (Vercel-compatible)

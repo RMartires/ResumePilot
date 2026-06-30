@@ -260,7 +260,6 @@ export function ResumeEditor({
         title={title}
         onTitleChange={setTitle}
         resume={resume}
-        previewRef={previewRef}
         onImport={(data) => {
           setResume(data);
           toast.success("Resume imported");

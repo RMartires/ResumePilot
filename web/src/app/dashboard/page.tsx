@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { ResumeList } from "@/components/dashboard/ResumeList";
 
 export default async function DashboardPage() {
@@ -10,11 +11,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold">My Resumes</h1>
-        <p className="text-muted-foreground">
-          Create, edit, and export your resumes.
-        </p>
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">My Resumes</h1>
+          <p className="text-muted-foreground">
+            Create, edit, and export your resumes.
+          </p>
+        </div>
+        <ImportResumeButton className="w-auto shrink-0" />
       </div>
       <ResumeList resumes={resumes ?? []} />
     </div>

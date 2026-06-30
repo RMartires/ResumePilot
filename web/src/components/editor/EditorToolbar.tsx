@@ -6,7 +6,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { downloadPreviewPdf } from "@/lib/pdf";
+import { downloadResumePdf } from "@/lib/pdf";
 import { normalizeResume, slugify } from "@/lib/resume";
 import type { Resume } from "@/lib/validations/resume";
 
@@ -15,7 +15,6 @@ type EditorToolbarProps = {
   title: string;
   onTitleChange: (title: string) => void;
   resume: Resume;
-  previewRef: React.RefObject<HTMLDivElement | null>;
   onImport: (resume: Resume) => void;
 };
 
@@ -24,27 +23,21 @@ export function EditorToolbar({
   title,
   onTitleChange,
   resume,
-  previewRef,
   onImport,
 }: EditorToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const slug = slugify(resume.header.name || title || "resume");
 
   const handleExportPdf = async () => {
-    const previewEl = previewRef.current?.querySelector(".resume-doc");
-    if (!previewEl || !(previewEl instanceof HTMLElement)) {
-      toast.error("Preview not ready");
-      return;
-    }
     try {
       toast.loading("Generating PDF…");
-      await downloadPreviewPdf(previewEl, `${slug}.pdf`);
+      await downloadResumePdf(resumeId, `${slug}.pdf`);
       toast.dismiss();
       toast.success("PDF downloaded");
     } catch (err) {
       console.error("PDF export failed:", err);
       toast.dismiss();
-      toast.error("PDF export failed");
+      toast.error(err instanceof Error ? err.message : "PDF export failed");
     }
   };
 

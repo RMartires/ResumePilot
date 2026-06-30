@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import { ResumePilotLogo, ResumePilotMark } from "@/components/brand/ResumePilotLogo";
+import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -125,6 +126,7 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
           !open && "flex flex-col items-center",
         )}
       >
+        <ImportResumeButton collapsed={!open} />
         <CreateResumeButton collapsed={!open} />
         {open ? (
           <Button
@@ -208,6 +210,7 @@ function CreateResumeButton({ collapsed }: { collapsed: boolean }) {
     return (
       <Button
         size="icon-sm"
+        variant="outline"
         onClick={create}
         aria-label="New Resume"
         title="New Resume"
@@ -218,7 +221,7 @@ function CreateResumeButton({ collapsed }: { collapsed: boolean }) {
   }
 
   return (
-    <Button className="w-full" size="sm" onClick={create}>
+    <Button className="w-full" size="sm" variant="outline" onClick={create}>
       <Plus className="mr-2 h-4 w-4 shrink-0" />
       New Resume
     </Button>

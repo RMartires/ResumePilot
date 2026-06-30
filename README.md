@@ -59,7 +59,7 @@ resume-builder/
 ├── index.html              # Legacy UI (deprecated)
 ├── js/                     # Legacy JS (deprecated)
 ├── css/                    # Legacy CSS (deprecated)
-├── generate_from_json.py   # CLI: JSON → Markdown → PDF
+├── generate_from_json.py   # CLI: JSON → Markdown
 └── serve.py                # Legacy static server
 ```
 
@@ -76,13 +76,13 @@ Resumes follow the schema in `schema/resume.schema.json`. Top-level keys:
 | `projects` | array | Projects with `name`, `url`, `bullets[]` |
 | `education` | object | Primary + `secondary[]` education entries |
 
-## CLI: Generate PDF from JSON
+## CLI: Generate Markdown from JSON
 
 ```bash
-python3 generate_from_json.py data/sample-resume.json output.pdf
+python3 generate_from_json.py data/sample-resume.json
 ```
 
-See the legacy README sections in git history for Resume 13.0 integration details.
+PDF export runs in the Next.js app via `web/src/lib/pdf/render-resume-pdf.ts` (works on Vercel).
 
 ## Development
 

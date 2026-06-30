@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Copy, Pencil, Trash2 } from "lucide-react";
+import { Copy, Pencil, Plus, Trash2 } from "lucide-react";
+import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -41,15 +42,29 @@ export function ResumeList({ resumes }: ResumeListProps) {
     }
   };
 
+  const createResume = async () => {
+    const res = await fetch("/api/resumes", { method: "POST" });
+    if (!res.ok) return;
+    const { id } = await res.json();
+    router.push(`/dashboard/resume/${id}`);
+  };
+
   if (resumes.length === 0) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>No resumes yet</CardTitle>
           <CardDescription>
-            Create your first resume to get started.
+            Start from scratch or import an existing PDF resume.
           </CardDescription>
         </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          <ImportResumeButton className="w-auto" />
+          <Button variant="outline" onClick={createResume}>
+            <Plus className="size-4" />
+            New Resume
+          </Button>
+        </CardContent>
       </Card>
     );
   }

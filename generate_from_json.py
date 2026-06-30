@@ -1,16 +1,11 @@
 #!/usr/bin/env python3
-"""Convert resume JSON to Markdown and optionally generate a PDF via Resume_13.0."""
+"""Convert resume JSON to Resume 13.0 Markdown."""
 
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
-
-ROOT = Path(__file__).resolve().parent
-RESUME_13 = ROOT.parent / "Resume_13.0"
-GENERATE_PDF = RESUME_13 / "generate_pdf.py"
 
 
 def json_to_markdown(data: dict) -> str:
@@ -86,8 +81,8 @@ def json_to_markdown(data: dict) -> str:
 def main() -> None:
     if len(sys.argv) < 2:
         raise SystemExit(
-            "Usage: python3 generate_from_json.py resume.json [output.pdf]\n"
-            "  Without output.pdf, writes resume.md next to the JSON file."
+            "Usage: python3 generate_from_json.py resume.json [output.md]\n"
+            "  Without output.md, writes resume.md next to the JSON file."
         )
 
     json_path = Path(sys.argv[1]).resolve()
@@ -95,26 +90,9 @@ def main() -> None:
         raise SystemExit(f"JSON file not found: {json_path}")
 
     data = json.loads(json_path.read_text(encoding="utf-8"))
-    md_path = json_path.with_suffix(".md")
+    md_path = Path(sys.argv[2]).resolve() if len(sys.argv) >= 3 else json_path.with_suffix(".md")
     md_path.write_text(json_to_markdown(data), encoding="utf-8")
     print(f"Wrote Markdown: {md_path}")
-
-    if len(sys.argv) >= 3:
-        pdf_path = Path(sys.argv[2]).resolve()
-        if not GENERATE_PDF.exists():
-            raise SystemExit(
-                f"PDF generator not found at {GENERATE_PDF}. "
-                "Export MD from the UI and run generate_pdf.py manually."
-            )
-        result = subprocess.run(
-            [sys.executable, str(GENERATE_PDF), str(md_path), str(pdf_path)],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            raise SystemExit(result.stderr or result.stdout)
-        print(result.stdout.strip())
-        print(f"Wrote PDF: {pdf_path}")
 
 
 if __name__ == "__main__":
