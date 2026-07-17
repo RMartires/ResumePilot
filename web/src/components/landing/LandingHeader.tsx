@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { ResumePilotMark } from "@/components/brand/ResumePilotLogo";
+import { startGoogleSignIn } from "@/components/auth/GoogleSignInButton";
 
 type LandingHeaderProps = {
   ctaHref?: string;
@@ -10,6 +14,17 @@ export function LandingHeader({
   ctaHref = "#sign-in",
   ctaLabel = "Get started",
 }: LandingHeaderProps) {
+  const [loading, setLoading] = useState(false);
+  const startsOAuth = ctaHref === "#sign-in";
+
+  const handleGetStarted = async () => {
+    setLoading(true);
+    const { error } = await startGoogleSignIn();
+    if (error) {
+      setLoading(false);
+    }
+  };
+
   return (
     <header className="border-b border-white/10">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
@@ -23,7 +38,16 @@ export function LandingHeader({
         >
           See how it works
         </a>
-        {ctaHref.startsWith("#") ? (
+        {startsOAuth ? (
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handleGetStarted}
+            className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-60"
+          >
+            {loading ? "Redirecting…" : ctaLabel}
+          </button>
+        ) : ctaHref.startsWith("#") ? (
           <a
             href={ctaHref}
             className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"

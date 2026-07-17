@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { reportSignupConversion } from "@/lib/google-ads";
 import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
 
 type GoogleSignInButtonProps = {
   redirectTo?: string;
   label?: string;
+  className?: string;
+  showIcon?: boolean;
 };
 
 function GoogleIcon() {
@@ -38,9 +41,29 @@ export function authCallbackUrl(next = "/dashboard") {
   return `${getSiteUrl()}/auth/callback?${params.toString()}`;
 }
 
+export async function startGoogleSignIn(redirectTo = "/dashboard") {
+  reportSignupConversion();
+
+  const supabase = createClient();
+  const redirectUrl = authCallbackUrl(redirectTo);
+
+  if (process.env.NODE_ENV === "development") {
+    console.info("[auth] OAuth redirectTo:", redirectUrl);
+  }
+
+  return supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: redirectUrl,
+    },
+  });
+}
+
 export function GoogleSignInButton({
   redirectTo = "/dashboard",
   label = "Continue with Google",
+  className,
+  showIcon = true,
 }: GoogleSignInButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -49,19 +72,7 @@ export function GoogleSignInButton({
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-    const redirectUrl = authCallbackUrl(redirectTo);
-
-    if (process.env.NODE_ENV === "development") {
-      console.info("[auth] OAuth redirectTo:", redirectUrl);
-    }
-
-    const { error: authError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-      },
-    });
+    const { error: authError } = await startGoogleSignIn(redirectTo);
 
     if (authError) {
       setError(authError.message);
@@ -74,11 +85,11 @@ export function GoogleSignInButton({
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className={className ?? "w-full"}
         disabled={loading}
         onClick={handleGoogleSignIn}
       >
-        <GoogleIcon />
+        {showIcon ? <GoogleIcon /> : null}
         {loading ? "Redirecting…" : label}
       </Button>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
