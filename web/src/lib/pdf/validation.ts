@@ -16,12 +16,13 @@ function hasPdfMimeType(type: string): boolean {
   return type === "application/pdf";
 }
 
+const PDF_MAGIC_SCAN_BYTES = 1024;
+
 export function isPdfMagicBytes(buffer: ArrayBuffer): boolean {
   if (buffer.byteLength < PDF_MAGIC.length) return false;
-  const header = new TextDecoder().decode(
-    new Uint8Array(buffer, 0, PDF_MAGIC.length),
-  );
-  return header.startsWith(PDF_MAGIC);
+  const scanLength = Math.min(buffer.byteLength, PDF_MAGIC_SCAN_BYTES);
+  const header = new TextDecoder().decode(new Uint8Array(buffer, 0, scanLength));
+  return header.includes(PDF_MAGIC);
 }
 
 export function assertPdfMagicBytes(buffer: ArrayBuffer): void {
@@ -42,10 +43,6 @@ export function assertUploadedPdf(file: {
     throw new PdfExtractError("Only PDF files are supported.");
   }
 
-  if (file.type && !pdfMime && !pdfExtension) {
-    throw new PdfExtractError("Only PDF files are supported.");
-  }
-
   if (file.size > MAX_PDF_BYTES) {
     throw new PdfExtractError("PDF must be 10 MB or smaller.");
   }
@@ -62,8 +59,8 @@ export async function assertPdfFile(file: File): Promise<void> {
     type: file.type,
   });
 
-  const header = await file.slice(0, PDF_MAGIC.length).text();
-  if (!header.startsWith(PDF_MAGIC)) {
+  const headerBuffer = await file.slice(0, PDF_MAGIC_SCAN_BYTES).arrayBuffer();
+  if (!isPdfMagicBytes(headerBuffer)) {
     throw new PdfExtractError("Only PDF files are supported.");
   }
 }

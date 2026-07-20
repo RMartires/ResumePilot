@@ -6,13 +6,21 @@ import { FileUp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { assertPdfFile } from "@/lib/pdf/validation";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 
 type ImportResumeButtonProps = {
   collapsed?: boolean;
   variant?: "default" | "outline" | "secondary";
   size?: "sm" | "default" | "lg";
   className?: string;
+};
+
+type ImportResponse = {
+  id?: string;
+  title?: string;
+  uploadId?: string;
+  source?: "heuristic" | "ai";
+  error?: string;
 };
 
 export function ImportResumeButton({
@@ -29,14 +37,12 @@ export function ImportResumeButton({
     try {
       await assertPdfFile(file);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Invalid PDF file",
-      );
+      toast.error(getErrorMessage(error, "Invalid PDF file"));
       return;
     }
 
     setImporting(true);
-    const toastId = toast.loading("Importing resume from PDF…");
+    const toastId = toast.loading("Importing resume…");
 
     try {
       const formData = new FormData();
@@ -47,10 +53,14 @@ export function ImportResumeButton({
         body: formData,
       });
 
-      const payload = (await res.json()) as { id?: string; error?: string };
+      const payload = (await res.json()) as ImportResponse;
 
       if (!res.ok) {
-        throw new Error(payload.error ?? "Import failed");
+        throw new Error(getErrorMessage(payload.error, "Import failed"));
+      }
+
+      if (!payload.id) {
+        throw new Error("Import failed");
       }
 
       toast.dismiss(toastId);
@@ -59,27 +69,31 @@ export function ImportResumeButton({
       router.refresh();
     } catch (error) {
       toast.dismiss(toastId);
-      toast.error(error instanceof Error ? error.message : "Import failed");
+      toast.error(getErrorMessage(error, "Import failed"));
     } finally {
       setImporting(false);
     }
   };
 
+  const fileInput = (
+    <input
+      ref={fileInputRef}
+      type="file"
+      accept="application/pdf"
+      className="hidden"
+      disabled={importing}
+      onChange={async (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (file) await importPdf(file);
+      }}
+    />
+  );
+
   if (collapsed) {
     return (
       <>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/pdf"
-          className="hidden"
-          disabled={importing}
-          onChange={async (event) => {
-            const file = event.target.files?.[0];
-            event.target.value = "";
-            if (file) await importPdf(file);
-          }}
-        />
+        {fileInput}
         <Button
           type="button"
           size="icon"
@@ -102,18 +116,7 @@ export function ImportResumeButton({
 
   return (
     <>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        className="hidden"
-        disabled={importing}
-        onChange={async (event) => {
-          const file = event.target.files?.[0];
-          event.target.value = "";
-          if (file) await importPdf(file);
-        }}
-      />
+      {fileInput}
       <Button
         type="button"
         size={size}

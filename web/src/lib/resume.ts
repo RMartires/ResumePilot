@@ -1,4 +1,4 @@
-import type { EducationEntry, Job, Project, Resume } from "@/lib/validations/resume";
+import type { Education, EducationEntry, Job, Project, Resume } from "@/lib/validations/resume";
 import {
   DEFAULT_SECTION_ORDER,
   normalizeActiveSections,
@@ -89,33 +89,100 @@ function normalizeEducationEntry(item: unknown): EducationEntry {
   return entry;
 }
 
-export function normalizeResume(data: unknown): Resume {
-  const base = emptyResume();
-  if (!data || typeof data !== "object") return base;
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
 
-  const raw = data as Record<string, unknown>;
+function coerceLinks(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map((l) => String(l).trim()).filter(Boolean);
+  }
+  if (typeof value === "string" && value.trim()) {
+    return value
+      .split(/[\n|,]+/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
 
-  if (raw.header && typeof raw.header === "object") {
-    const h = raw.header as Record<string, unknown>;
-    base.header = {
-      name: String(h.name ?? ""),
-      location: String(h.location ?? ""),
-      phone: String(h.phone ?? ""),
-      email: String(h.email ?? ""),
-      gender: String(h.gender ?? ""),
-      links: Array.isArray(h.links)
-        ? h.links.map((l) => String(l)).filter(Boolean)
-        : [""],
+function coerceSkills(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item).trim()).filter(Boolean).join(" | ");
+  }
+  return "";
+}
+
+function coerceEducation(raw: unknown): Education {
+  const empty = emptyResume().education;
+
+  if (Array.isArray(raw) && raw.length > 0) {
+    const [primary, ...rest] = raw;
+    const first = normalizeEducationEntry(primary);
+    return {
+      ...first,
+      secondary: rest.map((item) => normalizeEducationEntry(item)),
     };
-    if (base.header.links.length === 0) base.header.links = [""];
   }
 
-  base.summary = String(raw.summary ?? "");
-  base.skills = String(raw.skills ?? "");
+  const e = asRecord(raw);
+  if (!e) return empty;
 
-  if (Array.isArray(raw.experience)) {
-    base.experience = raw.experience.map((job) => {
-      const j = (job ?? {}) as Record<string, unknown>;
+  return {
+    school: String(e.school ?? e.name ?? ""),
+    degree: String(e.degree ?? ""),
+    fieldOfStudy: String(e.fieldOfStudy ?? ""),
+    year: String(e.year ?? ""),
+    graduationDate: String(e.graduationDate ?? ""),
+    marks: String(e.marks ?? ""),
+    marksType: String(e.marksType ?? "CGPA") || "CGPA",
+    description: String(e.description ?? ""),
+    secondary: Array.isArray(e.secondary)
+      ? e.secondary.map((item) => normalizeEducationEntry(item))
+      : [],
+  };
+}
+
+export function normalizeResume(data: unknown): Resume {
+  const base = emptyResume();
+
+  let rawValue = data;
+  if (typeof rawValue === "string") {
+    try {
+      rawValue = JSON.parse(rawValue) as unknown;
+    } catch {
+      return base;
+    }
+  }
+
+  const raw = asRecord(rawValue);
+  if (!raw) return base;
+
+  // Some models nest under resume/data instead of returning the object directly.
+  const nested = asRecord(raw.resume) ?? asRecord(raw.data);
+  const source = nested && !asRecord(raw.header) ? nested : raw;
+
+  const header = asRecord(source.header);
+  if (header) {
+    const links = coerceLinks(header.links);
+    base.header = {
+      name: String(header.name ?? ""),
+      location: String(header.location ?? ""),
+      phone: String(header.phone ?? ""),
+      email: String(header.email ?? ""),
+      gender: String(header.gender ?? ""),
+      links: links.length > 0 ? links : [""],
+    };
+  }
+
+  base.summary = String(source.summary ?? "");
+  base.skills = coerceSkills(source.skills);
+
+  if (Array.isArray(source.experience)) {
+    base.experience = source.experience.map((job) => {
+      const j = asRecord(job) ?? {};
       return {
         title: String(j.title ?? ""),
         company: String(j.company ?? ""),
@@ -132,9 +199,9 @@ export function normalizeResume(data: unknown): Resume {
   }
   if (base.experience.length === 0) base.experience = [emptyJob()];
 
-  if (Array.isArray(raw.projects)) {
-    base.projects = raw.projects.map((project) => {
-      const p = (project ?? {}) as Record<string, unknown>;
+  if (Array.isArray(source.projects)) {
+    base.projects = source.projects.map((project) => {
+      const p = asRecord(project) ?? {};
       return {
         name: String(p.name ?? ""),
         url: String(p.url ?? ""),
@@ -146,27 +213,14 @@ export function normalizeResume(data: unknown): Resume {
   }
   if (base.projects.length === 0) base.projects = [emptyProject()];
 
-  if (raw.education && typeof raw.education === "object") {
-    const e = raw.education as Record<string, unknown>;
-    base.education = {
-      school: String(e.school ?? ""),
-      degree: String(e.degree ?? ""),
-      fieldOfStudy: String(e.fieldOfStudy ?? ""),
-      year: String(e.year ?? ""),
-      graduationDate: String(e.graduationDate ?? ""),
-      marks: String(e.marks ?? ""),
-      marksType: String(e.marksType ?? "CGPA"),
-      description: String(e.description ?? ""),
-      secondary: Array.isArray(e.secondary)
-        ? e.secondary.map((item) => normalizeEducationEntry(item))
-        : [],
-    };
-    if (!base.education.graduationDate && base.education.year) {
-      base.education.graduationDate = `${base.education.year}-01-01`;
-    }
+  base.education = coerceEducation(source.education);
+  if (!base.education.graduationDate && base.education.year) {
+    base.education.graduationDate = /^\d{4}$/.test(base.education.year)
+      ? `${base.education.year}-01-01`
+      : base.education.year;
   }
 
-  base.activeSections = normalizeActiveSections(raw.activeSections);
+  base.activeSections = normalizeActiveSections(source.activeSections);
 
   return base;
 }

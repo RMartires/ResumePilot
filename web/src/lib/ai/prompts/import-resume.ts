@@ -56,10 +56,13 @@ Resume object shape:
 
 Rules:
 - Preserve factual content from the PDF. Do not invent employers, dates, degrees, or metrics.
+- Extract EVERY section present in the text: header (name, email, phone, location, links), summary, skills, experience, projects, and education.
+- Email, LinkedIn, GitHub, and portfolio URLs are critical — copy them exactly when present in the PDF text.
+- Put social/profile URLs in header.links as full https:// URLs (LinkedIn, GitHub, website, etc.).
 - Use empty strings and empty arrays for missing sections instead of omitting keys.
 - Split combined role descriptions into separate experience entries when clearly distinct jobs.
 - Keep bullet points concise and faithful to the source wording.
 - Normalize phone numbers and emails when present; leave blank if absent.
-- For links, include full URLs when available; otherwise use an empty string in the array.
-- If education lists multiple degrees, put the primary one in education and others in education.secondary.`;
+- If education lists multiple degrees, put the primary one in education and others in education.secondary.
+- skills must be a single string (use " | " or commas between groups), never an array.`;
 }

@@ -1,16 +1,26 @@
 import { NextResponse } from "next/server";
-import { flushLangSmithTraces } from "@/lib/ai/langsmith";
-import { importResumeFromPdf } from "@/lib/ai/import-resume-from-pdf";
-import { PdfExtractError } from "@/lib/pdf/extract-text";
+import { processResumeImport } from "@/lib/ai/process-resume-import";
+import { extractPdfText } from "@/lib/pdf/extract-text";
 import { getUploadedFile } from "@/lib/pdf/form-data-file";
-import { assertPdfMagicBytes, assertUploadedPdf } from "@/lib/pdf/validation";
-import { normalizeResume, resumeToJson } from "@/lib/resume";
+import {
+  assertPdfMagicBytes,
+  assertUploadedPdf,
+  PdfExtractError,
+} from "@/lib/pdf/validation";
+import {
+  buildResumeUploadPath,
+  createResumeUploadRecord,
+  markResumeUploadFailed,
+} from "@/lib/supabase/resume-uploads";
 import { createClient } from "@/lib/supabase/server";
+import { getErrorMessage } from "@/lib/utils";
 
 export const maxDuration = 60;
 
-function titleFromFilename(filename: string): string {
-  return filename.replace(/\.pdf$/i, "").trim() || "Imported Resume";
+function pdfValidationError(error: unknown): string {
+  return error instanceof PdfExtractError
+    ? error.message
+    : "Only PDF files are supported.";
 }
 
 export async function POST(request: Request) {
@@ -48,11 +58,7 @@ export async function POST(request: Request) {
   try {
     assertUploadedPdf(upload);
   } catch (error) {
-    const message =
-      error instanceof PdfExtractError
-        ? error.message
-        : "Only PDF files are supported.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: pdfValidationError(error) }, { status: 400 });
   }
 
   let buffer: ArrayBuffer;
@@ -65,53 +71,59 @@ export async function POST(request: Request) {
   try {
     assertPdfMagicBytes(buffer);
   } catch (error) {
-    const message =
-      error instanceof PdfExtractError
-        ? error.message
-        : "Only PDF files are supported.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    return NextResponse.json({ error: pdfValidationError(error) }, { status: 400 });
+  }
+
+  const uploadId = crypto.randomUUID();
+  const filePath = buildResumeUploadPath(user.id, uploadId, upload.name);
+
+  try {
+    await createResumeUploadRecord(supabase, {
+      id: uploadId,
+      userId: user.id,
+      filePath,
+      fileName: upload.name,
+      fileSize: buffer.byteLength,
+      mimeType: upload.type,
+    });
+  } catch (error) {
+    console.error(
+      "[import-pdf] failed to create upload record — run migration 003_resume_uploads_storage.sql",
+      error,
+    );
+    return NextResponse.json({ error: "Could not start upload." }, { status: 500 });
+  }
+
+  let pdfText: string;
+  try {
+    pdfText = await extractPdfText(buffer);
+  } catch (error) {
+    const message = getErrorMessage(error, "Failed to import resume");
+    await markResumeUploadFailed(supabase, uploadId, message);
+    console.error("[import-pdf] extract failed", uploadId, error);
+
+    const status = error instanceof PdfExtractError ? 400 : 500;
+    return NextResponse.json({ error: message, uploadId }, { status });
   }
 
   try {
-    const imported = await importResumeFromPdf(buffer);
+    const result = await processResumeImport({
+      uploadId,
+      userId: user.id,
+      fileName: upload.name,
+      filePath,
+      pdfText,
+      pdfBuffer: buffer,
+    });
 
-    const resume = resumeToJson(normalizeResume(imported.resume));
-    const title =
-      imported.title.trim() ||
-      resume.header.name.trim() ||
-      titleFromFilename(upload.name);
-
-    const { data: defaultTemplate } = await supabase
-      .from("templates")
-      .select("id")
-      .eq("is_default", true)
-      .maybeSingle();
-
-    const { data, error } = await supabase
-      .from("resumes")
-      .insert({
-        user_id: user.id,
-        title,
-        template_id: defaultTemplate?.id ?? null,
-        data: resume,
-      })
-      .select("id")
-      .single();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    await flushLangSmithTraces();
-    return NextResponse.json({ id: data.id, title });
+    return NextResponse.json({
+      id: result.resumeId,
+      title: result.title,
+      uploadId,
+      source: result.source,
+    });
   } catch (error) {
-    await flushLangSmithTraces();
-    if (error instanceof PdfExtractError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-    console.error("[import-pdf] failed", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to import resume";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const message = getErrorMessage(error, "Failed to import resume");
+    return NextResponse.json({ error: message, uploadId }, { status: 500 });
   }
 }

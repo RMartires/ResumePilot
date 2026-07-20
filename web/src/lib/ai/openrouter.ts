@@ -1,5 +1,5 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { resolveModelId } from "@/lib/ai/models";
+import { resolveImportModelId, resolveModelId } from "@/lib/ai/models";
 
 type OpenRouterMessage = {
   role?: string;
@@ -58,4 +58,9 @@ export function getOpenRouterProvider() {
 export function getChatModel(modelId?: string) {
   const openrouter = getOpenRouterProvider();
   return openrouter(resolveModelId(modelId));
+}
+
+export function getImportModel() {
+  const openrouter = getOpenRouterProvider();
+  return openrouter(resolveImportModelId());
 }

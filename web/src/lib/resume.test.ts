@@ -23,6 +23,36 @@ describe("resume", () => {
     expect(resume.education.school).toContain("Don Bosco");
   });
 
+  it("normalizeResume accepts education as an array", () => {
+    const resume = normalizeResume({
+      header: { name: "Alex", email: "a@b.com", links: "https://github.com/a" },
+      skills: ["TypeScript", "Node.js"],
+      education: [
+        { school: "MIT", degree: "BS", year: "2018" },
+        { school: "Stanford", degree: "MS", year: "2020" },
+      ],
+    });
+    expect(resume.header.links).toEqual(["https://github.com/a"]);
+    expect(resume.skills).toContain("TypeScript");
+    expect(resume.education.school).toBe("MIT");
+    expect(resume.education.secondary).toHaveLength(1);
+    expect(resume.education.secondary[0].school).toBe("Stanford");
+  });
+
+  it("normalizeResume unwraps nested resume and stringified JSON", () => {
+    const nested = normalizeResume({
+      resume: { header: { name: "Nested", email: "n@e.com", phone: "1" } },
+    });
+    expect(nested.header.name).toBe("Nested");
+    expect(nested.header.email).toBe("n@e.com");
+
+    const asString = normalizeResume(
+      JSON.stringify({ header: { name: "Stringified", location: "Goa" } }),
+    );
+    expect(asString.header.name).toBe("Stringified");
+    expect(asString.header.location).toBe("Goa");
+  });
+
   it("resumeToJson strips empty bullets and links", () => {
     const resume = emptyResume();
     resume.experience[0].bullets = ["", "Built API"];
