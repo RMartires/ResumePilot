@@ -1,4 +1,4 @@
-export const DEFAULT_AI_MODEL = "deepseek/deepseek-v4-flash";
+export const DEFAULT_AI_MODEL = "google/gemini-2.5-flash";
 
 /** Ultra-low-latency model for structured extraction (thinking off by default). */
 export const DEFAULT_IMPORT_MODEL = "google/gemini-2.5-flash-lite";
