@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Copy, Pencil, Plus, Trash2 } from "lucide-react";
 import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { cn } from "@/lib/utils";
 import {
   Card,
@@ -38,6 +39,7 @@ export function ResumeList({ resumes }: ResumeListProps) {
     const res = await fetch(`/api/resumes/${id}/duplicate`, { method: "POST" });
     if (res.ok) {
       const { id: newId } = await res.json();
+      track(AnalyticsEvent.ResumeDuplicated);
       router.push(`/dashboard/resume/${newId}`);
     }
   };
@@ -46,6 +48,7 @@ export function ResumeList({ resumes }: ResumeListProps) {
     const res = await fetch("/api/resumes", { method: "POST" });
     if (!res.ok) return;
     const { id } = await res.json();
+    track(AnalyticsEvent.ResumeCreated);
     router.push(`/dashboard/resume/${id}`);
   };
 

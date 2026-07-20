@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { UmamiScripts } from "@/components/analytics/UmamiScripts";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 
@@ -18,6 +19,7 @@ export default function LoginForm() {
   }, [searchParams]);
 
   return (
+    <>
     <div className="flex min-h-screen flex-col bg-[#060a09] text-white">
       <LandingHeader ctaHref="/" ctaLabel="Back to home" />
 
@@ -34,7 +36,7 @@ export default function LoginForm() {
           </div>
 
           <div className="mt-8 [&_button]:h-11 [&_button]:rounded-full [&_button]:border-white/15 [&_button]:bg-white/5 [&_button]:text-white [&_button]:hover:bg-white/10">
-            <GoogleSignInButton redirectTo={redirect} />
+            <GoogleSignInButton redirectTo={redirect} intent="login" />
           </div>
 
           {error ? <p className="mt-4 text-center text-sm text-red-400">{error}</p> : null}
@@ -48,5 +50,7 @@ export default function LoginForm() {
         </div>
       </div>
     </div>
+    <UmamiScripts />
+    </>
   );
 }

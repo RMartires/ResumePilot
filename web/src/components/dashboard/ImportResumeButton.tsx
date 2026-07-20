@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FileUp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { assertPdfFile } from "@/lib/pdf/validation";
 import { cn, getErrorMessage } from "@/lib/utils";
 
@@ -37,7 +38,12 @@ export function ImportResumeButton({
     try {
       await assertPdfFile(file);
     } catch (error) {
-      toast.error(getErrorMessage(error, "Invalid PDF file"));
+      const reason = getErrorMessage(error, "Invalid PDF file");
+      track(AnalyticsEvent.ResumeImportFailed, {
+        source: "pdf",
+        reason: reason.slice(0, 200),
+      });
+      toast.error(reason);
       return;
     }
 
@@ -63,13 +69,21 @@ export function ImportResumeButton({
         throw new Error("Import failed");
       }
 
+      track(AnalyticsEvent.ResumeImported, {
+        source: payload.source ?? "pdf",
+      });
       toast.dismiss(toastId);
       toast.success("Resume imported");
       router.push(`/dashboard/resume/${payload.id}`);
       router.refresh();
     } catch (error) {
+      const reason = getErrorMessage(error, "Import failed");
+      track(AnalyticsEvent.ResumeImportFailed, {
+        source: "pdf",
+        reason: reason.slice(0, 200),
+      });
       toast.dismiss(toastId);
-      toast.error(getErrorMessage(error, "Import failed"));
+      toast.error(reason);
     } finally {
       setImporting(false);
     }

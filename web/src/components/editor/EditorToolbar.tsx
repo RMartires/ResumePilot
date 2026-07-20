@@ -6,6 +6,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { downloadResumePdf } from "@/lib/pdf";
 import { normalizeResume, slugify } from "@/lib/resume";
 import type { Resume } from "@/lib/validations/resume";
@@ -33,6 +34,7 @@ export function EditorToolbar({
       toast.loading("Generating PDF…");
       await downloadResumePdf(resumeId, `${slug}.pdf`);
       toast.dismiss();
+      track(AnalyticsEvent.PdfExported);
       toast.success("PDF downloaded");
     } catch (err) {
       console.error("PDF export failed:", err);
@@ -70,6 +72,7 @@ export function EditorToolbar({
             try {
               const text = await file.text();
               onImport(normalizeResume(JSON.parse(text)));
+              track(AnalyticsEvent.ResumeImported, { source: "json" });
             } catch {
               toast.error("Invalid JSON file");
             } finally {

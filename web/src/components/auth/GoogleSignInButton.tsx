@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { reportSignupConversion } from "@/lib/google-ads";
 import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
+
+type AuthIntent = "signup" | "login" | "cta";
 
 type GoogleSignInButtonProps = {
   redirectTo?: string;
   label?: string;
   className?: string;
   showIcon?: boolean;
+  /** Which acquisition event to fire when OAuth starts. */
+  intent?: AuthIntent;
 };
 
 function GoogleIcon() {
@@ -41,7 +46,23 @@ export function authCallbackUrl(next = "/dashboard") {
   return `${getSiteUrl()}/auth/callback?${params.toString()}`;
 }
 
-export async function startGoogleSignIn(redirectTo = "/dashboard") {
+function trackAuthIntent(intent: AuthIntent = "signup") {
+  if (intent === "cta") {
+    track(AnalyticsEvent.CtaGetStarted);
+    return;
+  }
+  if (intent === "login") {
+    track(AnalyticsEvent.LoginStarted);
+    return;
+  }
+  track(AnalyticsEvent.SignupStarted);
+}
+
+export async function startGoogleSignIn(
+  redirectTo = "/dashboard",
+  intent: AuthIntent = "signup",
+) {
+  trackAuthIntent(intent);
   reportSignupConversion();
 
   const supabase = createClient();
@@ -64,6 +85,7 @@ export function GoogleSignInButton({
   label = "Continue with Google",
   className,
   showIcon = true,
+  intent = "signup",
 }: GoogleSignInButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -72,7 +94,7 @@ export function GoogleSignInButton({
     setLoading(true);
     setError("");
 
-    const { error: authError } = await startGoogleSignIn(redirectTo);
+    const { error: authError } = await startGoogleSignIn(redirectTo, intent);
 
     if (authError) {
       setError(authError.message);

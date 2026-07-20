@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ResumePreview } from "@/components/preview/ResumePreview";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { emptyResume } from "@/lib/resume";
 import type { Template } from "@/lib/templates";
 import { templateConfigSchema } from "@/lib/validations/resume";
@@ -79,11 +80,13 @@ export function TemplateGallery({
 
   const applyTemplate = async (templateId: string) => {
     if (!resumeId) return;
-    await fetch(`/api/resumes/${resumeId}`, {
+    const res = await fetch(`/api/resumes/${resumeId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ template_id: templateId }),
     });
+    if (!res.ok) return;
+    track(AnalyticsEvent.TemplateSelected, { template_id: templateId });
     router.refresh();
   };
 

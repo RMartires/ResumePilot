@@ -19,7 +19,7 @@ export function LandingHeader({
 
   const handleGetStarted = async () => {
     setLoading(true);
-    const { error } = await startGoogleSignIn();
+    const { error } = await startGoogleSignIn("/dashboard", "cta");
     if (error) {
       setLoading(false);
     }

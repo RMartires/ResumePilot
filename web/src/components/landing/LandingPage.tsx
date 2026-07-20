@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Script from "next/script";
 import { WandSparkles } from "lucide-react";
+import { UmamiScripts } from "@/components/analytics/UmamiScripts";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingSignInPanel } from "@/components/landing/LandingSignInPanel";
 import {
@@ -221,12 +221,7 @@ export function LandingPage() {
         </div>
       </footer>
     </div>
-    <Script
-      defer
-      src="https://umami.blogcrafter.co/script.js"
-      data-website-id="852ab99f-9cf8-4854-9646-c097c8e352b1"
-      strategy="afterInteractive"
-    />
+    <UmamiScripts />
     </>
   );
 }

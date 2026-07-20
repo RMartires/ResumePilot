@@ -18,6 +18,7 @@ import {
 } from "@/lib/ai/extract-structured-proposal";
 import type { ResumeChatUIMessage } from "@/lib/ai/resume-chat-ui-message";
 import { resumeChangeDataSchema } from "@/lib/ai/schemas/resume-chat-response";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import type { Resume } from "@/lib/validations/resume";
 import type { PatchReviewHandlers } from "@/lib/ai/types";
 import { cn } from "@/lib/utils";
@@ -156,6 +157,7 @@ export function ResumeAiChatPanel({
       lastNotifiedProposalIdRef.current = null;
       lastNotifiedPreviewKeyRef.current = null;
       onActiveProposalChangeRef.current?.(null, null);
+      track(AnalyticsEvent.AiSuggestionApplied);
       toast.success("Resume updated");
     },
     [markHandled, onApplyResume],
@@ -217,6 +219,7 @@ export function ResumeAiChatPanel({
     }
 
     setInput("");
+    track(AnalyticsEvent.AiChatSent);
     await sendMessage({ text });
   };
 

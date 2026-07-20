@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { STORAGE_KEY } from "@/lib/resume";
 import { normalizeResume } from "@/lib/resume";
 
@@ -47,6 +48,7 @@ export function LocalStorageImportDialog() {
         const { id } = await res.json();
         localStorage.removeItem(STORAGE_KEY);
         setOpen(false);
+        track(AnalyticsEvent.ResumeImported, { source: "local" });
         router.push(`/dashboard/resume/${id}`);
         router.refresh();
       }

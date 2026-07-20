@@ -14,6 +14,7 @@ import {
 import { ResumePilotLogo, ResumePilotMark } from "@/components/brand/ResumePilotLogo";
 import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -203,6 +204,7 @@ function CreateResumeButton({ collapsed }: { collapsed: boolean }) {
     const res = await fetch("/api/resumes", { method: "POST" });
     if (!res.ok) return;
     const { id } = await res.json();
+    track(AnalyticsEvent.ResumeCreated);
     router.push(`/dashboard/resume/${id}`);
   };
 
