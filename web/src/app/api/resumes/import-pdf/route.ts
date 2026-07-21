@@ -11,6 +11,7 @@ import {
   buildResumeUploadPath,
   createResumeUploadRecord,
   markResumeUploadFailed,
+  saveResumePdfToStorage,
 } from "@/lib/supabase/resume-uploads";
 import { createClient } from "@/lib/supabase/server";
 import { getErrorMessage } from "@/lib/utils";
@@ -94,6 +95,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not start upload." }, { status: 500 });
   }
 
+  // Persist PDF before parsing so failed imports remain inspectable in Storage.
+  try {
+    await saveResumePdfToStorage(supabase, filePath, buffer);
+  } catch (error) {
+    const message = getErrorMessage(error, "Failed to save PDF");
+    await markResumeUploadFailed(supabase, uploadId, message);
+    console.error("[import-pdf] storage failed", uploadId, error);
+    return NextResponse.json({ error: message, uploadId }, { status: 500 });
+  }
+
   let pdfText: string;
   try {
     pdfText = await extractPdfText(buffer);
@@ -113,7 +124,6 @@ export async function POST(request: Request) {
       fileName: upload.name,
       filePath,
       pdfText,
-      pdfBuffer: buffer,
     });
 
     return NextResponse.json({

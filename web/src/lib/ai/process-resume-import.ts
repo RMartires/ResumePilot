@@ -5,7 +5,6 @@ import { normalizeResume, resumeToJson } from "@/lib/resume";
 import {
   markResumeUploadFailed,
   markResumeUploadSuccess,
-  saveResumePdfToStorage,
 } from "@/lib/supabase/resume-uploads";
 import { createClient } from "@/lib/supabase/server";
 import { getErrorMessage } from "@/lib/utils";
@@ -49,7 +48,7 @@ async function insertResume(
 
 /**
  * Parse + save resume. Prefers deterministic heuristics (ms); falls back to LLM.
- * Storage upload is best-effort and does not block the result.
+ * Caller must already have persisted the PDF to Storage.
  */
 export async function processResumeImport(input: {
   uploadId: string;
@@ -57,15 +56,8 @@ export async function processResumeImport(input: {
   fileName: string;
   filePath: string;
   pdfText: string;
-  pdfBuffer: ArrayBuffer;
 }): Promise<ProcessResumeImportResult> {
   const supabase = await createClient();
-
-  void saveResumePdfToStorage(supabase, input.filePath, input.pdfBuffer).catch(
-    (error) => {
-      console.error("[import-pdf] background storage failed", input.uploadId, error);
-    },
-  );
 
   try {
     const [{ data: defaultTemplate }, heuristic] = await Promise.all([
