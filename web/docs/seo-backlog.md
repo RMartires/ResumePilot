@@ -1,6 +1,6 @@
 # SEO backlog (post Phases 1–2)
 
-Phases 1–2 shipped: marketing shell, technical SEO (sitemap/robots/JSON-LD/OG), legal, pricing/about, public ATS template library (13 pages), free heuristic ATS/score tools, feature landings, mobile marketing nav, deferred demo video load.
+Phases 1–2 shipped: marketing shell, technical SEO (sitemap/robots/JSON-LD/OG), legal/about pages, public ATS template library (13 pages), free heuristic ATS/score tools, feature landings, mobile marketing nav, deferred demo video load.
 
 ## Deferred — Phase 3 · Content engine
 

@@ -112,7 +112,7 @@ export function LandingPage() {
           <div>
             <h2 className="text-xl font-semibold">Explore before you sign in</h2>
             <p className="mt-1 text-sm text-zinc-400">
-              Compare ATS-safe layouts, check your resume, or review the free plan.
+              Compare ATS-safe layouts or check your resume with our free tools.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-sm">
@@ -124,9 +124,6 @@ export function LandingPage() {
             </Link>
             <Link href="/tools/resume-score" className="text-blue-300 hover:text-blue-200">
               Resume score
-            </Link>
-            <Link href="/pricing" className="text-blue-300 hover:text-blue-200">
-              Pricing
             </Link>
           </div>
         </div>

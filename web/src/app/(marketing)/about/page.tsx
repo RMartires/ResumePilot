@@ -62,10 +62,6 @@ export default function AboutPage() {
           <Link href="/templates" className="text-blue-300 hover:text-blue-200">
             templates
           </Link>
-          ,{" "}
-          <Link href="/pricing" className="text-blue-300 hover:text-blue-200">
-            pricing
-          </Link>
           , or our{" "}
           <Link href="/press" className="text-blue-300 hover:text-blue-200">
             press and product facts

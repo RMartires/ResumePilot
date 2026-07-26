@@ -7,7 +7,6 @@ const footerLinks = [
   { href: "/tools/ats-checker", label: "ATS Checker" },
   { href: "/tools/resume-score", label: "Resume Score" },
   { href: "/features", label: "Features" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/press", label: "Press" },
   { href: "/privacy", label: "Privacy Policy" },

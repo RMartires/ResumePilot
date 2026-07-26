@@ -14,7 +14,6 @@ const BUILT_IN_PUBLIC_PATHS = new Set([
   "/tools/ats-checker",
   "/tools/resume-score",
   "/features",
-  "/pricing",
   "/about",
 ]);
 

@@ -13,7 +13,6 @@ These steps are manual in Google / Bing dashboards — the site already exposes 
    - `/templates`
    - `/tools/ats-checker`
    - `/tools/resume-score`
-   - `/pricing`
    - `/about`
 6. Check **Page indexing** weekly for the first month; fix soft-404s / blocked by robots if any appear.
 

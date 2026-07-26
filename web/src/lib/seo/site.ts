@@ -16,7 +16,6 @@ const staticPublicPaths = [
   "/features/cover-letter",
   "/features/job-tracker",
   "/features/linkedin-import",
-  "/pricing",
   "/about",
   "/press",
   "/privacy",
