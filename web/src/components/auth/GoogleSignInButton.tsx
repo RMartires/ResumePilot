@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnalyticsEvent, track } from "@/lib/analytics/umami";
 import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
-import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
 
 type AuthIntent = "signup" | "login" | "cta";
@@ -72,6 +71,7 @@ export async function startGoogleSignIn(
 ) {
   trackAuthIntent(intent);
 
+  const { createClient } = await import("@/lib/supabase/client");
   const supabase = createClient();
   const redirectUrl = authCallbackUrl(redirectTo);
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -14,46 +15,20 @@ type ProductDemoProps = {
 };
 
 export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
 
-  useEffect(() => {
-    const node = containerRef.current;
-    if (!node || shouldLoad) return;
-
-    if (typeof IntersectionObserver === "undefined") {
-      setShouldLoad(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px 0px" },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [shouldLoad]);
-
-  useEffect(() => {
-    if (!shouldLoad) return;
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = true;
-    void video.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
-  }, [shouldLoad]);
-
   const togglePlayback = () => {
     const video = videoRef.current;
     if (!video) return;
+
+    if (!shouldLoad) {
+      setShouldLoad(true);
+      void video.play().catch(() => setPlaying(false));
+      return;
+    }
 
     if (video.paused) {
       void video.play();
@@ -73,7 +48,7 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
   };
 
   return (
-    <div ref={containerRef} className={cn("w-full min-w-0 max-w-full", className)}>
+    <div className={cn("w-full min-w-0 max-w-full", className)}>
       <div
         className={cn(
           "relative w-full max-w-full overflow-hidden rounded-3xl border border-white/10 bg-black shadow-2xl shadow-blue-950/30",
@@ -87,30 +62,32 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
           </span>
         </div>
         <div className="relative aspect-[16/10] w-full max-w-full bg-[#0a0e16]">
-          {shouldLoad ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="none"
-              poster={DEMO_POSTER_URL}
-              className="absolute inset-0 h-full w-full object-contain"
-              onPlay={() => setPlaying(true)}
-              onPause={() => setPlaying(false)}
-            >
-              <source src={DEMO_VIDEO_URL} type="video/mp4" />
-              Your browser does not support video playback.
-            </video>
-          ) : (
-            <div
-              className="absolute inset-0 bg-contain bg-center bg-no-repeat"
-              style={{ backgroundImage: `url(${DEMO_POSTER_URL})` }}
-              role="img"
-              aria-label="ResumePilot editor and ATS score preview"
-            />
-          )}
+          <Image
+            src={DEMO_POSTER_URL}
+            alt="ResumePilot editor and ATS score preview"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            unoptimized
+            className="object-contain"
+          />
+          <video
+            ref={videoRef}
+            loop
+            muted
+            playsInline
+            preload="none"
+            className={cn(
+              "absolute inset-0 h-full w-full object-contain transition-opacity",
+              shouldLoad ? "opacity-100" : "pointer-events-none opacity-0",
+            )}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+          >
+            <source src={DEMO_VIDEO_URL} type="video/mp4" />
+            Your browser does not support video playback.
+          </video>
           <div className="absolute right-4 bottom-4 flex items-center gap-2">
             <button
               type="button"
@@ -128,8 +105,7 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             <button
               type="button"
               onClick={togglePlayback}
-              disabled={!shouldLoad}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80 disabled:opacity-40"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-black/80"
               aria-label={playing ? "Pause demo" : "Play demo"}
             >
               {playing ? (
