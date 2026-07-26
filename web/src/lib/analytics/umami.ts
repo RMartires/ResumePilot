@@ -11,6 +11,9 @@ const UMAMI_READY_INTERVAL_MS = 250;
 
 export const AnalyticsEvent = {
   CtaGetStarted: "cta_get_started",
+  MarketingCtaClicked: "marketing_cta_clicked",
+  SeoToolCompleted: "seo_tool_completed",
+  TemplateCtaClicked: "template_cta_clicked",
   SignupStarted: "signup_started",
   SignupCompleted: "signup_completed",
   LoginStarted: "login_started",
@@ -132,6 +135,25 @@ export function track(
     ...(currentUserEmail ? { email: currentUserEmail } : {}),
     ...data,
   });
+
+  whenUmamiReady((umami) => {
+    if (payload) {
+      umami.track(event, payload);
+      return;
+    }
+    umami.track(event);
+  });
+}
+
+/**
+ * Fire an event without session identity enrichment.
+ * Use this for public acquisition funnels whose payload must remain non-PII.
+ */
+export function trackPrivacySafe(
+  event: AnalyticsEventName | string,
+  data?: AnalyticsEventData,
+): void {
+  const payload = compactEventData(data);
 
   whenUmamiReady((umami) => {
     if (payload) {

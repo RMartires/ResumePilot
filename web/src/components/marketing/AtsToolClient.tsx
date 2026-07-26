@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import type { AtsScoreResult } from "@/lib/seo/ats-score";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { AnalyticsEvent } from "@/lib/analytics/umami";
+import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
 
 type AtsToolClientProps = {
   mode: "ats-checker" | "resume-score";
@@ -47,6 +49,10 @@ export function AtsToolClient({ mode }: AtsToolClientProps) {
         throw new Error(data.error ?? "Could not score this resume.");
       }
       setResult(data.result);
+      trackSeoFunnelEvent(AnalyticsEvent.SeoToolCompleted, {
+        source_page: window.location.pathname,
+        tool: mode,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {

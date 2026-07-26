@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "AI Cover Letter Generator",
   description:
     "Generate role-specific cover letters that stay in sync with your resume and the job description you’re applying to.",
-  alternates: { canonical: "/features/cover-letter" },
-};
+  path: "/features/cover-letter",
+});
 
 export default function CoverLetterFeaturePage() {
   return (

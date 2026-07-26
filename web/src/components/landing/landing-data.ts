@@ -28,6 +28,7 @@ export type FeatureItem = {
   title: string;
   description: string;
   icon: LucideIcon;
+  href: string;
 };
 
 export const features: FeatureItem[] = [
@@ -36,48 +37,56 @@ export const features: FeatureItem[] = [
     description:
       "Generate bullet points, summaries, and full first drafts from your experience or a pasted job description in seconds.",
     icon: WandSparkles,
+    href: "/features",
   },
   {
     title: "ATS scoring & checker",
     description:
       "Real-time match scores and parse-safe formatting. Single-column templates that pass Workday, Greenhouse, Lever, and Taleo.",
     icon: ScanSearch,
+    href: "/tools/ats-checker",
   },
   {
     title: "Job description tailoring",
     description:
       "Paste any posting and get keyword gaps, match percentages, and suggested edits so each application is targeted — not copy-pasted.",
     icon: Target,
+    href: "/tools/ats-checker",
   },
   {
     title: "Professional templates",
     description:
       "ATS-friendly layouts plus polished designs. Switch between a corporate-safe version and a standout visual resume when you need both.",
     icon: LayoutTemplate,
+    href: "/templates",
   },
   {
     title: "Cover letter generator",
     description:
       "Role-specific cover letters in seconds, synced with your resume content and the job description you're applying to.",
     icon: FileText,
+    href: "/features/cover-letter",
   },
   {
     title: "LinkedIn import",
     description:
       "Pull your profile into a structured resume instantly. Update once, export PDF or Word for every application.",
     icon: Import,
+    href: "/features/linkedin-import",
   },
   {
     title: "Job application tracker",
     description:
       "Kanban-style pipeline from saved roles to interviews. Clip jobs from 50+ boards and keep resume versions attached to each.",
     icon: Briefcase,
+    href: "/features/job-tracker",
   },
   {
     title: "Resume analytics",
     description:
       "See what's working — keyword density, quantified bullets, length, and section completeness before you hit submit.",
     icon: ChartColumn,
+    href: "/tools/resume-score",
   },
 ];
 
@@ -143,3 +152,4 @@ export const faqs = [
 ];
 
 export const DEMO_VIDEO_URL = "/videos/resumepilot_demo.mp4";
+export const DEMO_POSTER_URL = "/images/product-demo-poster.svg";

@@ -36,11 +36,20 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: SITE_NAME,
     locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "ResumePilot — AI Resume Builder with ATS Optimization",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "ResumePilot — AI Resume Builder with ATS Optimization",
     description: siteDescription,
+    images: ["/twitter-image"],
   },
 };
 

@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "Privacy Policy",
   description:
     "How ResumePilot collects, uses, and protects your information when you use our AI resume builder.",
-  alternates: { canonical: "/privacy" },
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

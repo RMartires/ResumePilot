@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "LinkedIn Resume Builder — Import Your Profile",
   description:
     "Turn your LinkedIn profile into a structured ATS-friendly resume. Import once, tailor per role, export PDF or Word.",
-  alternates: { canonical: "/features/linkedin-import" },
-};
+  path: "/features/linkedin-import",
+});
 
 export default function LinkedInImportFeaturePage() {
   return (

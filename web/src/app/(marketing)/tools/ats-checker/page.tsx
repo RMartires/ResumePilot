@@ -1,22 +1,50 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { AtsToolClient } from "@/components/marketing/AtsToolClient";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
+import {
+  breadcrumbJsonLd,
+  webApplicationJsonLd,
+} from "@/lib/seo/structured-data";
 
-export const metadata: Metadata = {
-  title: "Free ATS Resume Checker",
-  description:
-    "Free ATS resume checker — upload a PDF or paste your resume, match keywords from a job description, and fix formatting issues before you apply.",
-  alternates: { canonical: "/tools/ats-checker" },
-};
+const title = "Free ATS Resume Checker";
+const description =
+  "Free ATS resume checker — upload a PDF or paste your resume, match keywords from a job description, and fix formatting issues before you apply.";
+
+export const metadata = createMarketingMetadata({
+  title,
+  description,
+  path: "/tools/ats-checker",
+});
 
 export default function AtsCheckerPage() {
   return (
-    <MarketingPage
-      eyebrow="Free tool"
-      title="ATS resume checker"
-      description="See how your resume stacks up against a job description. Instant heuristic match score, keyword gaps, and parse-safe formatting checks — no account required."
-    >
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "ATS resume checker", path: "/tools/ats-checker" },
+        ])}
+      />
+      <JsonLd
+        data={webApplicationJsonLd({
+          name: "ResumePilot ATS Resume Checker",
+          description,
+          path: "/tools/ats-checker",
+          featureList: [
+            "PDF text extraction",
+            "Job-description keyword comparison",
+            "Contact and section checks",
+            "Heuristic ATS match score",
+          ],
+        })}
+      />
+      <MarketingPage
+        eyebrow="Free tool"
+        title="ATS resume checker"
+        description="See how your resume stacks up against a job description. Instant heuristic match score, keyword gaps, and parse-safe formatting checks — no account required."
+      >
       <AtsToolClient mode="ats-checker" />
       <div className="mt-12 max-w-3xl space-y-3 text-sm leading-7 text-zinc-400">
         <h2 className="text-xl font-semibold text-white">How this ATS checker works</h2>
@@ -34,6 +62,7 @@ export default function AtsCheckerPage() {
           , use the linked tools.
         </p>
       </div>
-    </MarketingPage>
+      </MarketingPage>
+    </>
   );
 }

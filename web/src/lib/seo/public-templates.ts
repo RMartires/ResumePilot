@@ -51,6 +51,166 @@ const seoExtras: PublicTemplate[] = [
       layout: "standard",
     },
   },
+  {
+    slug: "simple",
+    name: "Simple",
+    description:
+      "Minimal ATS friendly resume template with plain headings and generous whitespace.",
+    atsNotes: [
+      "Minimal styling reduces parse failures",
+      "Clear section order: summary → experience → education → skills",
+      "Ideal when a portal strips formatting aggressively",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.74rem",
+      accentColor: "#18181b",
+      sectionSpacing: "20px",
+      headingTransform: "none",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "executive",
+    name: "Executive",
+    description:
+      "Senior-level ATS resume template with restrained serif type and strong section labels.",
+    atsNotes: [
+      "Leadership-friendly hierarchy without multi-column traps",
+      "Uppercase headings for skimmable structure",
+      "Works for director and VP applications through ATS portals",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Libre Baskerville, Georgia, serif",
+      fontSize: "0.7rem",
+      accentColor: "#0f172a",
+      sectionSpacing: "14px",
+      headingTransform: "uppercase",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "tech",
+    name: "Tech",
+    description:
+      "Engineering-focused ATS resume template optimized for skills density and project bullets.",
+    atsNotes: [
+      "Sans-serif body text for dense skill and stack lists",
+      "Blue accent kept subtle so PDF text stays selectable",
+      "Pairs well with keyword-heavy software engineer JDs",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.75rem",
+      accentColor: "#2563eb",
+      sectionSpacing: "16px",
+      headingTransform: "none",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "entry-level",
+    name: "Entry Level",
+    description:
+      "New-grad ATS friendly resume template that elevates projects, education, and skills.",
+    atsNotes: [
+      "Room for projects and coursework without sidebar clutter",
+      "Standard headings ATS keyword scanners recognize",
+      "Best when experience bullets are shorter",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.76rem",
+      accentColor: "#0f766e",
+      sectionSpacing: "18px",
+      headingTransform: "none",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "healthcare",
+    name: "Healthcare",
+    description:
+      "Clinical and allied-health ATS resume template with clear credentials and experience blocks.",
+    atsNotes: [
+      "Single-column flow for licenses and certifications",
+      "High-contrast text for printed and portal uploads",
+      "Avoids icon rows that break nursing/hospital ATS parsers",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.73rem",
+      accentColor: "#0e7490",
+      sectionSpacing: "15px",
+      headingTransform: "uppercase",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "student",
+    name: "Student",
+    description:
+      "Campus and internship ATS resume template with education-first friendly spacing.",
+    atsNotes: [
+      "Education and projects stay parser-readable",
+      "No columns that reorder internship bullets incorrectly",
+      "Clean export for Handshake and university career portals",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.75rem",
+      accentColor: "#4338ca",
+      sectionSpacing: "17px",
+      headingTransform: "none",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "one-page",
+    name: "One Page",
+    description:
+      "Tight ATS friendly resume template for fitting strong experience onto a single page.",
+    atsNotes: [
+      "Tighter spacing while keeping standard section names",
+      "Still single-column for reliable ATS parsing",
+      "Use when recruiters ask for a one-page resume",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.7rem",
+      accentColor: "#1f2937",
+      sectionSpacing: "12px",
+      headingTransform: "uppercase",
+      layout: "standard",
+    },
+  },
+  {
+    slug: "clean",
+    name: "Clean",
+    description:
+      "Neutral ATS resume template with balanced spacing and no decorative flourishes.",
+    atsNotes: [
+      "Neutral palette that survives black-and-white ATS renders",
+      "Consistent heading transform for section detection",
+      "Safe default for most corporate job boards",
+    ],
+    isDefault: false,
+    config: {
+      fontFamily: "Inter, system-ui, sans-serif",
+      fontSize: "0.74rem",
+      accentColor: "#334155",
+      sectionSpacing: "16px",
+      headingTransform: "uppercase",
+      layout: "standard",
+    },
+  },
 ];
 
 const baseAtsNotes: Record<string, string[]> = {

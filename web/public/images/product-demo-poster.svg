@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">ResumePilot editor preview</title>
+  <desc id="desc">A lightweight preview of the ResumePilot resume editor and ATS score panel.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#101827"/>
+      <stop offset="1" stop-color="#05070d"/>
+    </linearGradient>
+    <linearGradient id="score" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="800" fill="url(#bg)"/>
+  <rect x="34" y="34" width="1212" height="732" rx="22" fill="#0b101a" stroke="#263247"/>
+  <rect x="34" y="34" width="1212" height="66" rx="22" fill="#111827"/>
+  <circle cx="72" cy="67" r="8" fill="#ef4444"/>
+  <circle cx="98" cy="67" r="8" fill="#f59e0b"/>
+  <circle cx="124" cy="67" r="8" fill="#22c55e"/>
+  <text x="164" y="75" fill="#d4d4d8" font-family="system-ui, sans-serif" font-size="20" font-weight="600">ResumePilot editor</text>
+  <rect x="64" y="130" width="250" height="606" rx="14" fill="#0f172a" stroke="#253047"/>
+  <text x="88" y="172" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="17" font-weight="600">Resume sections</text>
+  <g fill="#334155">
+    <rect x="88" y="202" width="196" height="44" rx="8"/>
+    <rect x="88" y="258" width="196" height="44" rx="8"/>
+    <rect x="88" y="314" width="196" height="44" rx="8"/>
+    <rect x="88" y="370" width="196" height="44" rx="8"/>
+    <rect x="88" y="426" width="196" height="44" rx="8"/>
+  </g>
+  <rect x="344" y="130" width="576" height="606" rx="14" fill="#f8fafc"/>
+  <text x="392" y="190" fill="#0f172a" font-family="Georgia, serif" font-size="31" font-weight="700">Alex Morgan</text>
+  <rect x="392" y="210" width="234" height="8" rx="4" fill="#94a3b8"/>
+  <text x="392" y="266" fill="#1e3a5f" font-family="system-ui, sans-serif" font-size="16" font-weight="700">PROFESSIONAL SUMMARY</text>
+  <g fill="#cbd5e1">
+    <rect x="392" y="286" width="468" height="8" rx="4"/>
+    <rect x="392" y="304" width="438" height="8" rx="4"/>
+    <rect x="392" y="322" width="455" height="8" rx="4"/>
+  </g>
+  <text x="392" y="382" fill="#1e3a5f" font-family="system-ui, sans-serif" font-size="16" font-weight="700">EXPERIENCE</text>
+  <g fill="#cbd5e1">
+    <rect x="392" y="408" width="286" height="10" rx="5"/>
+    <rect x="392" y="436" width="450" height="8" rx="4"/>
+    <rect x="410" y="454" width="420" height="8" rx="4"/>
+    <rect x="410" y="472" width="398" height="8" rx="4"/>
+    <rect x="392" y="514" width="260" height="10" rx="5"/>
+    <rect x="392" y="542" width="452" height="8" rx="4"/>
+    <rect x="410" y="560" width="410" height="8" rx="4"/>
+  </g>
+  <rect x="950" y="130" width="266" height="280" rx="14" fill="#0f172a" stroke="#253047"/>
+  <text x="978" y="170" fill="#e4e4e7" font-family="system-ui, sans-serif" font-size="18" font-weight="600">ATS match score</text>
+  <text x="978" y="246" fill="#fff" font-family="system-ui, sans-serif" font-size="58" font-weight="700">86</text>
+  <text x="1060" y="246" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="20">/ 100</text>
+  <rect x="978" y="278" width="210" height="12" rx="6" fill="#243047"/>
+  <rect x="978" y="278" width="181" height="12" rx="6" fill="url(#score)"/>
+  <text x="978" y="334" fill="#86efac" font-family="system-ui, sans-serif" font-size="15"> Contact details found</text>
+  <text x="978" y="365" fill="#86efac" font-family="system-ui, sans-serif" font-size="15"> Standard sections</text>
+  <rect x="950" y="432" width="266" height="304" rx="14" fill="#0f172a" stroke="#253047"/>
+  <text x="978" y="472" fill="#e4e4e7" font-family="system-ui, sans-serif" font-size="18" font-weight="600">Keyword suggestions</text>
+  <g font-family="system-ui, sans-serif" font-size="14">
+    <rect x="978" y="500" width="118" height="34" rx="17" fill="#1e3a8a"/><text x="996" y="522" fill="#bfdbfe">leadership</text>
+    <rect x="978" y="548" width="138" height="34" rx="17" fill="#1e3a8a"/><text x="996" y="570" fill="#bfdbfe">stakeholders</text>
+    <rect x="978" y="596" width="108" height="34" rx="17" fill="#1e3a8a"/><text x="996" y="618" fill="#bfdbfe">strategy</text>
+  </g>
+</svg>

@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "Features — AI Resume Builder Toolkit",
   description:
     "Explore ResumePilot features: AI writing, ATS scoring, cover letters, LinkedIn import, job tracking, and ATS friendly templates.",
-  alternates: { canonical: "/features" },
-};
+  path: "/features",
+});
 
 const featureLinks = [
   {

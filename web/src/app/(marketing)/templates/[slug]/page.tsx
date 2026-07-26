@@ -4,10 +4,13 @@ import { notFound } from "next/navigation";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { PublicTemplatePreview } from "@/components/marketing/PublicTemplatePreview";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 import {
   getAllPublicTemplateSlugs,
   getPublicTemplate,
 } from "@/lib/seo/public-templates";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -22,11 +25,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const template = getPublicTemplate(slug);
   if (!template) return {};
 
-  return {
+  return createMarketingMetadata({
     title: `${template.name} — ATS Friendly Resume Template`,
     description: template.description,
-    alternates: { canonical: `/templates/${slug}` },
-  };
+    path: `/templates/${slug}`,
+  });
 }
 
 export default async function TemplateDetailPage({ params }: PageProps) {
@@ -35,11 +38,19 @@ export default async function TemplateDetailPage({ params }: PageProps) {
   if (!template) notFound();
 
   return (
-    <MarketingPage
-      eyebrow="ATS friendly resume template"
-      title={template.name}
-      description={template.description}
-    >
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Resume templates", path: "/templates" },
+          { name: template.name, path: `/templates/${slug}` },
+        ])}
+      />
+      <MarketingPage
+        eyebrow="ATS friendly resume template"
+        title={template.name}
+        description={template.description}
+      >
       <div className="grid gap-10 lg:grid-cols-2">
         <PublicTemplatePreview template={template} />
         <div className="space-y-6">
@@ -67,9 +78,11 @@ export default async function TemplateDetailPage({ params }: PageProps) {
             description="Create a free account to apply this template and export an ATS-safe PDF."
             href={`/login?redirect=${encodeURIComponent("/dashboard/templates")}`}
             label="Use this template"
+            templateSlug={template.slug}
           />
         </div>
       </div>
-    </MarketingPage>
+      </MarketingPage>
+    </>
   );
 }

@@ -2,8 +2,14 @@ import Link from "next/link";
 
 const footerLinks = [
   { href: "/templates", label: "Templates" },
+  { href: "/guides", label: "Guides" },
+  { href: "/examples/resumes", label: "Examples" },
   { href: "/tools/ats-checker", label: "ATS Checker" },
+  { href: "/tools/resume-score", label: "Resume Score" },
   { href: "/features", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
+  { href: "/press", label: "Press" },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/terms", label: "Terms" },
 ] as const;

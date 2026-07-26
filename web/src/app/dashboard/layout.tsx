@@ -3,6 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 import { UmamiScripts } from "@/components/analytics/UmamiScripts";
 import { UmamiSession } from "@/components/analytics/UmamiSession";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { noIndexMetadata } from "@/lib/seo/metadata";
+
+export const metadata = noIndexMetadata;
 
 export default async function AppLayout({
   children,
@@ -28,7 +31,6 @@ export default async function AppLayout({
       <UmamiSession
         userId={user.id}
         email={user.email}
-        createdAt={user.created_at}
       />
       <DashboardShell userEmail={user.email}>{children}</DashboardShell>
     </>

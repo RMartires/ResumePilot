@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { ResumePreview } from "@/components/preview/ResumePreview";
 import { AnalyticsEvent, track } from "@/lib/analytics/umami";
+import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
 import { emptyResume } from "@/lib/resume";
 import type { Template } from "@/lib/templates";
 import { templateConfigSchema } from "@/lib/validations/resume";
@@ -78,8 +79,12 @@ export function TemplateGallery({
 }: TemplateGalleryProps) {
   const router = useRouter();
 
-  const applyTemplate = async (templateId: string) => {
+  const applyTemplate = async (templateId: string, templateSlug: string) => {
     if (!resumeId) return;
+    trackSeoFunnelEvent(AnalyticsEvent.TemplateCtaClicked, {
+      source_page: "/dashboard/templates",
+      template_slug: templateSlug,
+    });
     const res = await fetch(`/api/resumes/${resumeId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -124,7 +129,7 @@ export function TemplateGallery({
                   className="w-full"
                   variant={isActive ? "secondary" : "default"}
                   disabled={isActive}
-                  onClick={() => applyTemplate(template.id)}
+                  onClick={() => applyTemplate(template.id, template.slug)}
                 >
                   {isActive ? "Current template" : "Use template"}
                 </Button>

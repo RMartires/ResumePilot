@@ -8,9 +8,14 @@ declare global {
   }
 }
 
-/** Fire-and-forget Sign-up conversion — must not delay OAuth navigation. */
+/** Fire only after the OAuth callback reliably classifies a new account. */
 export function reportSignupConversion() {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+  if (typeof window === "undefined") return;
+
+  window.dataLayer ??= [];
+  window.gtag ??= (...args: unknown[]) => {
+    window.dataLayer?.push(args);
+  };
 
   window.gtag("event", "conversion", {
     send_to: SIGNUP_CONVERSION_SEND_TO,

@@ -1,4 +1,5 @@
 import { WandSparkles } from "lucide-react";
+import Link from "next/link";
 import { LandingSignInPanel } from "@/components/landing/LandingSignInPanel";
 import {
   faqs,
@@ -87,8 +88,9 @@ export function LandingPage() {
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
-                <div
+                <Link
                   key={feature.title}
+                  href={feature.href}
                   className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-blue-500/30 hover:bg-white/[0.05]"
                 >
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/20 text-blue-300">
@@ -98,9 +100,34 @@ export function LandingPage() {
                   <p className="mt-2 text-sm leading-6 text-zinc-400">
                     {feature.description}
                   </p>
-                </div>
+                </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 px-6 py-12">
+        <div className="mx-auto flex max-w-6xl flex-col gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Explore before you sign in</h2>
+            <p className="mt-1 text-sm text-zinc-400">
+              Compare ATS-safe layouts, check your resume, or review the free plan.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3 text-sm">
+            <Link href="/templates" className="text-blue-300 hover:text-blue-200">
+              Resume templates
+            </Link>
+            <Link href="/tools/ats-checker" className="text-blue-300 hover:text-blue-200">
+              ATS checker
+            </Link>
+            <Link href="/tools/resume-score" className="text-blue-300 hover:text-blue-200">
+              Resume score
+            </Link>
+            <Link href="/pricing" className="text-blue-300 hover:text-blue-200">
+              Pricing
+            </Link>
           </div>
         </div>
       </section>

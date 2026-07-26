@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnalyticsEvent, track } from "@/lib/analytics/umami";
-import { reportSignupConversion } from "@/lib/google-ads";
+import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
 import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -47,15 +47,23 @@ export function authCallbackUrl(next = "/dashboard") {
 }
 
 function trackAuthIntent(intent: AuthIntent = "signup") {
+  const sourcePage =
+    typeof window === "undefined" ? "/" : window.location.pathname;
+
   if (intent === "cta") {
-    track(AnalyticsEvent.CtaGetStarted);
+    trackSeoFunnelEvent(AnalyticsEvent.MarketingCtaClicked, {
+      source_page: sourcePage,
+    });
     return;
   }
   if (intent === "login") {
-    track(AnalyticsEvent.LoginStarted);
+    track(AnalyticsEvent.LoginStarted, { auth_mode: "google" });
     return;
   }
-  track(AnalyticsEvent.SignupStarted);
+  trackSeoFunnelEvent(AnalyticsEvent.SignupStarted, {
+    source_page: sourcePage,
+    auth_mode: "google",
+  });
 }
 
 export async function startGoogleSignIn(
@@ -63,7 +71,6 @@ export async function startGoogleSignIn(
   intent: AuthIntent = "signup",
 ) {
   trackAuthIntent(intent);
-  reportSignupConversion();
 
   const supabase = createClient();
   const redirectUrl = authCallbackUrl(redirectTo);

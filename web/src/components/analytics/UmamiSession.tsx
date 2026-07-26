@@ -2,42 +2,43 @@
 
 import { useEffect } from "react";
 import { AnalyticsEvent, identifyUser, track } from "@/lib/analytics/umami";
-
-const NEW_USER_WINDOW_MS = 5 * 60 * 1000;
+import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
+import { reportSignupConversion } from "@/lib/google-ads";
 
 type UmamiSessionProps = {
   userId: string;
   email: string;
-  createdAt?: string | null;
 };
 
 /**
- * Identifies the Umami session by email. Fires login/signup completion only
- * after a real OAuth return (`?umami_login=1` from /auth/callback).
+ * Identifies the Umami session by email. Completion events only fire after a
+ * successful OAuth code exchange classified by the server callback.
  */
-export function UmamiSession({ userId, email, createdAt }: UmamiSessionProps) {
+export function UmamiSession({ userId, email }: UmamiSessionProps) {
   useEffect(() => {
     if (!email) return;
 
     identifyUser({ email, userId });
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get("umami_login") !== "1") return;
+    const authResult = params.get("auth_result");
+    if (authResult !== "signup" && authResult !== "login") return;
 
-    track(AnalyticsEvent.LoginCompleted);
-
-    if (createdAt) {
-      const ageMs = Date.now() - new Date(createdAt).getTime();
-      if (Number.isFinite(ageMs) && ageMs >= 0 && ageMs < NEW_USER_WINDOW_MS) {
-        track(AnalyticsEvent.SignupCompleted);
-      }
+    if (authResult === "signup") {
+      trackSeoFunnelEvent(AnalyticsEvent.SignupCompleted, {
+        source_page: window.location.pathname,
+        auth_mode: "google",
+      });
+      reportSignupConversion();
+    } else {
+      track(AnalyticsEvent.LoginCompleted, { auth_mode: "google" });
     }
 
-    params.delete("umami_login");
+    params.delete("auth_result");
     const query = params.toString();
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
     window.history.replaceState({}, "", nextUrl);
-  }, [userId, email, createdAt]);
+  }, [userId, email]);
 
   return null;
 }

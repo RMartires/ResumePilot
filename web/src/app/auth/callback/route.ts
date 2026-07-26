@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
+import { isReliableNewSignup } from "@/lib/auth/signup-completion";
 import { createClient } from "@/lib/supabase/server";
 
-function redirectAfterLogin(origin: string, next: string) {
+function redirectAfterLogin(
+  origin: string,
+  next: string,
+  authResult: "signup" | "login",
+) {
   const path = next.startsWith("/") ? next : "/dashboard";
   const url = new URL(path, origin);
-  // Lets the client fire login_completed once after a real OAuth return.
-  url.searchParams.set("umami_login", "1");
+  // Lets the client report completion once, only after code exchange succeeds.
+  url.searchParams.set("auth_result", authResult);
   return NextResponse.redirect(url);
 }
 
@@ -16,9 +21,15 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      return redirectAfterLogin(origin, next);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error && data.user) {
+      const authResult = isReliableNewSignup({
+        createdAt: data.user.created_at,
+        lastSignInAt: data.user.last_sign_in_at,
+      })
+        ? "signup"
+        : "login";
+      return redirectAfterLogin(origin, next, authResult);
     }
   }
 

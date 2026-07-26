@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "Terms of Service",
   description:
     "Terms that govern your use of ResumePilot, the AI resume builder and related free tools.",
-  alternates: { canonical: "/terms" },
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

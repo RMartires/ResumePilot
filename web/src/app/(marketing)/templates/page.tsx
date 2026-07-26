@@ -1,24 +1,49 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { PublicTemplateCard } from "@/components/marketing/PublicTemplateCard";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 import { PUBLIC_TEMPLATES } from "@/lib/seo/public-templates";
+import {
+  breadcrumbJsonLd,
+  itemListJsonLd,
+} from "@/lib/seo/structured-data";
 
-export const metadata: Metadata = {
-  title: "ATS Friendly Resume Templates (Free)",
-  description:
-    "Download-ready ATS friendly resume templates. Single-column, parse-safe layouts that work with Workday, Greenhouse, Lever, and Taleo.",
-  alternates: { canonical: "/templates" },
-};
+const title = "ATS Friendly Resume Templates (Free)";
+const description =
+  "Download-ready ATS friendly resume templates. Single-column, parse-safe layouts that work with Workday, Greenhouse, Lever, and Taleo.";
+
+export const metadata = createMarketingMetadata({
+  title,
+  description,
+  path: "/templates",
+});
 
 export default function TemplatesIndexPage() {
   return (
-    <MarketingPage
-      eyebrow="Templates"
-      title="ATS friendly resume templates"
-      description="Parser-safe layouts built for modern applicant tracking systems. Pick a template, tailor it in ResumePilot, and export PDF or Word."
-    >
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Resume templates", path: "/templates" },
+        ])}
+      />
+      <JsonLd
+        data={itemListJsonLd(
+          "ATS friendly resume templates",
+          PUBLIC_TEMPLATES.map((template) => ({
+            name: template.name,
+            path: `/templates/${template.slug}`,
+            description: template.description,
+          })),
+        )}
+      />
+      <MarketingPage
+        eyebrow="Templates"
+        title="ATS friendly resume templates"
+        description="Parser-safe layouts built for modern applicant tracking systems. Pick a template, tailor it in ResumePilot, and export PDF or Word."
+      >
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {PUBLIC_TEMPLATES.map((template) => (
           <PublicTemplateCard key={template.slug} template={template} />
@@ -55,6 +80,7 @@ export default function TemplatesIndexPage() {
           href="/login?redirect=%2Fdashboard%2Ftemplates"
         />
       </div>
-    </MarketingPage>
+      </MarketingPage>
+    </>
   );
 }

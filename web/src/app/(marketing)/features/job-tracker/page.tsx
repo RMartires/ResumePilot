@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
 import { MarketingPage } from "@/components/marketing/MarketingPage";
 import { SignInCta } from "@/components/marketing/SignInCta";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createMarketingMetadata({
   title: "Job Application Tracker",
   description:
     "Track job applications in a kanban-style pipeline — from saved roles to interviews — with resume versions attached to each posting.",
-  alternates: { canonical: "/features/job-tracker" },
-};
+  path: "/features/job-tracker",
+});
 
 export default function JobTrackerFeaturePage() {
   return (

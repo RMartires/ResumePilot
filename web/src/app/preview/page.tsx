@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { ResumePreview } from "@/components/preview/ResumePreview";
 import { normalizeResume } from "@/lib/resume";
+import { noIndexMetadata } from "@/lib/seo/metadata";
 import sampleResume from "@/data/sample-resume.json";
+
+export const metadata = noIndexMetadata;
 
 export default function PreviewDevPage() {
   const resume = normalizeResume(sampleResume);

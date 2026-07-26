@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ResumePreview } from "@/components/preview/ResumePreview";
+import { AnalyticsEvent } from "@/lib/analytics/umami";
+import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
 import type { PublicTemplate } from "@/lib/seo/public-templates";
 import { getPublicPreviewResume } from "@/lib/seo/preview-resume";
 
@@ -11,6 +14,17 @@ type PublicTemplateCardProps = {
 
 export function PublicTemplateCard({ template }: PublicTemplateCardProps) {
   const resume = getPublicPreviewResume(template.config);
+  const pathname = usePathname();
+
+  const handleUseTemplate = () => {
+    trackSeoFunnelEvent(AnalyticsEvent.MarketingCtaClicked, {
+      source_page: pathname,
+    });
+    trackSeoFunnelEvent(AnalyticsEvent.TemplateCtaClicked, {
+      source_page: pathname,
+      template_slug: template.slug,
+    });
+  };
 
   return (
     <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
@@ -37,6 +51,7 @@ export function PublicTemplateCard({ template }: PublicTemplateCardProps) {
           </Link>
           <Link
             href={`/login?redirect=${encodeURIComponent("/dashboard/templates")}`}
+            onClick={handleUseTemplate}
             className="text-sm font-medium text-zinc-300 hover:text-white"
           >
             Use this template
