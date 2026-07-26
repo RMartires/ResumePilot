@@ -3,6 +3,7 @@ import { Inter, Libre_Baskerville } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { GOOGLE_ADS_ID } from "@/lib/google-ads";
+import { SITE_NAME, SITE_URL, siteDescription } from "@/lib/seo/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,23 +17,28 @@ const libreBaskerville = Libre_Baskerville({
   weight: ["400", "700"],
 });
 
-const siteDescription =
-  "Build ATS-friendly resumes in minutes. AI writing, job-description tailoring, match scoring, cover letters, and application tracking in one workflow.";
-
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "ResumePilot — AI Resume Builder with ATS Optimization",
     template: "%s · ResumePilot",
   },
   description: siteDescription,
-  applicationName: "ResumePilot",
+  applicationName: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "ResumePilot — AI Resume Builder with ATS Optimization",
     description: siteDescription,
     type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "en_US",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "ResumePilot — AI Resume Builder with ATS Optimization",
     description: siteDescription,
   },

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { UmamiScripts } from "@/components/analytics/UmamiScripts";
 import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
@@ -40,13 +39,6 @@ export default function LoginForm() {
           </div>
 
           {error ? <p className="mt-4 text-center text-sm text-red-400">{error}</p> : null}
-
-          <p className="mt-6 text-center text-xs text-zinc-500">
-            Don&apos;t have access yet?{" "}
-            <Link href="/" className="text-emerald-300 underline underline-offset-2">
-              View the landing page
-            </Link>
-          </p>
         </div>
       </div>
     </div>
