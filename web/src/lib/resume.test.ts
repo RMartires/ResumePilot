@@ -18,9 +18,9 @@ describe("resume", () => {
 
   it("normalizeResume handles sample data", () => {
     const resume = normalizeResume(sampleResume);
-    expect(resume.header.name).toBe("Rohit Martires");
+    expect(resume.header.name).toBe("Alex Rivera");
     expect(resume.experience.length).toBeGreaterThan(0);
-    expect(resume.education.school).toContain("Don Bosco");
+    expect(resume.education.school).toContain("State University");
   });
 
   it("normalizeResume accepts education as an array", () => {
@@ -67,6 +67,6 @@ describe("resume", () => {
     const md = resumeToMarkdown(resume);
     expect(md).toContain("[header]");
     expect(md).toContain("[experience]");
-    expect(md).toContain("Rohit Martires");
+    expect(md).toContain("Alex Rivera");
   });
 });

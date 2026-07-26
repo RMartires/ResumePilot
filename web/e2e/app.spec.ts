@@ -18,7 +18,7 @@ test("login without redirect sends users to landing sign-in", async ({ page }) =
 
 test("preview dev page renders sample resume", async ({ page }) => {
   await page.goto("/preview");
-  await expect(page.getByText("Rohit Martires")).toBeVisible();
+  await expect(page.getByText("Alex Rivera")).toBeVisible();
   await expect(page.getByText("Professional Summary")).toBeVisible();
 });
 

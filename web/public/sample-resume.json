@@ -1,53 +1,52 @@
 {
   "header": {
-    "name": "Rohit Martires",
-    "location": "Margao, India",
-    "phone": "+91-9881611398",
-    "email": "rohitmartires14@gmail.com",
+    "name": "Alex Rivera",
+    "location": "San Francisco, CA",
+    "phone": "+1-555-0100",
+    "email": "alex@example.com",
     "links": [
-      "https://github.com/RMartires",
-      "https://www.linkedin.com/in/rohit-martires-31697b179"
+      "https://github.com/example",
+      "https://www.linkedin.com/in/example"
     ]
   },
-  "summary": "Senior Backend Engineer with 6+ years building high-throughput backend systems, production GenAI features, and e-commerce platforms. Shipped systems processing 100k events/second, 50k+ orders/day, and 100k+ requests/day with sub-1s P95 latency.",
-  "skills": "Backend: Node.js, TypeScript, Python, Flask, Java, Spring Boot, REST APIs | Data: SQL, PostgreSQL, MongoDB, Redis, ETL, Snowplow, Event Systems | AI/LLM: GenAI, LLMs, LangChain, LangGraph, RAG, OpenRouter | Infra/Observability: Docker, Git, AWS, New Relic, LangSmith, Langfuse",
+  "summary": "Software engineer with experience building reliable web applications, APIs, and data pipelines. Comfortable owning features end-to-end from design through production.",
+  "skills": "Backend: Node.js, TypeScript, Python, REST APIs | Data: SQL, PostgreSQL, Redis | Infra: Docker, Git, AWS",
   "experience": [
     {
-      "title": "Senior Software Engineer (Backend / AI Systems)",
-      "company": "Primathon",
-      "dates": "Dec 2023 - Present",
+      "title": "Senior Software Engineer",
+      "company": "Acme Corp",
+      "dates": "Jan 2022 - Present",
       "bullets": [
-        "Architected and authored system design for Snowplow-based event ingestion pipelines processing 100k events/second (Node.js, TypeScript), aligning 3 cross-functional teams.",
-        "Built GenAI-powered ad creative generation APIs (Flask, OpenRouter), automating personalized ad content generation for large product catalogs with model-routing support.",
-        "Established GenAI observability standards and integrated tracing (LangSmith, Langfuse) across request flows, reducing debugging time for prompt and model failures by 35%."
+        "Led design and delivery of event-driven services processing high request volumes with sub-second P95 latency.",
+        "Built internal APIs and tooling that reduced time-to-ship for recurring product workflows.",
+        "Improved observability across services, cutting average incident debugging time significantly."
       ]
     },
     {
-      "title": "Software Engineer (Backend)",
-      "company": "SWIFT",
-      "dates": "Aug 2022 - Nov 2023",
+      "title": "Software Engineer",
+      "company": "Northwind Labs",
+      "dates": "Aug 2019 - Dec 2021",
       "bullets": [
-        "Led a team of 3 developers to architect an in-house order management system processing 50k orders/day (Java, Spring Boot, MongoDB).",
-        "Built and maintained integrations across Shopify, Amazon, WooCommerce, and other e-commerce providers, handling 100k+ requests/day."
+        "Shipped order and catalog integrations used across multiple storefronts.",
+        "Collaborated with a small team to modernize legacy APIs and improve reliability."
       ]
     }
   ],
   "projects": [
     {
-      "name": "Hindsight",
-      "url": "https://github.com/RMartires/hindsight",
+      "name": "Resume Toolkit",
+      "url": "https://github.com/example/resume-toolkit",
       "bullets": [
-        "Built a multi-agent market analysis platform (LangGraph, FastAPI, Next.js) with an AI Trader agent and specialist analysts for point-in-time stock analysis.",
-        "Streamed agent pipeline runs over SSE with Langfuse tracing and Supabase-backed replay for debugging completed analyses."
+        "Built an open-source resume formatting helper with ATS-safe templates and export utilities."
       ]
     }
   ],
   "education": {
-    "school": "Don Bosco College of Engineering",
-    "degree": "BE/B.Tech/BS",
-    "fieldOfStudy": "Computer Engineering",
-    "year": "2020",
-    "graduationDate": "2020-04-30",
+    "school": "State University",
+    "degree": "B.S.",
+    "fieldOfStudy": "Computer Science",
+    "year": "2019",
+    "graduationDate": "2019-05-15",
     "marks": "",
     "marksType": "CGPA",
     "description": "",

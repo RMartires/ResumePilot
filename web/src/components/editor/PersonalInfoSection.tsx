@@ -67,7 +67,7 @@ export function PersonalInfoSection({
           id="name"
           value={header.name}
           onChange={(e) => update({ name: e.target.value })}
-          placeholder="Rohit Martires"
+          placeholder="Alex Rivera"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function PersonalInfoSection({
                   phone: `${phoneCode}${e.target.value ? `-${e.target.value}` : ""}`,
                 })
               }
-              placeholder="9881611398"
+              placeholder="5550100123"
             />
           </div>
         </div>
@@ -123,7 +123,7 @@ export function PersonalInfoSection({
             id="location"
             value={header.location}
             onChange={(e) => update({ location: e.target.value })}
-            placeholder="Margao, India"
+            placeholder="San Francisco, CA"
           />
         </div>
 

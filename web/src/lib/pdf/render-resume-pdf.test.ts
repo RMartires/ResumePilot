@@ -48,7 +48,7 @@ describe("renderResumePdf", () => {
     it("renders serif-style uppercase headings", async () => {
       const content = await pdfText(await renderResumePdf(resume, classic));
 
-      expect(content.toUpperCase()).toContain("ROHIT MARTIRES");
+      expect(content.toUpperCase()).toContain("ALEX RIVERA");
       expect(content.toUpperCase()).toContain("PROFESSIONAL SUMMARY");
       expect(content.toUpperCase()).toContain("EXPERIENCE");
       expect(content.toUpperCase()).toContain("EDUCATION");
@@ -56,11 +56,11 @@ describe("renderResumePdf", () => {
 
     it("keeps experience in title, dates, company, bullets order", async () => {
       const content = await pdfText(await renderResumePdf(resume, classic));
-      const titleIndex = content.indexOf("Senior Software Engineer (Backend / AI Systems)");
-      const datesIndex = content.indexOf("Dec 2023 - Present");
-      const companyIndex = content.indexOf("Primathon");
+      const titleIndex = content.indexOf("Senior Software Engineer");
+      const datesIndex = content.indexOf("Jan 2022 - Present");
+      const companyIndex = content.indexOf("Acme Corp");
       const bulletIndex = content.indexOf(
-        "Architected and authored system design for Snowplow-based event ingestion pipelines",
+        "Led design and delivery of event-driven services",
       );
 
       expect(titleIndex).toBeGreaterThan(-1);
@@ -71,13 +71,12 @@ describe("renderResumePdf", () => {
 
     it("renders education with school before degree", async () => {
       const content = await pdfText(await renderResumePdf(resume, classic));
-      const schoolIndex = content.indexOf("Don Bosco College of Engineering");
-      const degreeIndex = content.indexOf("BE/B.Tech/BS - Computer Engineering");
-      const yearIndex = content.indexOf("2020");
+      const schoolIndex = content.indexOf("State University");
+      const degreeIndex = content.indexOf("B.S. - Computer Science");
 
       expect(schoolIndex).toBeGreaterThan(-1);
       expect(degreeIndex).toBeGreaterThan(schoolIndex);
-      expect(yearIndex).toBeGreaterThan(schoolIndex);
+      expect(content.slice(schoolIndex)).toContain("2019");
     });
   });
 
@@ -95,10 +94,10 @@ describe("renderResumePdf", () => {
 
     it("keeps experience in title, dates, company, bullets order", async () => {
       const content = await pdfText(await renderResumePdf(resume, compact));
-      const titleIndex = content.indexOf("Senior Software Engineer (Backend / AI Systems)");
-      const datesIndex = content.indexOf("Dec 2023 - Present");
-      const companyIndex = content.indexOf("Primathon");
-      const bulletIndex = content.indexOf("Led a team of 3 developers");
+      const titleIndex = content.indexOf("Senior Software Engineer");
+      const datesIndex = content.indexOf("Jan 2022 - Present");
+      const companyIndex = content.indexOf("Acme Corp");
+      const bulletIndex = content.indexOf("Collaborated with a small team");
 
       expect(titleIndex).toBeGreaterThan(-1);
       expect(datesIndex).toBeGreaterThan(titleIndex);
@@ -113,14 +112,14 @@ describe("renderResumePdf", () => {
           {
             title:
               "Senior Software Engineer (Backend / AI Systems / Platform Infrastructure)",
-            company: "Primathon",
-            dates: "Dec 2023 - Present",
+            company: "Acme Corp",
+            dates: "Jan 2022 - Present",
             location: "",
             startDate: "",
             endDate: "",
             current: true,
             bullets: [
-              "Built GenAI-powered ad creative generation APIs with model routing support.",
+              "Built internal APIs and tooling with model routing support.",
             ],
           },
         ],
@@ -130,9 +129,9 @@ describe("renderResumePdf", () => {
         await renderResumePdf(longTitleResume, compact),
       );
 
-      expect(content).toContain("Dec 2023 - Present");
-      expect(content).toContain("Primathon");
-      expect(content).toContain("Built GenAI-powered ad creative generation APIs");
+      expect(content).toContain("Jan 2022 - Present");
+      expect(content).toContain("Acme Corp");
+      expect(content).toContain("Built internal APIs and tooling");
     });
   });
 
@@ -142,11 +141,11 @@ describe("renderResumePdf", () => {
     it("renders sidebar and main-column content", async () => {
       const content = await pdfText(await renderResumePdf(resume, modern));
 
-      expect(content).toContain("Don Bosco College of Engineering");
+      expect(content).toContain("State University");
       expect(content).toContain("Backend: Node.js");
       expect(content).toContain("Experience");
-      expect(content).toContain("Senior Software Engineer (Backend / AI Systems) at Primathon");
-      expect(content).toContain("Hindsight");
+      expect(content).toContain("Senior Software Engineer at Acme Corp");
+      expect(content).toContain("Resume Toolkit");
     });
 
     it("keeps multi-page main content readable", async () => {
@@ -155,9 +154,9 @@ describe("renderResumePdf", () => {
       expect(await pdfPageCount(pdf)).toBeGreaterThan(1);
 
       const content = await pdfText(pdf);
-      expect(content).toContain("Senior Software Engineer (Backend / AI Systems) at Primathon");
+      expect(content).toContain("Senior Software Engineer at Acme Corp");
       expect(content).toContain("distributed systems initiative 40");
-      expect(content).toContain("Don Bosco College of Engineering");
+      expect(content).toContain("State University");
     });
   });
 
@@ -167,7 +166,7 @@ describe("renderResumePdf", () => {
       const pdf = await renderResumePdf(resume, config);
 
       expect(pdf.subarray(0, 5).toString("utf8")).toBe("%PDF-");
-      expect(await pdfText(pdf)).toContain("Primathon");
+      expect(await pdfText(pdf)).toContain("Acme Corp");
     }
   });
 });
