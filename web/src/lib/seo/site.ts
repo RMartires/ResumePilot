@@ -13,6 +13,7 @@ const staticPublicPaths = [
   "/tools/ats-checker",
   "/tools/resume-score",
   "/features",
+  "/pricing",
   "/features/cover-letter",
   "/features/job-tracker",
   "/features/linkedin-import",

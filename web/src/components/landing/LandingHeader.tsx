@@ -15,7 +15,10 @@ type LandingHeaderProps = {
 const navGroups = [
   {
     label: "Product",
-    links: [{ href: "/features", label: "Features" }],
+    links: [
+      { href: "/features", label: "Features" },
+      { href: "/pricing", label: "Pricing" },
+    ],
   },
   {
     label: "Tools",

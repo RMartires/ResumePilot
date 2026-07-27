@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { renderResumePdf } from "@/lib/pdf/render-resume-pdf";
+import {
+  assertUsageAvailable,
+  recordUsage,
+  usageLimitResponse,
+  UsageLimitError,
+} from "@/lib/billing/usage";
 import { getDefaultTemplateConfig } from "@/lib/pdf/template-theme";
 import {
   emptyResume,
@@ -66,7 +72,18 @@ export async function GET(
 
   if (format === "pdf") {
     try {
+      await assertUsageAvailable(user.id, "pdf_download");
+    } catch (error) {
+      if (error instanceof UsageLimitError) {
+        return NextResponse.json(usageLimitResponse(error), { status: 402 });
+      }
+      throw error;
+    }
+
+    try {
       const pdf = await renderResumePdf(normalized, templateConfig);
+
+      await recordUsage(user.id, "pdf_download");
 
       return new NextResponse(new Uint8Array(pdf), {
         headers: {

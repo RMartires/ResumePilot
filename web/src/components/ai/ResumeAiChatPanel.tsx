@@ -83,7 +83,19 @@ export function ResumeAiChatPanel({
         "resume-change": zodSchema(resumeChangeDataSchema),
       },
       onError: (err) => {
-        toast.error(err.message || "AI chat failed");
+        const message = err.message || "AI chat failed";
+        if (message.includes("limit") || message.includes("Upgrade")) {
+          toast.error(message, {
+            action: {
+              label: "View plans",
+              onClick: () => {
+                window.location.href = "/pricing";
+              },
+            },
+          });
+          return;
+        }
+        toast.error(message);
       },
     });
 

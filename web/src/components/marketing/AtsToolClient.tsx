@@ -35,6 +35,7 @@ export function AtsToolClient({ mode }: AtsToolClientProps) {
       if (resumeText.trim()) form.set("resumeText", resumeText);
       if (jdText.trim()) form.set("jdText", jdText);
       if (file) form.set("file", file);
+      form.set("tool", mode);
 
       const response = await fetch("/api/tools/ats-check", {
         method: "POST",
@@ -43,7 +44,24 @@ export function AtsToolClient({ mode }: AtsToolClientProps) {
       const data = (await response.json()) as {
         result?: AtsScoreResult;
         error?: string;
+        code?: string;
+        upgradeUrl?: string;
+        signInUrl?: string;
       };
+
+      if (response.status === 401) {
+        throw new Error(
+          data.error ??
+            "Sign in to use your free monthly checks, or upgrade to Pro for unlimited access.",
+        );
+      }
+
+      if (response.status === 402) {
+        throw new Error(
+          data.error ??
+            "Free plan limit reached this month. Upgrade to Pro for unlimited checks.",
+        );
+      }
 
       if (!response.ok || !data.result) {
         throw new Error(data.error ?? "Could not score this resume.");
@@ -113,7 +131,23 @@ export function AtsToolClient({ mode }: AtsToolClientProps) {
                 ? "Get resume score"
                 : "Check ATS match"}
           </button>
-          {error ? <p className="text-sm text-red-400">{error}</p> : null}
+          {error ? (
+            <p className="text-sm text-red-400">
+              {error}{" "}
+              {error.includes("Sign in") ? (
+                <Link href="/login" className="text-blue-300 underline hover:text-blue-200">
+                  Sign in
+                </Link>
+              ) : error.includes("limit") ? (
+                <Link href="/pricing" className="text-blue-300 underline hover:text-blue-200">
+                  View Pro plans
+                </Link>
+              ) : null}
+            </p>
+          ) : null}
+          <p className="text-xs text-zinc-500">
+            Sign in to use your free monthly allowance ({mode === "ats-checker" ? "3 ATS checks" : "3 resume scores"}). Pro is unlimited.
+          </p>
         </div>
       </form>
 

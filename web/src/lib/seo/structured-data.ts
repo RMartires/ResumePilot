@@ -58,13 +58,45 @@ export function softwareApplicationJsonLd() {
     offers: {
       "@type": "Offer",
       price: "0",
-      priceCurrency: "USD",
+      priceCurrency: "INR",
     },
     provider: {
       "@type": "Organization",
       name: SITE_NAME,
       url: SITE_URL,
     },
+  };
+}
+
+export function pricingOfferJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${SITE_NAME} Pro`,
+    description:
+      "Unlimited AI resume writing, PDF import, and job-description tailoring.",
+    brand: {
+      "@type": "Brand",
+      name: SITE_NAME,
+    },
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Pro Monthly",
+        price: "457",
+        priceCurrency: "INR",
+        url: `${SITE_URL}/pricing`,
+        availability: "https://schema.org/InStock",
+      },
+      {
+        "@type": "Offer",
+        name: "Pro Annual",
+        price: "4992",
+        priceCurrency: "INR",
+        url: `${SITE_URL}/pricing`,
+        availability: "https://schema.org/InStock",
+      },
+    ],
   };
 }
 

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
 import { ResumeList } from "@/components/dashboard/ResumeList";
+import { BillingBanner } from "@/components/billing/BillingBanner";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -11,6 +12,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="p-8">
+      <BillingBanner />
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">My Resumes</h1>

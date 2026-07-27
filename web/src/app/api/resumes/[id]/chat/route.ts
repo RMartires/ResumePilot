@@ -14,6 +14,12 @@ import {
 import { getChatModel } from "@/lib/ai/openrouter";
 import { streamStructuredMessageField } from "@/lib/ai/stream-message-field";
 import { normalizeResume, resumeToJson } from "@/lib/resume";
+import {
+  assertUsageAvailable,
+  recordUsage,
+  usageLimitResponse,
+  UsageLimitError,
+} from "@/lib/billing/usage";
 import { createClient } from "@/lib/supabase/server";
 import type { Resume } from "@/lib/validations/resume";
 
@@ -61,6 +67,17 @@ export async function POST(
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  try {
+    await assertUsageAvailable(user.id, "ai_chat");
+  } catch (error) {
+    if (error instanceof UsageLimitError) {
+      return NextResponse.json(usageLimitResponse(error), { status: 402 });
+    }
+    throw error;
+  }
+
+  await recordUsage(user.id, "ai_chat");
 
   const { data: resumeRow, error: resumeError } = await supabase
     .from("resumes")
