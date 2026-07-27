@@ -15,7 +15,7 @@ const proFeatures = [
 ] as const;
 
 export function ProPricingCard() {
-  const [billingCycle, setBillingCycle] = useState<BillingPlan>("annual");
+  const [billingCycle, setBillingCycle] = useState<BillingPlan>("monthly");
   const plan = BILLING_PLANS[billingCycle];
   const isAnnual = billingCycle === "annual";
 
@@ -62,7 +62,7 @@ export function ProPricingCard() {
         </span>
       </p>
       <p className="mt-1 text-sm text-emerald-300">
-        {isAnnual ? plan.priceNote : "Billed monthly"}
+        {isAnnual ? plan.priceNote : `${PRO_PRICING.monthly.taxNote} · billed monthly`}
       </p>
       {isAnnual ? (
         <p className="mt-1 text-xs text-zinc-500">{BILLING_PLANS.annual.billedLabel}</p>
@@ -79,6 +79,7 @@ export function ProPricingCard() {
 
       <div className="mt-8">
         <PricingCheckoutButton
+          key={billingCycle}
           plan={billingCycle}
           label={isAnnual ? "Upgrade to Pro — yearly" : "Upgrade to Pro — monthly"}
         />

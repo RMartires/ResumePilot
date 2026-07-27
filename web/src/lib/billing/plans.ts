@@ -1,19 +1,32 @@
 export type BillingPlan = "monthly" | "annual";
 
-/** JobSuit-style INR pricing (update Dodo product amounts to match). */
+const MONTHLY_INR = 499;
+const ANNUAL_DISCOUNT_RATE = 0.25;
+
+const annualFullInr = MONTHLY_INR * 12;
+const annualInr = Math.round(annualFullInr * (1 - ANNUAL_DISCOUNT_RATE));
+const annualMonthlyEquivalent = Math.round(annualInr / 12);
+const annualSaveInr = annualFullInr - annualInr;
+
+const inr = (amount: number) =>
+  `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
+
+/** INR pricing shown on /pricing (excl. tax). Update Dodo products to match. */
 export const PRO_PRICING = {
   monthly: {
-    amountInr: 457,
-    display: "₹457",
+    amountInr: MONTHLY_INR,
+    display: inr(MONTHLY_INR),
     suffix: "/ mo",
+    taxNote: "excl. tax",
   },
   annual: {
-    amountInr: 4992,
-    monthlyEquivalent: 416,
-    display: "₹416",
+    amountInr: annualInr,
+    monthlyEquivalent: annualMonthlyEquivalent,
+    display: inr(annualMonthlyEquivalent),
     suffix: "/ mo",
-    billedLabel: "₹4,992 billed annually",
-    saveLabel: "Save ₹495 vs monthly plan",
+    billedLabel: `${inr(annualInr)} billed annually · excl. tax`,
+    saveLabel: `Save ${inr(annualSaveInr)} vs monthly (25% off)`,
+    discountRate: ANNUAL_DISCOUNT_RATE,
   },
 } as const;
 
@@ -23,7 +36,7 @@ export const BILLING_PLANS = {
     label: "Pro Monthly",
     envKey: "DODO_PRODUCT_ID_MONTHLY",
     priceLabel: `${PRO_PRICING.monthly.display}${PRO_PRICING.monthly.suffix}`,
-    priceNote: "Billed monthly · pause or cancel anytime",
+    priceNote: `${PRO_PRICING.monthly.taxNote} · billed monthly`,
   },
   annual: {
     id: "annual" as const,
@@ -36,8 +49,11 @@ export const BILLING_PLANS = {
 } as const;
 
 export function getProductIdForPlan(plan: BillingPlan): string | undefined {
-  const config = BILLING_PLANS[plan];
-  return process.env[config.envKey];
+  // Static env access — dynamic process.env[key] is unreliable in Next.js builds.
+  if (plan === "monthly") {
+    return process.env.DODO_PRODUCT_ID_MONTHLY;
+  }
+  return process.env.DODO_PRODUCT_ID_ANNUAL;
 }
 
 export function isBillingPlan(value: string): value is BillingPlan {

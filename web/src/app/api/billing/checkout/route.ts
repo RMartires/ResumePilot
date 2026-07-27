@@ -99,7 +99,11 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ checkoutUrl: session.checkout_url });
+  return NextResponse.json({
+    checkoutUrl: session.checkout_url,
+    plan,
+    productId,
+  });
 }
 
 export async function GET(request: Request) {

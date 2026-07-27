@@ -83,7 +83,7 @@ export function pricingOfferJsonLd() {
       {
         "@type": "Offer",
         name: "Pro Monthly",
-        price: "457",
+        price: "499",
         priceCurrency: "INR",
         url: `${SITE_URL}/pricing`,
         availability: "https://schema.org/InStock",
@@ -91,7 +91,7 @@ export function pricingOfferJsonLd() {
       {
         "@type": "Offer",
         name: "Pro Annual",
-        price: "4992",
+        price: "4491",
         priceCurrency: "INR",
         url: `${SITE_URL}/pricing`,
         availability: "https://schema.org/InStock",
