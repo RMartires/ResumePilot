@@ -160,6 +160,6 @@ export function usageLimitResponse(error: UsageLimitError) {
     eventType: error.eventType,
     used: error.used,
     limit: error.limit,
-    upgradeUrl: "/pricing",
+    upgradeUrl: "/dashboard/upgrade",
   };
 }

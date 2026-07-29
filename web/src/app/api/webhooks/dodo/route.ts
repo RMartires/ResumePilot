@@ -9,6 +9,7 @@ import {
   revokeProAccess,
   syncSubscriptionFromWebhook,
 } from "@/lib/billing/sync";
+import { upsertBillingTransaction } from "@/lib/billing/transactions";
 
 const webhookKey = process.env.DODO_PAYMENTS_WEBHOOK_KEY;
 
@@ -45,11 +46,19 @@ export const POST = webhookKey
       webhookKey,
       onPaymentSucceeded: async (payload) => {
         await handleOnce(payload, async () => {
+          await upsertBillingTransaction({
+            ...payload.data,
+            status: payload.data.status ?? "succeeded",
+          });
           await grantProFromPayment(payload.data);
         });
       },
       onPaymentFailed: async (payload) => {
         await handleOnce(payload, async () => {
+          await upsertBillingTransaction({
+            ...payload.data,
+            status: payload.data.status ?? "failed",
+          });
           const paymentId = payload.data.payment_id;
           if (paymentId) {
             await markReferralConversionCancelled(paymentId);
@@ -129,6 +138,15 @@ export const POST = webhookKey
         await handleOnce(payload, async () => {
           const paymentId = payload.data.payment_id;
           if (paymentId) {
+            await upsertBillingTransaction({
+              payment_id: paymentId,
+              status: payload.data.is_partial
+                ? "partially_refunded"
+                : "refunded",
+              refund_status: payload.data.is_partial ? "partial" : "full",
+              customer: payload.data.customer,
+              metadata: payload.data.metadata,
+            });
             await markReferralConversionCancelled(paymentId);
           }
         });

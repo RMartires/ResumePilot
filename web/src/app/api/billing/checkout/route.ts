@@ -81,7 +81,7 @@ export async function POST(request: Request) {
         "ResumePilot user",
     },
     return_url: getBillingReturnUrl(),
-    cancel_url: `${SITE_URL}/pricing`,
+    cancel_url: `${SITE_URL}/dashboard/upgrade`,
     metadata,
     allowed_payment_method_types: [
       "upi_collect",

@@ -65,10 +65,10 @@ export default function CheckoutSuccessPage() {
             Go to dashboard
           </Link>
           <Link
-            href="/pricing"
+            href="/dashboard/billing"
             className="rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-white/[0.05]"
           >
-            Back to pricing
+            Usage & Billing
           </Link>
         </div>
       </div>

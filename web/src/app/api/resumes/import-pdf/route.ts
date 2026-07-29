@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         {
           error: "Pro subscription required for PDF import.",
           code: error.code,
-          upgradeUrl: "/pricing",
+          upgradeUrl: "/dashboard/upgrade",
         },
         { status: 402 },
       );

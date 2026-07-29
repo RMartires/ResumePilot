@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import type { BillingPlan } from "@/lib/billing/plans";
+import { cn } from "@/lib/utils";
 
 type PricingCheckoutButtonProps = {
   plan: BillingPlan;
   label: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "dashboard";
 };
 
 export function PricingCheckoutButton({
@@ -49,9 +50,11 @@ export function PricingCheckoutButton({
   };
 
   const className =
-    variant === "primary"
-      ? "w-full rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-60"
-      : "w-full rounded-full border border-white/15 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-white transition hover:border-blue-500/30 hover:bg-white/[0.06] disabled:opacity-60";
+    variant === "dashboard"
+      ? "w-full rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-60"
+      : variant === "primary"
+        ? "w-full rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-60"
+        : "w-full rounded-full border border-white/15 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-white transition hover:border-blue-500/30 hover:bg-white/[0.06] disabled:opacity-60";
 
   return (
     <div>
@@ -63,7 +66,16 @@ export function PricingCheckoutButton({
       >
         {loading ? "Redirecting…" : label}
       </button>
-      {error ? <p className="mt-2 text-sm text-red-400">{error}</p> : null}
+      {error ? (
+        <p
+          className={cn(
+            "mt-2 text-sm",
+            variant === "dashboard" ? "text-red-600" : "text-red-400",
+          )}
+        >
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
