@@ -1,5 +1,9 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { isReliableNewSignup } from "@/lib/auth/signup-completion";
+import { persistReferralOnProfile } from "@/lib/billing/sync";
+import { REFERRAL_COOKIE_NAME } from "@/lib/referrals/constants";
+import { normalizeReferralCode } from "@/lib/referrals/cookie";
 import { createClient } from "@/lib/supabase/server";
 
 function redirectAfterLogin(
@@ -23,6 +27,14 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
+      const cookieStore = await cookies();
+      const referralCode = normalizeReferralCode(
+        cookieStore.get(REFERRAL_COOKIE_NAME)?.value ?? null,
+      );
+      if (referralCode) {
+        await persistReferralOnProfile(data.user.id, referralCode);
+      }
+
       const authResult = isReliableNewSignup({
         createdAt: data.user.created_at,
         lastSignInAt: data.user.last_sign_in_at,

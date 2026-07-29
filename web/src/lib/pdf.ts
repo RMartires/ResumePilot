@@ -13,13 +13,20 @@ export async function downloadResumePdf(
 
   if (!response.ok) {
     let message = "PDF export failed";
+    let upgradeUrl: string | undefined;
     try {
-      const payload = (await response.json()) as { error?: string };
+      const payload = (await response.json()) as {
+        error?: string;
+        upgradeUrl?: string;
+      };
       if (payload.error) message = payload.error;
+      upgradeUrl = payload.upgradeUrl;
     } catch {
       // Non-JSON error body.
     }
-    throw new Error(message);
+    const error = new Error(message) as Error & { upgradeUrl?: string };
+    error.upgradeUrl = upgradeUrl;
+    throw error;
   }
 
   const blob = await response.blob();

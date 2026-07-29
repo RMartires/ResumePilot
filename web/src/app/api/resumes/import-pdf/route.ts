@@ -13,6 +13,7 @@ import {
   markResumeUploadFailed,
   saveResumePdfToStorage,
 } from "@/lib/supabase/resume-uploads";
+import { ProRequiredError, requireProAccess } from "@/lib/billing/entitlements";
 import { createClient } from "@/lib/supabase/server";
 import { getErrorMessage } from "@/lib/utils";
 
@@ -42,6 +43,22 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    await requireProAccess(user.id);
+  } catch (error) {
+    if (error instanceof ProRequiredError) {
+      return NextResponse.json(
+        {
+          error: "Pro subscription required for PDF import.",
+          code: error.code,
+          upgradeUrl: "/dashboard/upgrade",
+        },
+        { status: 402 },
+      );
+    }
+    throw error;
   }
 
   let formData: FormData;

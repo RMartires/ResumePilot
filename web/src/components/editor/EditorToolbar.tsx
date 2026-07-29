@@ -39,7 +39,19 @@ export function EditorToolbar({
     } catch (err) {
       console.error("PDF export failed:", err);
       toast.dismiss();
-      toast.error(err instanceof Error ? err.message : "PDF export failed");
+      const error = err as Error & { upgradeUrl?: string };
+      if (error.upgradeUrl) {
+        toast.error(error.message, {
+          action: {
+            label: "View plans",
+            onClick: () => {
+              window.location.href = error.upgradeUrl!;
+            },
+          },
+        });
+        return;
+      }
+      toast.error(error instanceof Error ? error.message : "PDF export failed");
     }
   };
 

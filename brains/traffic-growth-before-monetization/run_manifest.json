@@ -1,0 +1,25 @@
+{
+  "version": "3.0.0",
+  "query": "What are the best evidence-backed ways to drive traffic to a free resume builder and ATS checker before introducing a paid plan?",
+  "mode": "standard",
+  "started_at": "2026-07-26T19:07:30.464590+00:00",
+  "finished_at": "2026-07-26T19:10:39.251446+00:00",
+  "assumptions": [
+    "ResumePilot will keep its core builder and checker free during the initial growth phase.",
+    "The primary near-term market is English-language job seekers, initially emphasizing the United States.",
+    "The founder has limited budget and should favor compounding, low-cash acquisition channels."
+  ],
+  "provider_config": {
+    "primary": "WebSearch",
+    "keyword_data": "Keywords Everywhere MCP",
+    "parallel_research_agents": 4
+  },
+  "report_dir": "/Users/apple/OSS/resume-builder/research/ResumePilot_Traffic_Growth_Research_20260727",
+  "artifact_paths": {
+    "sources": "sources.jsonl",
+    "evidence": "evidence.jsonl",
+    "claims": "claims.jsonl",
+    "report": "report.md"
+  },
+  "continuation": null
+}
