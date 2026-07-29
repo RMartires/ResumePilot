@@ -1,4 +1,5 @@
 import DodoPayments from "dodopayments";
+import { SITE_URL } from "@/lib/seo/site";
 
 let client: DodoPayments | null = null;
 
@@ -21,11 +22,32 @@ export function getDodoClient(): DodoPayments {
   return client;
 }
 
-export function getBillingReturnUrl(): string {
+/** Public app origin used for checkout return/cancel URLs. */
+export function getBillingAppOrigin(): string {
+  if (process.env.DODO_PAYMENTS_RETURN_URL) {
+    try {
+      return new URL(process.env.DODO_PAYMENTS_RETURN_URL).origin;
+    } catch {
+      // fall through
+    }
+  }
+
+  // Live checkouts must never redirect to localhost if started from local .env.
+  if (process.env.DODO_PAYMENTS_ENVIRONMENT === "live_mode") {
+    return SITE_URL.replace(/\/$/, "");
+  }
+
   return (
-    process.env.DODO_PAYMENTS_RETURN_URL ??
-    `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/checkout/success`
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+    "http://localhost:3000"
   );
+}
+
+export function getBillingReturnUrl(): string {
+  if (process.env.DODO_PAYMENTS_RETURN_URL) {
+    return process.env.DODO_PAYMENTS_RETURN_URL;
+  }
+  return `${getBillingAppOrigin()}/checkout/success`;
 }
 
 export function isDodoConfigured(): boolean {

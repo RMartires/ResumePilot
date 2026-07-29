@@ -1,12 +1,16 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getBillingReturnUrl, getDodoClient, isDodoConfigured } from "@/lib/billing/dodo";
+import {
+  getBillingAppOrigin,
+  getBillingReturnUrl,
+  getDodoClient,
+  isDodoConfigured,
+} from "@/lib/billing/dodo";
 import { BILLING_PLANS, getProductIdForPlan, isBillingPlan } from "@/lib/billing/plans";
 import { ensureProfile } from "@/lib/billing/entitlements";
 import { REFERRAL_COOKIE_NAME } from "@/lib/referrals/constants";
 import { normalizeReferralCode } from "@/lib/referrals/cookie";
-import { SITE_URL } from "@/lib/seo/site";
 import { createClient } from "@/lib/supabase/server";
 
 const checkoutSchema = z.object({
@@ -81,7 +85,7 @@ export async function POST(request: Request) {
         "ResumePilot user",
     },
     return_url: getBillingReturnUrl(),
-    cancel_url: `${SITE_URL}/dashboard/upgrade`,
+    cancel_url: `${getBillingAppOrigin()}/dashboard/upgrade`,
     metadata,
     allowed_payment_method_types: [
       "upi_collect",
