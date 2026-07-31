@@ -9,13 +9,14 @@ import { JsonLd } from "@/lib/seo/json-ld";
 export const metadata = createMarketingMetadata({
   title: "Pricing — ResumePilot Pro",
   description:
-    "Upgrade to ResumePilot Pro for unlimited AI resume writing, PDF import, tailoring, and exports. Pay with UPI or card.",
+    "Upgrade to ResumePilot Pro for unlimited AI resume writing, job-description tailoring, and exports. Pay with UPI or card.",
   path: "/pricing",
 });
 
 const freeFeatures = [
   "Build and edit resumes",
   "Core templates",
+  "PDF import with AI structuring",
   `${FREE_TIER_LIMITS.ai_chat} AI chat messages / month`,
   `${FREE_TIER_LIMITS.ats_check} ATS checks / month`,
   `${FREE_TIER_LIMITS.resume_score} resume score runs / month`,

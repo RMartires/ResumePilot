@@ -1,0 +1,14 @@
+-- 1) Grant Pro on the profile
+update public.profiles
+set plan_tier = 'pro'
+where email = 'user@example.com';
+
+-- 2) Keep / fix the subscription period so resolveIsPro stays true
+update public.subscriptions
+set
+  status = 'active',
+  current_period_end = now() + interval '10 years',
+  cancel_at_period_end = false
+where user_id = (
+  select id from public.profiles where email = 'user@example.com'
+);

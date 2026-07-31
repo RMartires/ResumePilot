@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 
 export const PRO_FEATURES = [
   "Unlimited AI resume chat",
-  "PDF import with AI structuring",
   "Unlimited ATS checks & resume scores",
   "Unlimited PDF downloads",
   "Job-description tailoring",

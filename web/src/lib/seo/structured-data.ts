@@ -74,7 +74,7 @@ export function pricingOfferJsonLd() {
     "@type": "Product",
     name: `${SITE_NAME} Pro`,
     description:
-      "Unlimited AI resume writing, PDF import, and job-description tailoring.",
+      "Unlimited AI resume writing, ATS checks, and job-description tailoring.",
     brand: {
       "@type": "Brand",
       name: SITE_NAME,

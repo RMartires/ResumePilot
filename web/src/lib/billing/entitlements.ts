@@ -72,23 +72,6 @@ export async function getSubscriptionStatusForUser(
   };
 }
 
-export async function requireProAccess(userId: string): Promise<SubscriptionStatus> {
-  const status = await getSubscriptionStatusForUser(userId);
-  if (!status.isPro) {
-    throw new ProRequiredError();
-  }
-  return status;
-}
-
-export class ProRequiredError extends Error {
-  readonly code = "PRO_REQUIRED" as const;
-
-  constructor() {
-    super("Pro subscription required");
-    this.name = "ProRequiredError";
-  }
-}
-
 /** Used by webhook handler with service role. */
 export async function setUserPlanTier(
   userId: string,
