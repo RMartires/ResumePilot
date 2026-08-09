@@ -22,7 +22,7 @@ ensure_docker() {
 
   if ! sudo docker info >/dev/null 2>&1; then
     sudo bash -c 'nohup dockerd >/tmp/dockerd.log 2>&1 &'
-    for _ in $(seq 1 30); do
+    for _ in $(seq 1 60); do
       sudo docker info >/dev/null 2>&1 && break
       sleep 1
     done
@@ -34,8 +34,18 @@ ensure_docker() {
     return 1
   }
 
-  # Let the ubuntu user talk to the daemon without sudo in this session.
-  sudo chmod 666 /var/run/docker.sock || true
+  # Let the current (non-root) user talk to the daemon without sudo. The socket
+  # can be (re)created by the daemon, so retry the chmod until a plain
+  # `docker info` succeeds rather than assuming one chmod sticks.
+  for _ in $(seq 1 30); do
+    docker info >/dev/null 2>&1 && break
+    sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
+    sleep 1
+  done
+  docker info >/dev/null 2>&1 || {
+    echo "docker socket not accessible without sudo" >&2
+    return 1
+  }
 
   # Required for nested-container inter-service networking (see header note).
   sudo sysctl -w net.bridge.bridge-nf-call-iptables=0  >/dev/null 2>&1 || true
