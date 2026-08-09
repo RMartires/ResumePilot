@@ -16,7 +16,7 @@ ensure_docker
 
 echo "== Starting local Supabase =="
 # `supabase start` is idempotent: it reuses a running stack or starts a fresh one.
-(cd "$REPO_ROOT" && supabase start)
+supa start
 
 ensure_env_local
 

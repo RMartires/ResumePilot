@@ -47,8 +47,8 @@ echo "== Pre-pulling Supabase images + validating migrations =="
 ensure_docker
 # Bring the stack up once so the images are cached in the snapshot and the
 # migrations/seed are validated, then tear it down (start.sh brings it up on boot).
-(cd "$REPO_ROOT" && supabase start) || echo "supabase start during install failed (non-fatal; start.sh retries on boot)."
+supa start || echo "supabase start during install failed (non-fatal; start.sh retries on boot)."
 ensure_env_local || true
-(cd "$REPO_ROOT" && supabase stop --no-backup) || true
+supa stop --no-backup || true
 
 echo "== Install complete =="

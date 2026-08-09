@@ -8,10 +8,22 @@
 #   * net.bridge.bridge-nf-call-iptables must be 0, otherwise bridged
 #     container-to-container traffic hits the host's legacy iptables
 #     "FORWARD DROP" policy and every inter-service DB connection times out.
+#
+# We drive Docker and the Supabase CLI through `sudo`: in the build/boot
+# environment the daemon socket is only reliably reachable as root even after a
+# chmod, so `sudo` is the portable choice. `supa()` wraps the CLI accordingly.
+# For interactive convenience we still best-effort open the socket to the
+# non-root user (so a plain `docker`/`supabase` works when the group/permission
+# race allows it).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export REPO_ROOT
+
+# Run the Supabase CLI from the repo root as root (needs the Docker socket).
+supa() {
+  (cd "$REPO_ROOT" && sudo supabase "$@")
+}
 
 # Start (or reuse) the Docker daemon and apply the nested-container fixes.
 ensure_docker() {
@@ -34,22 +46,14 @@ ensure_docker() {
     return 1
   }
 
-  # Let the current (non-root) user talk to the daemon without sudo. The socket
-  # can be (re)created by the daemon, so retry the chmod until a plain
-  # `docker info` succeeds rather than assuming one chmod sticks.
-  for _ in $(seq 1 30); do
-    docker info >/dev/null 2>&1 && break
-    sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
-    sleep 1
-  done
-  docker info >/dev/null 2>&1 || {
-    echo "docker socket not accessible without sudo" >&2
-    return 1
-  }
-
   # Required for nested-container inter-service networking (see header note).
   sudo sysctl -w net.bridge.bridge-nf-call-iptables=0  >/dev/null 2>&1 || true
   sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=0 >/dev/null 2>&1 || true
+
+  # Best-effort: let the non-root user use `docker`/`supabase` without sudo when
+  # possible. Not required for the scripts (they use sudo), so never fatal.
+  sudo usermod -aG docker "$USER" 2>/dev/null || true
+  sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
 }
 
 # Write web/.env.local from the running local Supabase stack if it's absent.
@@ -59,9 +63,10 @@ ensure_env_local() {
   local env_file="$REPO_ROOT/web/.env.local"
   [ -f "$env_file" ] && return 0
 
-  local anon svc
-  anon="$(cd "$REPO_ROOT" && supabase status -o env 2>/dev/null | sed -n 's/^ANON_KEY="\(.*\)"$/\1/p')"
-  svc="$(cd "$REPO_ROOT" && supabase status -o env 2>/dev/null | sed -n 's/^SERVICE_ROLE_KEY="\(.*\)"$/\1/p')"
+  local status anon svc
+  status="$(supa status -o env 2>/dev/null || true)"
+  anon="$(printf '%s\n' "$status" | sed -n 's/^ANON_KEY="\(.*\)"$/\1/p')"
+  svc="$(printf '%s\n' "$status" | sed -n 's/^SERVICE_ROLE_KEY="\(.*\)"$/\1/p')"
 
   cat >"$env_file" <<EOF
 # Local Supabase (from \`supabase start\`). Fixed local dev keys only. Gitignored.
