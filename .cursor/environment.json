@@ -1,0 +1,11 @@
+{
+  "name": "Resume Builder",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "web-dev",
+      "command": "cd web && npm run dev"
+    }
+  ]
+}
