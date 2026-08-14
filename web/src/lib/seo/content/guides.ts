@@ -70,10 +70,87 @@ export const GUIDES = guideSchema.array().parse([
     ],
     ...dates,
     relatedLinks: [
-      { title: "ATS-friendly resume guide", path: "/guides/ats/workday-resume" },
+      { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
       { title: "Resume examples", path: "/examples/resumes" },
       { title: "Resume templates", path: "/templates" },
       { title: "ATS checker", path: "/tools/ats-checker" },
+    ],
+  },
+  {
+    slug: "ats-friendly-resume-format",
+    canonical: "/guides/ats/ats-friendly-resume-format",
+    status: "published",
+    kind: "ats",
+    title: "ATS-Friendly Resume Format: Layout, File Type, and Structure",
+    description:
+      "Use a reverse-chronological, single-column resume format with standard headings, selectable text, and the file type the employer actually requests.",
+    intro:
+      "An ATS-friendly resume format is the document architecture that lets software extract your name, jobs, dates, and skills into the right fields, and that still lets a recruiter scan the same file in seconds. It is not a secret template, a guaranteed score, or a reason to hide your work history. Applicant tracking systems vary by vendor and employer setup, so no layout is universally “approved.” The practical goal is a reverse-chronological, single-column file with conventional headings, contact details in the body, and real selectable text. Choose the file type the posting asks for, then verify reading order before you apply.",
+    sections: [
+      {
+        heading: "Format is structure, not decoration",
+        body: "People searching for an ATS-friendly resume format usually want three decisions: which structure to use, how to lay out the page, and whether to export PDF or Word. Those choices matter because parsers do not “see” your design. They pull a stream of text and try to assign chunks to fields such as employer, title, and date. A visually clever layout can still fail if that stream is out of order, missing contact details, or trapped in an image. Career-center guidance from universities such as UC Santa Barbara, the University of Virginia, and Utah Valley University converges on the same baseline: one column, reverse-chronological experience, standard headings, and no essential information in tables, text boxes, graphics, or page headers. Treat that baseline as risk reduction, not a promise that every Workday, Greenhouse, Lever, or Taleo configuration will behave identically.",
+      },
+      {
+        heading: "Use reverse-chronological order as the default",
+        body: "The safest ATS resume format is reverse chronological: most recent role first, with a consistent pattern of job title, employer, location, and month-year dates, then bullets. Recruiters expect that timeline, and parsing systems are built around it. A hybrid or combination layout can still be ATS-friendly when it keeps a full dated experience section and merely leads with a short summary and a skills list. That is useful for career changes, because you can surface transferable evidence without deleting where and when you worked. Avoid a purely functional resume that groups achievements under skill labels and buries or omits employers and dates. Functional layouts often look to reviewers like an attempt to hide gaps, and they give parsers fewer of the title-company-date blocks they are trying to extract. If you have a gap, keep honest dates and explain the period briefly in a summary or a clearly labeled role such as study, caregiving, or contract work rather than erasing the timeline.",
+      },
+      {
+        heading: "Keep one column and a predictable reading order",
+        body: "Use a single column that reads top to bottom and left to right across the full page width. Two-column, sidebar, and table-based templates are the most common reason a resume looks fine on screen and comes out scrambled after upload. The failure is usually reading order, not that the software “cannot read columns” in the abstract: a parser may walk left to right across a row and interleave a skills sidebar with job titles, or merge dates into the wrong employer. Independent layout tests and university career advice both treat a one-column body as the conservative default, especially when you do not know whether the employer uses a modern parser or an older Taleo-style form. Skills can still be grouped in a short comma-separated list. What to avoid is using a table or text boxes to place entire sections side by side. After you export, copy the whole file into a plain-text editor. If titles, companies, dates, and bullets no longer stay together, rebuild the layout before applying.",
+      },
+      {
+        heading: "Put contact details and headings where parsers look",
+        body: "Place your name, phone, email, city and region, and relevant links in ordinary body text at the top of the first page. Several ATS workflows skip or mishandle headers and footers, so a contact line that exists only in page furniture can disappear from the profile even when the PDF looks complete. Do not replace the words email or phone with icons; a glyph is not searchable text. Label sections with conventional names that both people and software recognize: Summary or Professional Summary, Experience or Work Experience, Education, and Skills. Creative headings such as “My journey” or “What I’ve been up to” waste a recruiter’s time and can cause a parser to miss the start of a section. Keep each job’s facts in a repeated pattern so promotions at one employer remain distinct. Month and year dates in a consistent style, such as “Mar 2023 – Present,” are easier to extract than relative phrases like “two years ago.”",
+      },
+      {
+        heading: "Choose PDF or Word from the posting, then test the file",
+        body: "Follow the employer’s requested file type first. There is no single winner between PDF and DOCX across every applicant tracking system. A text-based PDF usually preserves layout when a person opens it; a clean Word file can be easier for some older portals to ingest. Jobscan and many career centers accept either when the posting is silent, while some enterprise forms still prefer Word. The non-negotiable rule is selectable text. If you cannot highlight and copy sentences in the exported PDF, the file is an image or a flattened design export, and many parsers will treat it as empty. Export from Word, Google Docs, or a builder that emits real text. Do not print-to-PDF from a scan, and be cautious with Canva or other design tools that may flatten text or wrap a two-column template. Name the file like “Jordan-Lee-Product-Manager-Resume.pdf,” not “resume-final-v7.” After upload, inspect any autofilled employer, title, date, and education fields and correct them before submitting.",
+      },
+      {
+        heading: "Keep type, spacing, and bullets boring on purpose",
+        body: "Use one familiar font family at about 10–12 points for body text and a modestly larger size for headings. Arial, Calibri, Helvetica, Georgia, Times New Roman, Cambria, and similar system faces are practical because they remain readable after export. Margins between half an inch and one inch leave enough whitespace for a human scan without crowding. Standard round or dash bullets are safer than arrows, checkmarks, or icon fonts. Skip photos, logos, skill bars, charts, and text inside shapes; those elements are either ignored or turned into noise. Color and bold are fine when contrast stays high and meaning does not depend on the color alone. One page is a useful constraint for many students and early-career candidates; two focused pages are reasonable when relevant experience actually needs the room. Do not shrink type until the file becomes tiring to read. An ATS does not award extra credit for squeezing everything onto one page, and the person who opens the attachment still has to use it.",
+      },
+      {
+        heading: "Match the posting with honest language, not hidden tricks",
+        body: "Format gets your evidence into the database. Relevance still decides whether a recruiter searches for you. Use the job description as a checklist of real skills, tools, certifications, and domain terms, then include those terms only where they truthfully describe your work. Put important language in normal sentences and bullets, not in white text, keyword dumps, or copied requirement lists. Pair an acronym with the full term once when both appear in the posting. A checker can flag missing structure or weak overlap; it cannot invent a license, work authorization, or years of experience you do not have, and it cannot model every employer’s screening questions. When the application asks you to re-enter history, complete the fields accurately even if they repeat the resume. The formatted attachment and the structured profile should tell the same story.",
+      },
+    ],
+    steps: [
+      { name: "Pick a structure", text: "Use reverse-chronological experience, or a hybrid that still shows dated jobs; skip a purely functional layout." },
+      { name: "Build one readable column", text: "Put contact details in the body, use standard headings, and keep titles, employers, and dates grouped together." },
+      { name: "Export and verify", text: "Save the requested PDF or DOCX, confirm text is selectable, paste into a plain-text editor, then check parsed application fields." },
+    ],
+    faqs: [
+      {
+        question: "What is the best ATS-friendly resume format?",
+        answer: "A reverse-chronological, single-column layout with standard headings, contact details in the body, consistent month-year dates, and selectable text. A short summary and skills list on top of that timeline is fine. Avoid a functional resume that hides employers and dates.",
+      },
+      {
+        question: "Is PDF or Word better for applicant tracking systems?",
+        answer: "Use the format the employer requests. If both are allowed, a text-based PDF or a clean DOCX can work. Image-only PDFs, scans, and design exports that you cannot highlight are the files to avoid. Inspect parsed fields after upload whenever the form shows them.",
+      },
+      {
+        question: "Can I use a two-column or Canva resume with ATS software?",
+        answer: "It is a gamble. Some modern parsers handle simple columns, but reading order often breaks, and design-tool PDFs may flatten text into images. A one-column Word or Google Docs file exported as real text is the safer default when you cannot test the employer’s exact system.",
+      },
+      {
+        question: "Do tables, graphics, and headers break ATS parsing?",
+        answer: "They raise risk rather than guaranteeing rejection. Layout tables and text boxes can shuffle order; images and icons are not searchable text; headers and footers are sometimes skipped. Keep essential facts in the body as ordinary text, then run a copy-paste test.",
+      },
+      {
+        question: "How long should an ATS resume be?",
+        answer: "Length is for the human reader more than the software. One page suits many early-career applications; two pages are appropriate when relevant roles, projects, or credentials need the space. Do not shrink fonts or margins just to force an arbitrary page count.",
+      },
+    ],
+    datePublished: "2026-08-14",
+    dateModified: "2026-08-14",
+    relatedLinks: [
+      { title: "ATS-friendly resume templates", path: "/templates" },
+      { title: "ATS checker", path: "/tools/ats-checker" },
+      { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
+      { title: "ATS-friendly fonts", path: "/guides/ats/ats-friendly-fonts" },
+      { title: "Workday application guide", path: "/guides/ats/workday-resume" },
     ],
   },
   ...[
@@ -184,6 +261,7 @@ export const GUIDES = guideSchema.array().parse([
     relatedLinks: [
       { title: "ATS checker", path: "/tools/ats-checker" },
       { title: "Resume templates", path: "/templates" },
+      { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
       { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
       { title: "ATS resume guides", path: "/guides/ats" },
       {

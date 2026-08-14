@@ -42,6 +42,12 @@ test("Phase 3 content routes render and cross-link", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Workday Resume Parsing/ })).toBeVisible();
   await expect(page.getByText(/configurations, integrations, and review practices vary/i)).toBeVisible();
 
+  await page.goto("/guides/ats/ats-friendly-resume-format");
+  await expect(
+    page.getByRole("heading", { name: /ATS-Friendly Resume Format/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /ATS-friendly resume templates/ })).toBeVisible();
+
   await page.goto("/examples/resumes/nursing");
   await expect(
     page.getByRole("heading", { name: "Nursing Resume Example" }),
