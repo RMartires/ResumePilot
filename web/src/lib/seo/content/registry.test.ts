@@ -37,6 +37,12 @@ describe("SEO content registry", () => {
     expect(getGuide("ats-friendly-resume-format")?.canonical).toBe(
       "/guides/ats/ats-friendly-resume-format",
     );
+    expect(getGuide("ats-friendly-resume-format")?.relatedLinks[0]?.path).toBe(
+      "/tools/ats-checker",
+    );
+    expect(getGuide("workday-resume")?.relatedLinks[0]?.path).toBe(
+      "/guides/ats/ats-friendly-resume-format",
+    );
     expect(getResumeExample("software-engineer")?.canonical).toBe(
       "/examples/resumes/software-engineer",
     );

@@ -46,6 +46,11 @@ test("Phase 3 content routes render and cross-link", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: /ATS-Friendly Resume Format/ }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /paste-test the file/i }),
+  ).toBeVisible();
+  await expect(page.getByText(/Copy the whole file into Notepad/i)).toBeVisible();
+  await expect(page.getByRole("link", { name: /ATS checker/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /ATS-friendly resume templates/ })).toBeVisible();
 
   await page.goto("/examples/resumes/nursing");
