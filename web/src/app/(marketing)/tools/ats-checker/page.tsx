@@ -51,7 +51,12 @@ export default function AtsCheckerPage() {
         <p>
           We extract text from your PDF, scan for contact details and standard section
           headings, and compare keywords from the job posting. Scores are estimates — not a
-          guarantee from any specific ATS vendor. For a full{" "}
+          guarantee from any specific ATS vendor. For how to choose keywords from one
+          posting, see the{" "}
+          <Link href="/guides/ats/resume-keywords" className="text-blue-300 hover:text-blue-200">
+            resume keywords
+          </Link>{" "}
+          guide. For a full{" "}
           <Link href="/tools/resume-score" className="text-blue-300 hover:text-blue-200">
             resume score
           </Link>{" "}

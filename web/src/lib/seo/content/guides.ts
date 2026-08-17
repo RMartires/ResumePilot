@@ -114,7 +114,7 @@ export const GUIDES = guideSchema.array().parse([
       },
       {
         heading: "Match the posting with honest language, not hidden tricks",
-        body: "Format gets your evidence into the database. Relevance still decides whether a recruiter searches for you. Use the job description as a checklist of real skills, tools, certifications, and domain terms, then include those terms only where they truthfully describe your work. Put important language in normal sentences and bullets, not in white text, keyword dumps, or copied requirement lists. Pair an acronym with the full term once when both appear in the posting. A checker can flag missing structure or weak overlap on this file; those scores are third-party estimates, not a grade recruiters see, and a high keyword overlap can still sit on scrambled work history. Knockout questions such as work authorization, licensure, or years of experience—not layout scores—are what can auto-disposition an application. A checker cannot invent a license you do not have, and it cannot model every employer’s screening questions. When the application asks you to re-enter history, complete the fields accurately even if they repeat the resume. The formatted attachment and the structured profile should tell the same story.",
+        body: "Format gets your evidence into the database. Relevance still decides whether a recruiter searches for you. Use the job description as a checklist of real skills, tools, certifications, and domain terms, then include those terms only where they truthfully describe your work. For the extraction method—title, tools, certifications, and repeated phrases—see the resume keywords guide. Put important language in normal sentences and bullets, not in white text, keyword dumps, or copied requirement lists. Pair an acronym with the full term once when both appear in the posting. A checker can flag missing structure or weak overlap on this file; those scores are third-party estimates, not a grade recruiters see, and a high keyword overlap can still sit on scrambled work history. Knockout questions such as work authorization, licensure, or years of experience—not layout scores—are what can auto-disposition an application. A checker cannot invent a license you do not have, and it cannot model every employer’s screening questions. When the application asks you to re-enter history, complete the fields accurately even if they repeat the resume. The formatted attachment and the structured profile should tell the same story.",
       },
     ],
     steps: [
@@ -155,7 +155,7 @@ export const GUIDES = guideSchema.array().parse([
       },
     ],
     datePublished: "2026-08-14",
-    dateModified: "2026-08-14",
+    dateModified: "2026-08-17",
     relatedLinks: [
       { title: "ATS checker", path: "/tools/ats-checker" },
       { title: "Resume keywords", path: "/guides/ats/resume-keywords" },
@@ -194,7 +194,7 @@ export const GUIDES = guideSchema.array().parse([
       },
       {
         heading: "ATS search is not a universal pass score",
-        body: "Applicant tracking systems store, search, and rank applications in ways that depend on the vendor and the employer’s setup. Recruiters often filter on titles, skills, and knockout questions. Keyword overlap can help you appear in a search; it does not grade a universal robot, and it does not override missing work authorization, licensure, or required years. Third-party match percentages are gap estimates for this file against this posting. They are not a score recruiters see, not a clone of Jobscan or any other vendor, and not a 75% or 80% pass mark. Do not chase parse-rate tables. Employer configurations vary, so a clean overlap on scrambled work history still fails the person who opens the attachment. Use keywords to make true evidence findable. Then complete the application’s structured fields so the profile and the file tell the same story.",
+        body: "Applicant tracking systems store, search, and rank applications in ways that depend on the vendor and the employer’s setup. Recruiters often filter on titles, skills, and knockout questions. Keyword overlap can help you appear in a search; it does not grade a universal robot, and it does not override missing work authorization, licensure, or required years. Harvard Business School and Accenture’s Hidden Workers research found that many employers believe qualified people are screened out for missing exact job-description criteria. That is evidence that posting language matters in ranking systems. It is not an auto-reject rate, and it is not a reason to stuff terms you cannot defend. Some matching tools rank applications without auto-rejecting anyone. Third-party match percentages are gap estimates for this file against this posting. They are not a score recruiters see, not a clone of Jobscan or any other vendor, and not a 75% or 80% pass mark. Do not chase parse-rate tables. Employer configurations vary, so a clean overlap on scrambled work history still fails the person who opens the attachment. Use keywords to make true evidence findable. Then complete the application’s structured fields so the profile and the file tell the same story.",
       },
       {
         heading: "Verify with a Notepad paste-test, then the ATS checker",
