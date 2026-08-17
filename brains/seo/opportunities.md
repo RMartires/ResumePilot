@@ -9,8 +9,6 @@ Status: `open` = fair game · `blocked` = owned/synonym/cooldown · `needs-page`
 | Keyword | Cluster | Why it is a candidate | Product path |
 |---------|---------|----------------------|--------------|
 | are canva resumes ats friendly | `design-tools` | Distinct intent from our layout hub; competitors rank how-tos | `/templates` + format guide as related, not the canonical |
-| how to tailor a resume to a job description | `tailoring` | Not the pillar “how to make”; maps to builder paste-JD | builder / checker |
-| ats resume keywords | `tailoring` | Keyword-matching how-to, not a template picker | `/tools/ats-checker` |
 | career change resume | `examples-roles` | We only have SWE / nursing / PM examples | `/examples/resumes` new slug if evidence is honest |
 | resume for first job | `examples-roles` | Student/entry intent beyond `/templates/student` | examples or new guide |
 | how to list skills on a resume | `skills-objectives` | Hub exists; no dedicated how-to | `/skills` related; new guide if intent is how-to |
@@ -27,6 +25,8 @@ Status: `open` = fair game · `blocked` = owned/synonym/cooldown · `needs-page`
 | ats friendly resume template / templates / cv template | `/templates` |
 | ats resume template | `/templates` |
 | ats friendly resume format | `/guides/ats/ats-friendly-resume-format` |
+| resume keywords / ats keywords / ats resume keywords | `/guides/ats/resume-keywords` |
+| how to tailor a resume to a job description | `/guides/ats/resume-keywords` |
 | ats resume checker / ats checker / free ats scan | `/tools/ats-checker` |
 | how to make a resume | `/guides/how-to-make-a-resume` |
 | best free resume builder / free resume builder | `/compare/best-free-resume-builder` |
@@ -38,4 +38,16 @@ Add leftover competitor-domain keywords here after each Step 1. Include KE volum
 
 | Keyword | Cluster | KE vol | Comp | Seen | Source |
 |---------|---------|--------|------|------|--------|
-| *(none yet — fill from competitor `get_domain_keywords`)* | | | | | |
+| cover letter vs resume | cover-letter | 4400 | 0.15 | 2026-08-17 | jobscan.co |
+| resume skills section | skills-objectives | 6600 | 0.03 | 2026-08-17 | jobscan.co |
+| hard skills examples | skills-objectives | 8100 | 0.05 | 2026-08-17 | tealhq.com |
+| interests to put on a resume | skills-objectives | 1300 | 0.17 | 2026-08-17 | jobscan.co / tealhq.com |
+| interpersonal skills examples | skills-objectives | 2400 | 0.06 | 2026-08-17 | jobscan.co |
+| problem solving skills | skills-objectives | 4400 | 0.02 | 2026-08-17 | jobscan.co |
+| canva resume builder | design-tools | 90500 | 0.08 | 2026-08-17 | zety.com (navigational Canva) |
+| how to write a cover letter | cover-letter | 49500 | 0.38 | 2026-08-17 | zety.com |
+| cover letter examples | cover-letter | 450000 | 0.47 | 2026-08-17 | zety.com |
+| resume header | how-to-write | 3600 | 0.88 | 2026-08-17 | zety.com |
+| references on resume | how-to-write | 8100 | 0.10 | 2026-08-17 | jobscan.co |
+| cv vs resume | how-to-write | 33100 | 0.24 | 2026-08-17 | zety.com |
+| student resume | examples-roles | 4400 | 0.36 | 2026-08-17 | zety.com (watch `/templates/student`) |

@@ -12,6 +12,7 @@ Strategy context: [`../traffic-growth-before-monetization/`](../traffic-growth-b
 | [competitors.md](./competitors.md) | Domains and URLs to mine for keywords we do not own |
 | [opportunities.md](./opportunities.md) | Unowned keywords we may ship later |
 | [ship-log.md](./ship-log.md) | What we shipped, when, and which cluster is in cooldown |
+| [run.example.md](./run.example.md) | Template for the current-run handoff. Live file is gitignored `run.md` |
 
 ## What else this needs (keep here, not in chat)
 
@@ -39,7 +40,7 @@ Use these names in owned, opportunities, and the ship log.
 | `job-tracker` | Application tracking | `/features/job-tracker` |
 | `linkedin` | LinkedIn import / profile-to-resume | `/features/linkedin-import` |
 | `wording` | Words to avoid, buzzwords | `/guides/ats/resume-words-to-avoid` |
-| `tailoring` | Keywords, job-description match, how to tailor | none yet (checker is a tool, not this how-to) |
+| `tailoring` | Keywords, job-description match, how to tailor | `/guides/ats/resume-keywords` (checker is the scan tool) |
 | `design-tools` | Canva / Figma / InDesign ATS questions | none yet |
 
 A keyword is **owned** if it matches a row in `owned-keywords.md` **or** it is a synonym in an owned cluster. Prefer a cluster that has **no** published page.

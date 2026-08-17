@@ -13,3 +13,6 @@ web/out/
 web/playwright-report/
 web/test-results/
 .gstack/
+
+# Per-run SEO handoff (written by seo-manager; do not commit dumps)
+brains/seo/run.md
