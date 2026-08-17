@@ -58,7 +58,12 @@ export default function TemplatesIndexPage() {
           Applicant tracking systems read text, not design. The strongest ATS friendly
           resume templates use a single column, standard headings, and avoid tables,
           text boxes, and icons in the body. ResumePilot defaults to parse-safe formatting
-          so you can focus on keywords and quantified bullets.
+          so you can focus on keywords and quantified bullets. For the layout, file type,
+          and section-order rules behind those templates, see the{" "}
+          <Link href="/guides/ats/ats-friendly-resume-format" className="text-blue-300 hover:text-blue-200">
+            ATS-friendly resume format
+          </Link>{" "}
+          guide.
         </p>
         <p>
           Prefer a free score before you apply? Try the{" "}
