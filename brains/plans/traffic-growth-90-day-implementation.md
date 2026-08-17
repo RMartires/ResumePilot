@@ -72,7 +72,7 @@ Related docs: `web/docs/seo-search-console.md` (UTMs), `web/docs/seo-research-te
 
 ### Content quality pass · Content + Eng
 
-Publish or refine **5 high-intent clusters** (each must be genuinely different — no template-swap spam):
+Publish or refine **5 high-intent clusters** (each must be genuinely different — no template-swap spam). Keyword ownership and next URLs: [`../seo/`](../seo/README.md).
 
 - [ ] Cluster 1: ATS-friendly templates (by experience / format) → link to checker
 - [ ] Cluster 2: Role resume examples (start with roles you know) → template + checker

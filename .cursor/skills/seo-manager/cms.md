@@ -2,6 +2,8 @@
 
 Read this in Step 4. Do not load it during keyword analysis.
 
+Keyword inventory (owned map, competitors, opportunities, ship log) lives in [`brains/seo/`](../../../brains/seo/README.md). Read that in Step 1. Update it in Step 5.
+
 ## Content files
 
 | Kind | File | Canonical pattern |
@@ -55,3 +57,7 @@ Match Workday/Greenhouse guides: conservative defaults, employer configuration v
 ## Worked example (2026-08-14)
 
 Keyword `ats friendly resume format` (KE ~22,200 US/mo, competition 0.10). GSC attached format queries to `/templates` ~position 90. Shipped `/guides/ats/ats-friendly-resume-format` instead of expanding the gallery. Research then required a louder Notepad paste-test, checker-first related links, and an explicit “do not republish parse rates” line — those landed as a follow-up commit on the same PR.
+
+## Lesson (2026-08-17)
+
+Do not follow that with `ats friendly resume template`. The gallery already owns it; format and template are one `ats-layout` cluster. Next run: an **unowned** cluster from `brains/seo/opportunities.md`, seeded by competitor domain keywords.
