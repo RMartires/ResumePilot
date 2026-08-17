@@ -21,6 +21,18 @@ describe("createMarketingMetadata", () => {
     });
     expect(metadata.openGraph).not.toHaveProperty("images");
   });
+
+  it("uses an absolute homepage title so the brand suffix is not duplicated", () => {
+    const metadata = createMarketingMetadata({
+      title: "ResumePilot — AI Resume Builder with ATS Optimization",
+      description: "Build ATS-friendly resumes.",
+      path: "/",
+    });
+
+    expect(metadata.title).toEqual({
+      absolute: "ResumePilot — AI Resume Builder with ATS Optimization",
+    });
+  });
 });
 
 describe("private-route robots metadata", () => {

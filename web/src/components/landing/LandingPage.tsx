@@ -35,9 +35,9 @@ export function LandingPage() {
             </h1>
 
             <p className="mt-4 max-w-xl text-sm leading-6 text-zinc-300 sm:mt-5 sm:text-base sm:leading-7">
-              ResumePilot analyzes, tailors, and improves your resume for every role —
-              AI writing, ATS optimization, cover letters, and application tracking in one
-              workflow.
+              Build resumes that get past ATS screening and get noticed by recruiters.
+              ResumePilot analyzes and tailors every application — AI writing, job-description
+              matching, cover letters, and tracking in one workflow.
             </p>
 
             <ul className="mt-6 space-y-2 text-sm text-zinc-300 sm:mt-8">

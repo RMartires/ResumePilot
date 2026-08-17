@@ -16,7 +16,8 @@ export function createMarketingMetadata({
   path,
 }: MarketingMetadataInput): Metadata {
   return {
-    title,
+    // Homepage already includes the brand; skip the layout "%s · ResumePilot" suffix.
+    title: path === "/" ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
     openGraph: {
