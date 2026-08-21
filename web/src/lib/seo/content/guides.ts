@@ -135,7 +135,7 @@ export const GUIDES = guideSchema.array().parse([
       },
       {
         question: "Can I use a two-column or Canva resume with ATS software?",
-        answer: "It is a gamble. Some modern parsers handle simple columns, but reading order often breaks, and design-tool PDFs may flatten text into images. A one-column Word or Google Docs file exported as real text is the safer default when you cannot test the employer’s exact system.",
+        answer: "It is a gamble. Some modern parsers handle simple columns, but reading order often breaks, and design-tool PDFs may flatten text into images. Paste-test the export; if titles, employers, and dates scramble, rebuild in a one-column file. Canva is not banned by name. See the Canva resume ATS guide for a keep-or-rebuild checklist.",
       },
       {
         question: "Do tables, graphics, and headers break ATS parsing?",
@@ -155,13 +155,14 @@ export const GUIDES = guideSchema.array().parse([
       },
     ],
     datePublished: "2026-08-14",
-    dateModified: "2026-08-17",
+    dateModified: "2026-08-21",
     relatedLinks: [
       { title: "ATS checker", path: "/tools/ats-checker" },
       { title: "Resume keywords", path: "/guides/ats/resume-keywords" },
       { title: "ATS-friendly resume templates", path: "/templates" },
       { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
       { title: "ATS-friendly fonts", path: "/guides/ats/ats-friendly-fonts" },
+      { title: "Are Canva resumes ATS friendly?", path: "/guides/ats/canva-resume-ats" },
       { title: "Workday application guide", path: "/guides/ats/workday-resume" },
     ],
   },
@@ -241,6 +242,84 @@ export const GUIDES = guideSchema.array().parse([
       { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
       { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
       { title: "ATS-friendly resume templates", path: "/templates" },
+    ],
+  },
+  {
+    slug: "canva-resume-ats",
+    canonical: "/guides/ats/canva-resume-ats",
+    status: "published",
+    kind: "ats",
+    title: "Are Canva Resumes ATS Friendly? Keep or Rebuild",
+    description:
+      "Canva is not banned by applicant tracking systems. Popular templates use columns, icons, and graphics that parsers scramble. Paste-test this export, then keep it or rebuild.",
+    intro:
+      "A Canva resume is ATS-friendly only if this export still reads as selectable text with titles, employers, and dates grouped together. Applicant tracking systems do not auto-reject the word “Canva,” and they do not certify creator templates. Popular Canva layouts use columns, icons, text boxes, and graphics that parsers often scramble or skip. Employer configs vary, so there is no universal pass. Open the file, highlight the body, paste it into Notepad or TextEdit, and decide: keep this design for humans, or rebuild a plain one-column file for portals.",
+    sections: [
+      {
+        heading: "Canva is not banned; popular layouts are the parse risk",
+        body: "Job seekers ask whether Canva resumes are ATS friendly because the brand is a design tool, not because employers keep a blocklist of Canva filenames. Systems extract a stream of text and try to assign chunks to fields such as name, employer, title, and date. They do not award extra credit for a polished template, and they do not reject a file because the footer says Canva. What they fail on is reading order and missing text: a two-column “modern” layout, skill icons instead of words, text sitting in shapes, or a PDF that is really a picture. Search labels such as “ATS-friendly” on a Canva template are creator names, not an official Canva or ATS certification. Treat the brand as a starting file. Treat the layout as the thing you have to test.",
+      },
+      {
+        heading: "Columns, icons, text boxes, and graphics scramble parsers",
+        body: "Popular Canva resume templates put a skills sidebar beside experience, replace “email” and “phone” with glyphs, and lock headings into text boxes or tables so the design stays aligned. A person can still scan that page. A parser may walk left to right across a row and interleave the sidebar with job titles, skip icon-only contact details, or drop anything drawn as a graphic. Some modern stacks try to reconstruct simple columns, but you cannot know whether this employer’s Workday, Greenhouse, Lever, or Taleo setup is layout-aware. Independent layout tests and university career advice still treat a one-column body, standard headings, and ordinary typed contact details as the conservative default. If a fact only exists as an icon, chart, or photo overlay, assume many systems will not store it.",
+      },
+      {
+        heading: "Paste-test this Canva export before you apply",
+        body: "Do this on the file you will upload, not on the Canva canvas. Open the export, confirm you can highlight sentences, then copy the whole document into Notepad, TextEdit, or another plain-text editor. Check that your name, phone, email, and links appear as real characters. Check that each job still groups title, employer, and dates, then the bullets, in a sensible order. If the paste is empty, out of order, or missing contact details, the portal will often store the same mess. A checker can then inspect this export for structure and overlap with one job description; treat that as a review of this file, not a recruiter-facing grade and not a vendor “pass rate.” After you upload to the employer’s form, inspect autofilled employer, title, date, and education fields and correct them before submitting.",
+      },
+      {
+        heading: "Follow the posting’s file type; graphic Canva files are not Word",
+        body: "Use the format the employer requests. Career-center and commercial guides disagree on a default PDF versus Word rule, so do not pick PDF-always or Word-always. Graphic Canva designs also do not native-export a true Word resume; DOCX export is a Canva Docs path, not a magic fix for a designed poster. If the posting asks for Word and your Canva file is a designed PDF, rebuild in a word processor or builder instead of hoping a converter will restore reading order. If the posting asks for PDF, export selectable text—not a flattened print, scan, or image-only download. Name the file like “Jordan-Lee-Product-Manager-Resume.pdf.” Canva Pro, Magic Studio, or AI rewrite tools can change wording and polish; they do not repair columns, icons, or image-based text.",
+      },
+      {
+        heading: "Keep a designed copy for humans; use a tested file for portals",
+        body: "You do not have to throw the Canva file away. A designed PDF can still help in networking, a referral email, a portfolio, or an interview leave-behind where a person opens the attachment. The application portal is a different channel. When the paste test fails, rebuild a reverse-chronological, single-column resume with standard headings and contact details in the body, then export the requested type from that source. Use the designed file where a human asked for it. Use the tested text file where software will parse it. If the paste test passes—selectable text, grouped titles and dates, no missing contact line—you can keep this Canva export for that posting, still follow the requested file type, and still correct parsed fields after upload.",
+      },
+      {
+        heading: "If the paste test fails, rebuild instead of decorating more",
+        body: "Adding another icon pack, a second color, or a denser sidebar will not make a scrambled reading order safer. Move the content into a one-column ATS template if you need a parse-safe shell, or write the portal version in the builder. Keep conventional headings, and type skills as words in a short list. Re-run the highlight and paste test on the new export. Then paste that file and the job description into the ATS checker and add only missing terms you can honestly support. Knockout questions such as work authorization, licensure, or years of experience can still stop an application no matter how clean the layout is. The keep-or-rebuild decision is about extraction risk on this file, not a promise that every employer configuration will behave the same way.",
+      },
+    ],
+    steps: [
+      { name: "Export selectable text", text: "Download the file the posting asks for and confirm you can highlight and copy sentences in the export, not only on the Canva canvas." },
+      { name: "Paste-test reading order", text: "Copy the whole file into Notepad or TextEdit. Confirm contact details appear as text and that titles, employers, and dates still travel together." },
+      { name: "Inspect this export", text: "Run the ATS checker on this file and one job description. Treat the result as a review of this export, not a recruiter score." },
+      { name: "Keep or rebuild", text: "If the paste test passes, keep the file for portals and a designed copy for humans. If it fails, rebuild in a one-column template or write the portal version in the builder instead of adding more decoration." },
+      { name: "Correct parsed fields", text: "After upload, inspect autofilled employer, title, date, and education fields and fix them before you submit." },
+    ],
+    faqs: [
+      {
+        question: "Are Canva resumes ATS friendly?",
+        answer: "Only if this export is selectable text with a sensible reading order. Popular Canva templates often use columns, icons, and graphics that parsers scramble. Canva is not banned by name. Paste-test the file, then keep it or rebuild.",
+      },
+      {
+        question: "Does an ATS automatically reject Canva resumes?",
+        answer: "Systems do not auto-reject the word “Canva.” They can store empty or scrambled fields when text is trapped in images, text boxes, or a two-column layout. Knockout questions such as work authorization are what can auto-disposition an application.",
+      },
+      {
+        question: "Does Canva Pro or Canva AI make a resume ATS-safe?",
+        answer: "No. Paid or AI features can change wording and polish. They do not certify parsing, and they do not fix columns, icons, or image-based text. Test the exported file the same way you would test a free template.",
+      },
+      {
+        question: "Can I download a Canva resume as a Word document for ATS?",
+        answer: "Graphic Canva designs do not native-export a true Word resume. DOCX is a Canva Docs path. If the posting asks for Word, rebuild in a word processor or builder rather than converting a designed poster.",
+      },
+      {
+        question: "Should I upload a PDF or Word file from Canva?",
+        answer: "Follow the posting first. Neither format is universally better. The shared rule is selectable text plus the type the employer requested. Image-only PDFs and flattened design exports are the files to avoid.",
+      },
+      {
+        question: "Are Canva templates labeled ATS-friendly actually safe?",
+        answer: "Those names are creator labels, not an official Canva or employer certification. Open the export, paste it into a plain-text editor, and judge reading order. If the test fails, use a one-column template instead.",
+      },
+    ],
+    datePublished: "2026-08-21",
+    dateModified: "2026-08-21",
+    relatedLinks: [
+      { title: "ATS checker", path: "/tools/ats-checker" },
+      { title: "ATS-friendly resume templates", path: "/templates" },
+      { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
+      { title: "ATS-friendly fonts", path: "/guides/ats/ats-friendly-fonts" },
     ],
   },
   ...[

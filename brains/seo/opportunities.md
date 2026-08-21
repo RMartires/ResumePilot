@@ -8,7 +8,6 @@ Status: `open` = fair game · `blocked` = owned/synonym/cooldown · `needs-page`
 
 | Keyword | Cluster | Why it is a candidate | Product path |
 |---------|---------|----------------------|--------------|
-| are canva resumes ats friendly | `design-tools` | Distinct intent from our layout hub; competitors rank how-tos | `/templates` + format guide as related, not the canonical |
 | career change resume | `examples-roles` | We only have SWE / nursing / PM examples | `/examples/resumes` new slug if evidence is honest |
 | resume for first job | `examples-roles` | Student/entry intent beyond `/templates/student` | examples or new guide |
 | how to list skills on a resume | `skills-objectives` | Hub exists; no dedicated how-to | `/skills` related; new guide if intent is how-to |
@@ -31,6 +30,7 @@ Status: `open` = fair game · `blocked` = owned/synonym/cooldown · `needs-page`
 | how to make a resume | `/guides/how-to-make-a-resume` |
 | best free resume builder / free resume builder | `/compare/best-free-resume-builder` |
 | resume examples | `/examples/resumes` |
+| are canva resumes ats friendly / canva resume ats | `/guides/ats/canva-resume-ats` |
 
 ## Parking lot
 
@@ -51,3 +51,8 @@ Add leftover competitor-domain keywords here after each Step 1. Include KE volum
 | references on resume | how-to-write | 8100 | 0.10 | 2026-08-17 | jobscan.co |
 | cv vs resume | how-to-write | 33100 | 0.24 | 2026-08-17 | zety.com |
 | student resume | examples-roles | 4400 | 0.36 | 2026-08-17 | zety.com (watch `/templates/student`) |
+| how to add linkedin to resume | how-to-write | 2900 | 0.04 | 2026-08-21 | zety.com |
+| what is ats resume | how-to-write | 3600 | 0.33 | 2026-08-21 | jobscan.co |
+| google docs resume template | design-tools | 90500 | 0.28 | 2026-08-21 | jobscan.co / zety.com |
+| resume templates canva | design-tools | 135000 | 0.03 | 2026-08-21 | zety.com (navigational Canva) |
+| canva resume templates | design-tools | 10 | 0.05 | 2026-08-21 | tealhq.com |
