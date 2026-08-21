@@ -277,14 +277,14 @@ export const GUIDES = guideSchema.array().parse([
       },
       {
         heading: "If the paste test fails, rebuild instead of decorating more",
-        body: "Adding another icon pack, a second color, or a denser sidebar will not make a scrambled reading order safer. Move the content into a one-column ATS template or the builder, keep conventional headings, and type skills as words in a short list. Re-run the highlight and paste test on the new export. Then paste that file and the job description into the ATS checker and add only missing terms you can honestly support. Knockout questions such as work authorization, licensure, or years of experience can still stop an application no matter how clean the layout is. The keep-or-rebuild decision is about extraction risk on this file, not a promise that every employer configuration will behave the same way.",
+        body: "Adding another icon pack, a second color, or a denser sidebar will not make a scrambled reading order safer. Move the content into a one-column ATS template if you need a parse-safe shell, or write the portal version in the builder. Keep conventional headings, and type skills as words in a short list. Re-run the highlight and paste test on the new export. Then paste that file and the job description into the ATS checker and add only missing terms you can honestly support. Knockout questions such as work authorization, licensure, or years of experience can still stop an application no matter how clean the layout is. The keep-or-rebuild decision is about extraction risk on this file, not a promise that every employer configuration will behave the same way.",
       },
     ],
     steps: [
       { name: "Export selectable text", text: "Download the file the posting asks for and confirm you can highlight and copy sentences in the export, not only on the Canva canvas." },
       { name: "Paste-test reading order", text: "Copy the whole file into Notepad or TextEdit. Confirm contact details appear as text and that titles, employers, and dates still travel together." },
       { name: "Inspect this export", text: "Run the ATS checker on this file and one job description. Treat the result as a review of this export, not a recruiter score." },
-      { name: "Keep or rebuild", text: "If the paste test passes, keep the file for portals and a designed copy for humans. If it fails, rebuild in a one-column template instead of adding more decoration." },
+      { name: "Keep or rebuild", text: "If the paste test passes, keep the file for portals and a designed copy for humans. If it fails, rebuild in a one-column template or write the portal version in the builder instead of adding more decoration." },
       { name: "Correct parsed fields", text: "After upload, inspect autofilled employer, title, date, and education fields and fix them before you submit." },
     ],
     faqs: [

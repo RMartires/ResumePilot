@@ -4,7 +4,7 @@ Newest first. Cooldown is **14 days** per cluster, or until GSC lists the new ca
 
 | Date | Keyword | Canonical | Cluster | PR / commit | Research |
 |------|---------|-----------|---------|-------------|----------|
-| 2026-08-21 | are canva resumes ats friendly | `/guides/ats/canva-resume-ats` | `design-tools` | (PR pending) | `~/Documents/Canva_Resume_ATS_Research_20260821/` |
+| 2026-08-21 | are canva resumes ats friendly | `/guides/ats/canva-resume-ats` | `design-tools` | #7 | `~/Documents/Canva_Resume_ATS_Research_20260821/` |
 | 2026-08-17 | resume keywords | `/guides/ats/resume-keywords` | `tailoring` | #6 | `~/Documents/Resume_Keywords_Research_20260817/` |
 | 2026-08-14 | ats friendly resume format | `/guides/ats/ats-friendly-resume-format` | `ats-layout` | #4 / #5, `487f52a` | `~/Documents/ATS_Friendly_Resume_Format_Research_20260814/` |
 
