@@ -71,6 +71,7 @@ export const GUIDES = guideSchema.array().parse([
     ...dates,
     relatedLinks: [
       { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
+      { title: "Resume keywords", path: "/guides/ats/resume-keywords" },
       { title: "Resume examples", path: "/examples/resumes" },
       { title: "Resume templates", path: "/templates" },
       { title: "ATS checker", path: "/tools/ats-checker" },
@@ -113,7 +114,7 @@ export const GUIDES = guideSchema.array().parse([
       },
       {
         heading: "Match the posting with honest language, not hidden tricks",
-        body: "Format gets your evidence into the database. Relevance still decides whether a recruiter searches for you. Use the job description as a checklist of real skills, tools, certifications, and domain terms, then include those terms only where they truthfully describe your work. Put important language in normal sentences and bullets, not in white text, keyword dumps, or copied requirement lists. Pair an acronym with the full term once when both appear in the posting. A checker can flag missing structure or weak overlap on this file; those scores are third-party estimates, not a grade recruiters see, and a high keyword overlap can still sit on scrambled work history. Knockout questions such as work authorization, licensure, or years of experience—not layout scores—are what can auto-disposition an application. A checker cannot invent a license you do not have, and it cannot model every employer’s screening questions. When the application asks you to re-enter history, complete the fields accurately even if they repeat the resume. The formatted attachment and the structured profile should tell the same story.",
+        body: "Format gets your evidence into the database. Relevance still decides whether a recruiter searches for you. Use the job description as a checklist of real skills, tools, certifications, and domain terms, then include those terms only where they truthfully describe your work. For the extraction method—title, tools, certifications, and repeated phrases—see the resume keywords guide. Put important language in normal sentences and bullets, not in white text, keyword dumps, or copied requirement lists. Pair an acronym with the full term once when both appear in the posting. A checker can flag missing structure or weak overlap on this file; those scores are third-party estimates, not a grade recruiters see, and a high keyword overlap can still sit on scrambled work history. Knockout questions such as work authorization, licensure, or years of experience—not layout scores—are what can auto-disposition an application. A checker cannot invent a license you do not have, and it cannot model every employer’s screening questions. When the application asks you to re-enter history, complete the fields accurately even if they repeat the resume. The formatted attachment and the structured profile should tell the same story.",
       },
     ],
     steps: [
@@ -154,13 +155,92 @@ export const GUIDES = guideSchema.array().parse([
       },
     ],
     datePublished: "2026-08-14",
-    dateModified: "2026-08-14",
+    dateModified: "2026-08-17",
     relatedLinks: [
       { title: "ATS checker", path: "/tools/ats-checker" },
+      { title: "Resume keywords", path: "/guides/ats/resume-keywords" },
       { title: "ATS-friendly resume templates", path: "/templates" },
       { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
       { title: "ATS-friendly fonts", path: "/guides/ats/ats-friendly-fonts" },
       { title: "Workday application guide", path: "/guides/ats/workday-resume" },
+    ],
+  },
+  {
+    slug: "resume-keywords",
+    canonical: "/guides/ats/resume-keywords",
+    status: "published",
+    kind: "ats",
+    title: "Resume Keywords: How to Tailor Them to One Job Description",
+    description:
+      "Pull resume keywords from this posting’s title, tools, certifications, and repeated phrases. Place them honestly, then verify with a paste-test and the ATS checker.",
+    intro:
+      "Resume keywords are the words this employer uses to describe the work—not a transferable industry list you reuse on every application. The useful move is to extract this posting’s title, hard skills, tools, certifications, and repeated phrases, then place them in your summary, skills section, and evidence bullets only where they are true. Applicant tracking systems and recruiter filters vary by employer, so overlap is not a pass score. Copy the exported file into Notepad to confirm the new terms are selectable text, then paste the resume and this job description into the ATS checker and treat missing true terms as the to-do list.",
+    sections: [
+      {
+        heading: "Keywords come from this posting, not a generic bank",
+        body: "People searching for resume keywords usually want a list they can paste. That is the wrong unit of work. The terms that help this application are the ones in this job description: the job title as written, required tools and platforms, licenses or certifications, domain nouns that repeat, and the verbs the employer uses for the work you actually did. A 500-term “best keywords” bank is not transferable across postings, industries, or seniority. Two “product manager” roles can emphasize discovery versus delivery, Salesforce versus HubSpot, or a certification you do not hold. Start from the live requisition, not from last month’s version or a template of popular skills. Keep a longer master resume for storage, then make a focused copy for each serious application. The goal is translation: say what you did in the employer’s language when that language is accurate. It is not to collect every noun in the advertisement.",
+      },
+      {
+        heading: "Extract the title, tools, certs, and repeated phrases",
+        body: "Read the posting once for requirements and once for language. Highlight the exact job title and close variants, named tools and systems, required certifications or licenses, hard skills, and phrases that appear more than once. Separate knockouts from preferences. Work authorization, an active license, a degree, or years in a named setting can auto-disposition an application even when keyword overlap looks strong; a checker cannot grant those. Preferences such as “nice to have” tools belong on the resume only if you can discuss them. Ignore fluffy culture lines. When the posting says “electronic health record” in one sentence and “EHR” in another, note both. When it repeats “incident response” five times and mentions “on-call” once, the repeated phrase is the one to place if it is true of your work. Write a short extraction list before you edit: five to twelve terms you can defend, not a dump of every adjective in the posting.",
+      },
+      {
+        heading: "Place terms in the summary, skills, and evidence bullets",
+        body: "Put important language where a recruiter and a parser both look: a short summary that names the target role, a skills section that indexes defensible tools, and bullets that show the term in context. “SQL” in a skills list is weaker than a bullet that says you wrote SQL to reconcile weekly billing exceptions, and weaker still if the posting never asks for it. Pair an acronym with the full term once when the job uses both, such as “Customer Relationship Management (CRM),” then use the form the posting prefers. Do not invent experience, inflate a one-time demo into daily use, or copy requirement paragraphs into a skills block. Soft skills belong in bullets with an audience or result, not as a second keyword list. If a true term still has no home after editing, either add one honest sentence of context or leave it off. Twelve relevant, supported terms usually outperform a dense wall of loosely related words.",
+      },
+      {
+        heading: "Mirror exact phrasing when it is true—never hide it",
+        body: "If you conducted user interviews and the role consistently says “user interviews,” use that phrase instead of a looser synonym such as “customer chats.” Exact phrasing helps keyword search and recruiter filters; it does not replace evidence. Do not use white text, tiny type, keyword stuffing, or copied job-description blocks. Those tricks waste space, can look like spam to a human, and do not create experience you can discuss. There is no reliable keyword-density target to hit. Semantic matching in some products may relate close terms, but that does not make exact language obsolete, and you cannot know this employer’s configuration. Skip hidden text, tables of synonyms, and headers that exist only to park extra nouns. If you cannot explain a term in an interview, it does not belong on the page.",
+      },
+      {
+        heading: "ATS search is not a universal pass score",
+        body: "Applicant tracking systems store, search, and rank applications in ways that depend on the vendor and the employer’s setup. Recruiters often filter on titles, skills, and knockout questions. Keyword overlap can help you appear in a search; it does not grade a universal robot, and it does not override missing work authorization, licensure, or required years. Harvard Business School and Accenture’s Hidden Workers research found that many employers believe qualified people are screened out for missing exact job-description criteria. That is evidence that posting language matters in ranking systems. It is not an auto-reject rate, and it is not a reason to stuff terms you cannot defend. Some matching tools rank applications without auto-rejecting anyone. Third-party match percentages are gap estimates for this file against this posting. They are not a score recruiters see, not a clone of Jobscan or any other vendor, and not a 75% or 80% pass mark. Do not chase parse-rate tables. Employer configurations vary, so a clean overlap on scrambled work history still fails the person who opens the attachment. Use keywords to make true evidence findable. Then complete the application’s structured fields so the profile and the file tell the same story.",
+      },
+      {
+        heading: "Verify with a Notepad paste-test, then the ATS checker",
+        body: "After you add terms, export the file the posting asks for and copy the whole resume into Notepad or another plain-text editor. Confirm the new keywords are selectable text, not images, icons, or text trapped in a sidebar. Titles, employers, dates, and bullets should still travel together. If a term you added disappears or the order scrambles, fix the layout before you apply—usually by moving content into a single column of ordinary body text. Then paste this resume and this job description into the ATS checker. Treat missing true terms as the to-do list. Do not treat the percentage as pass or fail, and do not add words you cannot defend just to close a gap. If the paste-test fails, switch to a simpler ATS-friendly format before scanning again. Keep the submitted resume next to the job description so interview answers match what the employer saw.",
+      },
+    ],
+    steps: [
+      { name: "Extract this posting", text: "From the live job description, list the title, tools, certifications, knockouts, and phrases that repeat." },
+      { name: "Place terms honestly", text: "Put true language in the summary, skills, and evidence bullets. Pair an acronym with the full term once. Do not invent work." },
+      { name: "Paste-test the export", text: "Copy the whole file into Notepad or another plain-text editor and confirm the new keywords are selectable text in a sensible order." },
+      { name: "Scan resume plus this JD", text: "Paste both into the ATS checker. Use missing true terms as the edit list; ignore the percentage as a pass mark." },
+      { name: "Fix gaps, then apply", text: "Add only language you can defend. If the paste-test failed, simplify the format first. Review parsed application fields before submitting." },
+    ],
+    faqs: [
+      {
+        question: "What are resume keywords?",
+        answer: "They are the employer’s terms for the role: job title, hard skills, tools, certifications, and repeated phrases in this posting. They are not a generic industry list you reuse on every application.",
+      },
+      {
+        question: "Should I copy every keyword from the job description?",
+        answer: "No. Use the posting’s wording only where it accurately describes your experience. Copied requirement lists, hidden text, and claims you cannot discuss in an interview do not help.",
+      },
+      {
+        question: "Do I need a 75% ATS match score to get interviews?",
+        answer: "No. There is no universal pass mark recruiters use. Third-party scores are estimates of overlap on this file, not a grade of the employer’s system. Missing licenses or work authorization can still stop an application.",
+      },
+      {
+        question: "Are lists of the best resume keywords worth using?",
+        answer: "Not as a transferable bank. Popular terms from another role or a 500-item list can be irrelevant or untrue for this posting. Extract language from the live job description instead.",
+      },
+      {
+        question: "Will semantic or AI matching make exact keywords unnecessary?",
+        answer: "Some systems relate close terms, but employer setups vary and you cannot assume this one does. Mirror exact phrasing when it is true. Do not skip the terms the posting actually uses.",
+      },
+      {
+        question: "How do I check that my keywords will be read?",
+        answer: "Copy the exported resume into Notepad and confirm the new terms are selectable text. Then paste the resume and this job description into the ATS checker and add only missing terms you can honestly support.",
+      },
+    ],
+    datePublished: "2026-08-17",
+    dateModified: "2026-08-17",
+    relatedLinks: [
+      { title: "ATS checker", path: "/tools/ats-checker" },
+      { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
+      { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },
+      { title: "ATS-friendly resume templates", path: "/templates" },
     ],
   },
   ...[
@@ -270,6 +350,7 @@ export const GUIDES = guideSchema.array().parse([
     ...dates,
     relatedLinks: [
       { title: "ATS-friendly resume format", path: "/guides/ats/ats-friendly-resume-format" },
+      { title: "Resume keywords", path: "/guides/ats/resume-keywords" },
       { title: "ATS checker", path: "/tools/ats-checker" },
       { title: "Resume templates", path: "/templates" },
       { title: "How to make a resume", path: "/guides/how-to-make-a-resume" },

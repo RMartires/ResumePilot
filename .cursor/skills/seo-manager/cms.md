@@ -2,7 +2,7 @@
 
 Read this in Step 4. Do not load it during keyword analysis.
 
-Keyword inventory (owned map, competitors, opportunities, ship log) lives in [`brains/seo/`](../../../brains/seo/README.md). Read that in Step 1. Update it in Step 5.
+Keyword inventory lives in [`brains/seo/`](../../../brains/seo/README.md). Read that in Step 1. Update owned/opportunities/ship-log in Step 5. The current-run handoff is gitignored `brains/seo/run.md` (template: `run.example.md`). Do not ask the user to `/summarize`; deep-research runs in a Task subagent.
 
 ## Content files
 

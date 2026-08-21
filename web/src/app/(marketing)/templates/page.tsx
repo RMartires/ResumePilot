@@ -63,7 +63,11 @@ export default function TemplatesIndexPage() {
           <Link href="/guides/ats/ats-friendly-resume-format" className="text-blue-300 hover:text-blue-200">
             ATS-friendly resume format
           </Link>{" "}
-          guide.
+          guide. For how to pull terms from one posting, see{" "}
+          <Link href="/guides/ats/resume-keywords" className="text-blue-300 hover:text-blue-200">
+            resume keywords
+          </Link>
+          .
         </p>
         <p>
           Prefer a free score before you apply? Try the{" "}

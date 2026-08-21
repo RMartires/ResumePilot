@@ -31,5 +31,6 @@ Last reconciled: 2026-08-17 against `web/src/lib/seo/content/` and marketing hub
 | cover letter generator | `/features/cover-letter` | `cover-letter` | Feature landing, not a full how-to. |
 | job tracker | `/features/job-tracker` | `job-tracker` | |
 | linkedin resume import | `/features/linkedin-import` | `linkedin` | |
+| resume keywords | `/guides/ats/resume-keywords` | `tailoring` | Shipped 2026-08-17. Also owns `ats keywords`, `ats resume keywords`, `how to tailor a resume to a job description`, `best resume keywords`. |
 
 Hub index pages (`/guides`, `/guides/ats`, `/examples/resumes`, `/compare`, `/features`) are not extra keyword targets.
