@@ -32,5 +32,6 @@ Last reconciled: 2026-08-17 against `web/src/lib/seo/content/` and marketing hub
 | job tracker | `/features/job-tracker` | `job-tracker` | |
 | linkedin resume import | `/features/linkedin-import` | `linkedin` | |
 | resume keywords | `/guides/ats/resume-keywords` | `tailoring` | Shipped 2026-08-17. Also owns `ats keywords`, `ats resume keywords`, `how to tailor a resume to a job description`, `best resume keywords`. |
+| are canva resumes ats friendly | `/guides/ats/canva-resume-ats` | `design-tools` | Shipped 2026-08-21. Also owns `canva resume ats`, `is canva ats friendly`. Does **not** own navigational `canva resume builder` / `resume templates canva`. |
 
 Hub index pages (`/guides`, `/guides/ats`, `/examples/resumes`, `/compare`, `/features`) are not extra keyword targets.

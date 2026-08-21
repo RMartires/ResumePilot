@@ -63,6 +63,16 @@ test("Phase 3 content routes render and cross-link", async ({ page }) => {
   await expect(page.getByText(/Copy the whole resume into Notepad/i)).toBeVisible();
   await expect(page.getByRole("link", { name: /ATS checker/ })).toBeVisible();
 
+  await page.goto("/guides/ats/canva-resume-ats");
+  await expect(
+    page.getByRole("heading", { name: /Are Canva Resumes ATS Friendly/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Paste-test this Canva export/i }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /ATS checker/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /ATS-friendly resume templates/ })).toBeVisible();
+
   await page.goto("/examples/resumes/nursing");
   await expect(
     page.getByRole("heading", { name: "Nursing Resume Example" }),

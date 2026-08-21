@@ -41,7 +41,7 @@ Use these names in owned, opportunities, and the ship log.
 | `linkedin` | LinkedIn import / profile-to-resume | `/features/linkedin-import` |
 | `wording` | Words to avoid, buzzwords | `/guides/ats/resume-words-to-avoid` |
 | `tailoring` | Keywords, job-description match, how to tailor | `/guides/ats/resume-keywords` (checker is the scan tool) |
-| `design-tools` | Canva / Figma / InDesign ATS questions | none yet |
+| `design-tools` | Canva / Figma / InDesign ATS questions | `/guides/ats/canva-resume-ats` |
 
 A keyword is **owned** if it matches a row in `owned-keywords.md` **or** it is a synonym in an owned cluster. Prefer a cluster that has **no** published page.
 

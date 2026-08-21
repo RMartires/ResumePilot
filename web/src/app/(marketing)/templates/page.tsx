@@ -63,7 +63,11 @@ export default function TemplatesIndexPage() {
           <Link href="/guides/ats/ats-friendly-resume-format" className="text-blue-300 hover:text-blue-200">
             ATS-friendly resume format
           </Link>{" "}
-          guide. For how to pull terms from one posting, see{" "}
+          guide. If you already have a Canva file, see{" "}
+          <Link href="/guides/ats/canva-resume-ats" className="text-blue-300 hover:text-blue-200">
+            are Canva resumes ATS friendly
+          </Link>{" "}
+          before you keep decorating it. For how to pull terms from one posting, see{" "}
           <Link href="/guides/ats/resume-keywords" className="text-blue-300 hover:text-blue-200">
             resume keywords
           </Link>

@@ -24,8 +24,8 @@ describe("SEO content registry", () => {
       "skills",
       "comparisons",
     ]);
-    expect(ALL_CONTENT).toHaveLength(25);
-    expect(published(GUIDES)).toHaveLength(9);
+    expect(ALL_CONTENT).toHaveLength(26);
+    expect(published(GUIDES)).toHaveLength(10);
     expect(published(RESUME_EXAMPLES)).toHaveLength(3);
     expect(published(OBJECTIVE_COLLECTIONS)).toHaveLength(3);
     expect(published(SKILLS_PAGES)).toHaveLength(3);
@@ -42,6 +42,9 @@ describe("SEO content registry", () => {
     );
     expect(getGuide("resume-keywords")?.canonical).toBe("/guides/ats/resume-keywords");
     expect(getGuide("resume-keywords")?.relatedLinks[0]?.path).toBe("/tools/ats-checker");
+    expect(getGuide("canva-resume-ats")?.canonical).toBe("/guides/ats/canva-resume-ats");
+    expect(getGuide("canva-resume-ats")?.relatedLinks[0]?.path).toBe("/tools/ats-checker");
+    expect(getGuide("canva-resume-ats")?.relatedLinks[1]?.path).toBe("/templates");
     expect(getGuide("workday-resume")?.relatedLinks[0]?.path).toBe(
       "/guides/ats/ats-friendly-resume-format",
     );
