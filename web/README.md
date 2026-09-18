@@ -1,6 +1,6 @@
-# Resume Builder (Next.js)
+# ResumePilot (Next.js)
 
-Modern resume builder with Supabase auth, cloud sync, templates, and live PDF preview.
+Free, open-source AI resume builder with Supabase auth, cloud sync, templates, unlimited AI writing, and live PDF preview. There is no paid plan.
 
 ## Stack
 
@@ -84,6 +84,8 @@ The AI panel is pinned between the form and live preview in the editor. The mode
 | `/dashboard/resume/[id]` | Editor + live preview |
 | `/dashboard/templates` | Template gallery |
 | `/preview` | Dev preview with sample data |
+
+There is no `/pricing` or billing dashboard. Old `/pricing` URLs redirect to `/`.
 
 ## Migration from vanilla app
 

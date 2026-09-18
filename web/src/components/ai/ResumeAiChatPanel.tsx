@@ -19,7 +19,7 @@ import {
 import type { ResumeChatUIMessage } from "@/lib/ai/resume-chat-ui-message";
 import { resumeChangeDataSchema } from "@/lib/ai/schemas/resume-chat-response";
 import { AnalyticsEvent, track } from "@/lib/analytics/umami";
-import { formatUserFacingApiError } from "@/lib/billing/format-api-error";
+import { formatUserFacingApiError } from "@/lib/api/format-api-error";
 import type { Resume } from "@/lib/validations/resume";
 import type { PatchReviewHandlers } from "@/lib/ai/types";
 import { cn } from "@/lib/utils";
@@ -84,21 +84,7 @@ export function ResumeAiChatPanel({
         "resume-change": zodSchema(resumeChangeDataSchema),
       },
       onError: (err) => {
-        const { message, upgradeUrl, isUsageLimit } = formatUserFacingApiError(
-          err.message,
-        );
-        if (isUsageLimit) {
-          toast.error(message, {
-            action: {
-              label: "View plans",
-              onClick: () => {
-                window.location.href = upgradeUrl ?? "/dashboard/upgrade";
-              },
-            },
-          });
-          return;
-        }
-        toast.error(message);
+        toast.error(formatUserFacingApiError(err.message));
       },
     });
 
@@ -297,15 +283,7 @@ export function ResumeAiChatPanel({
 
           {friendlyError && (
             <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs leading-relaxed text-destructive">
-              <p>{friendlyError.message}</p>
-              {friendlyError.isUsageLimit ? (
-                <a
-                  href={friendlyError.upgradeUrl ?? "/dashboard/upgrade"}
-                  className="mt-1.5 inline-block font-medium underline underline-offset-2"
-                >
-                  Upgrade to Pro
-                </a>
-              ) : null}
+              <p>{friendlyError}</p>
             </div>
           )}
           <div ref={messagesEndRef} aria-hidden />

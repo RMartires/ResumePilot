@@ -18,7 +18,7 @@ const libreBaskerville = Libre_Baskerville({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "ResumePilot — AI Resume Builder with ATS Optimization",
+    default: "ResumePilot — Free AI Resume Builder",
     template: "%s · ResumePilot",
   },
   description: siteDescription,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "ResumePilot — AI Resume Builder with ATS Optimization",
+    title: "ResumePilot — Free AI Resume Builder",
     description: siteDescription,
     type: "website",
     url: SITE_URL,
@@ -39,13 +39,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "ResumePilot — AI Resume Builder with ATS Optimization",
+        alt: "ResumePilot — Free AI Resume Builder",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ResumePilot — AI Resume Builder with ATS Optimization",
+    title: "ResumePilot — Free AI Resume Builder",
     description: siteDescription,
     images: ["/twitter-image"],
   },

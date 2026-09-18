@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_GITHUB_URL } from "@/lib/brand";
 
 const footerLinks = [
   { href: "/templates", label: "Templates" },
@@ -7,6 +8,7 @@ const footerLinks = [
   { href: "/tools/ats-checker", label: "ATS Checker" },
   { href: "/tools/resume-score", label: "Resume Score" },
   { href: "/features", label: "Features" },
+  { href: SITE_GITHUB_URL, label: "GitHub" },
   { href: "/about", label: "About" },
   { href: "/press", label: "Press" },
   { href: "/privacy", label: "Privacy Policy" },
@@ -18,15 +20,27 @@ export function MarketingFooter() {
     <footer className="border-t border-white/10 px-6 py-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
         <p>
-          ResumePilot — AI resume builder with ATS optimization. Sign in to get
+          ResumePilot — Free AI Resume Builder. Open source. Sign in to get
           started.
         </p>
         <div className="flex flex-wrap gap-4">
-          {footerLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-white">
-              {link.label}
-            </Link>
-          ))}
+          {footerLinks.map((link) =>
+            link.href.startsWith("http") ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link key={link.href} href={link.href} className="hover:text-white">
+                {link.label}
+              </Link>
+            ),
+          )}
         </div>
       </div>
     </footer>

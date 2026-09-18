@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -16,27 +16,37 @@ type ProductDemoProps = {
 
 export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [ready, setReady] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
 
+  useEffect(() => {
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready || !shouldLoad) return;
+    const video = videoRef.current;
+    if (!video) return;
+    void video.play().catch(() => setPlaying(false));
+  }, [ready, shouldLoad]);
+
   const togglePlayback = () => {
+    if (!shouldLoad) {
+      setShouldLoad(true);
+    }
+
     const video = videoRef.current;
     if (!video) return;
 
-    if (!shouldLoad) {
-      setShouldLoad(true);
-      void video.play().catch(() => setPlaying(false));
+    if (video.paused) {
+      void video.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
       return;
     }
 
-    if (video.paused) {
-      void video.play();
-      setPlaying(true);
-    } else {
-      video.pause();
-      setPlaying(false);
-    }
+    video.pause();
+    setPlaying(false);
   };
 
   const toggleMute = () => {
@@ -61,7 +71,10 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             ResumePilot preview
           </span>
         </div>
-        <div className="relative aspect-[16/10] w-full max-w-full bg-[#0a0e16]">
+        <div
+          className="relative aspect-[16/10] w-full max-w-full bg-[#0a0e16]"
+          suppressHydrationWarning
+        >
           <Image
             src={DEMO_POSTER_URL}
             alt="ResumePilot editor and ATS score preview"
@@ -72,22 +85,24 @@ export function ProductDemo({ className, size = "large" }: ProductDemoProps) {
             unoptimized
             className="object-contain"
           />
-          <video
-            ref={videoRef}
-            loop
-            muted
-            playsInline
-            preload="none"
-            className={cn(
-              "absolute inset-0 h-full w-full object-contain transition-opacity",
-              shouldLoad ? "opacity-100" : "pointer-events-none opacity-0",
-            )}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-          >
-            <source src={DEMO_VIDEO_URL} type="video/mp4" />
-            Your browser does not support video playback.
-          </video>
+          {ready ? (
+            <video
+              ref={videoRef}
+              loop
+              muted
+              playsInline
+              preload="none"
+              className={cn(
+                "absolute inset-0 h-full w-full object-contain transition-opacity",
+                shouldLoad ? "opacity-100" : "pointer-events-none opacity-0",
+              )}
+              onPlay={() => setPlaying(true)}
+              onPause={() => setPlaying(false)}
+            >
+              <source src={DEMO_VIDEO_URL} type="video/mp4" />
+              Your browser does not support video playback.
+            </video>
+          ) : null}
           <div className="absolute right-4 bottom-4 flex items-center gap-2">
             <button
               type="button"

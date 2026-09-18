@@ -18,8 +18,8 @@ export const metadata = createMarketingMetadata({
 });
 
 const productFacts = [
-  "ResumePilot is a web-based resume builder focused on ATS-readable resumes and job-specific tailoring.",
-  "The product combines resume editing, AI-assisted writing, PDF export, match scoring, cover-letter support, and application tracking.",
+  "ResumePilot is a free, open-source web-based resume builder focused on ATS-readable resumes and job-specific tailoring.",
+  "The product combines resume editing, unlimited AI-assisted writing, PDF export, match scoring, cover-letter support, and application tracking.",
   "Public tools include an ATS resume checker and a standalone resume score; both can be tried without creating an account.",
   "ResumePilot publishes resume templates, resume examples, role-specific skills pages, and practical resume and ATS guides.",
 ] as const;
@@ -60,11 +60,12 @@ export default function PressPage() {
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <h2 className="text-xl font-semibold text-white">Boilerplate</h2>
             <p className="mt-4 text-sm leading-7 text-zinc-300">
-              ResumePilot is a web-based AI resume builder that helps job seekers write,
-              tailor, score, export, and organize resumes in one workflow. It emphasizes
-              ATS-readable layouts, job-description keyword matching, and practical guidance.
-              ResumePilot also provides public resume tools, templates, examples, and guides
-              that people can explore before signing in.
+              ResumePilot is a free, open-source web-based AI resume builder that helps
+              job seekers write, tailor, score, export, and organize resumes in one
+              workflow. It emphasizes ATS-readable layouts, job-description keyword
+              matching, and practical guidance. ResumePilot also provides public resume
+              tools, templates, examples, and guides that people can explore before
+              signing in.
             </p>
           </section>
 

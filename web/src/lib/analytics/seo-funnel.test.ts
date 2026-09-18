@@ -61,11 +61,11 @@ describe("trackPrivacySafe", () => {
 
     identifyUser({ email: "private@example.com", userId: "user-123" });
     trackPrivacySafe(AnalyticsEvent.MarketingCtaClicked, {
-      source_page: "/pricing",
+      source_page: "/",
     });
 
     expect(track).toHaveBeenCalledWith(AnalyticsEvent.MarketingCtaClicked, {
-      source_page: "/pricing",
+      source_page: "/",
     });
   });
 });

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ResumePilot — AI Resume Builder with ATS Optimization";
+export const alt = "ResumePilot — Free AI Resume Builder";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -59,7 +59,7 @@ export default function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            AI Resume Builder with ATS Optimization
+            Free AI Resume Builder
           </div>
           <div
             style={{
@@ -69,8 +69,8 @@ export default function OpenGraphImage() {
               lineHeight: 1.35,
             }}
           >
-            Tailor resumes to the job description, check ATS fit, and export
-            parser-safe PDFs.
+            Unlimited AI writing, ATS checks, and parser-safe PDFs. Open source
+            and free forever.
           </div>
         </div>
 
@@ -83,7 +83,7 @@ export default function OpenGraphImage() {
             color: "#93c5fd",
           }}
         >
-          <span>Free ATS checker · Templates · Job tracker</span>
+          <span>Free forever · Open source · No credit card</span>
           <span>resumepilot.xyz</span>
         </div>
       </div>

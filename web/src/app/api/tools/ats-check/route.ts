@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
 import { extractPdfText, PdfExtractError } from "@/lib/pdf/extract-text";
 import {
-  assertUsageAvailable,
-  recordUsage,
-  usageLimitResponse,
-  UsageLimitError,
-} from "@/lib/billing/usage";
-import {
   assertUploadedPdf,
   assertPdfMagicBytes,
   MAX_PDF_BYTES,
 } from "@/lib/pdf/validation";
 import { scoreResumeAgainstJd } from "@/lib/seo/ats-score";
-import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
@@ -116,16 +109,6 @@ function parseJsonFields(body: unknown): {
   };
 }
 
-function resolveUsageEvent(tool: string | null | undefined) {
-  if (tool === "resume-score") {
-    return "resume_score" as const;
-  }
-  if (tool === "ats-checker") {
-    return "ats_check" as const;
-  }
-  return null;
-}
-
 export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") ?? "";
@@ -209,37 +192,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const usageEvent = resolveUsageEvent(tool);
-    let authenticatedUserId: string | null = null;
-
-    if (usageEvent) {
-      const supabase = await createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return NextResponse.json(
-          {
-            error: "Sign in to use this tool with your free monthly allowance.",
-            code: "AUTH_REQUIRED",
-            signInUrl: "/login",
-          },
-          { status: 401 },
-        );
-      }
-
-      authenticatedUserId = user.id;
-
-      try {
-        await assertUsageAvailable(user.id, usageEvent);
-      } catch (error) {
-        if (error instanceof UsageLimitError) {
-          return NextResponse.json(usageLimitResponse(error), { status: 402 });
-        }
-        throw error;
-      }
-    }
+    void tool;
 
     resumeText = resumeText.trim();
     if (!resumeText) {
@@ -250,10 +203,6 @@ export async function POST(request: Request) {
     }
 
     const result = scoreResumeAgainstJd(resumeText, jdText || null);
-
-    if (usageEvent && authenticatedUserId) {
-      await recordUsage(authenticatedUserId, usageEvent);
-    }
 
     return NextResponse.json({ result });
   } catch (error) {

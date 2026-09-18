@@ -125,14 +125,14 @@ export const includedItems = [
   "LinkedIn profile import",
   "Application tracker",
   "PDF & Word export",
-  "Free tier at launch",
+  "Free forever — open source",
 ];
 
 export const faqs = [
   {
     question: "What is ResumePilot?",
     answer:
-      "ResumePilot is an AI resume builder that helps you write, tailor, and track applications in one place. You get AI writing, ATS scoring, job-description matching, cover letters, templates, and a job tracker without switching tools.",
+      "ResumePilot is a free, open-source AI resume builder that helps you write, tailor, and track applications in one place. You get unlimited AI writing, ATS scoring, job-description matching, cover letters, templates, and a job tracker without switching tools.",
   },
   {
     question: "Will my resume pass ATS filters?",
@@ -145,9 +145,9 @@ export const faqs = [
       "Generic AI output stands out for the wrong reasons. ResumePilot gives you drafts to edit, not finished copy. Add your metrics, tighten the wording, and make sure every line reflects your real experience.",
   },
   {
-    question: "Is there a free plan?",
+    question: "Is ResumePilot free?",
     answer:
-      "Yes. Sign in with Google to get started. Core resume building and AI assistance are available so you can try it before upgrading.",
+      "Yes. ResumePilot is a free, open-source AI resume builder. Sign in with Google to use the editor. AI writing, ATS checks, resume scores, and PDF exports are unlimited — no paid plan and no credit card.",
   },
 ];
 
