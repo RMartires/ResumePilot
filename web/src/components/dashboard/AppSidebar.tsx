@@ -6,14 +6,12 @@ import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
-  CreditCard,
   FileText,
   Gauge,
   LayoutTemplate,
   LogOut,
   Plus,
   ScanSearch,
-  Sparkles,
 } from "lucide-react";
 import { ResumePilotLogo, ResumePilotMark } from "@/components/brand/ResumePilotLogo";
 import { ImportResumeButton } from "@/components/dashboard/ImportResumeButton";
@@ -32,7 +30,6 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-  const [isPro, setIsPro] = useState<boolean | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem(SIDEBAR_OPEN_STORAGE_KEY);
@@ -44,25 +41,6 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
   useEffect(() => {
     localStorage.setItem(SIDEBAR_OPEN_STORAGE_KEY, String(open));
   }, [open]);
-
-  useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      try {
-        const response = await fetch("/api/billing/status");
-        if (!response.ok) return;
-        const data = (await response.json()) as { isPro?: boolean };
-        if (!cancelled) {
-          setIsPro(Boolean(data.isPro));
-        }
-      } catch {
-        // Non-blocking; upgrade CTA stays visible until we know.
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [pathname]);
 
   const signOut = async () => {
     const supabase = createClient();
@@ -160,17 +138,6 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
           collapsed={!open}
           active={pathname.startsWith("/dashboard/tools/resume-score")}
         />
-        <SidebarLink
-          href="/dashboard/billing"
-          icon={CreditCard}
-          label="Usage & Billing"
-          collapsed={!open}
-          active={pathname.startsWith("/dashboard/billing")}
-        />
-
-        {isPro !== true ? (
-          <UpgradeSidebarLink collapsed={!open} />
-        ) : null}
       </nav>
 
       <div
@@ -205,37 +172,6 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
         )}
       </div>
     </aside>
-  );
-}
-
-function UpgradeSidebarLink({ collapsed }: { collapsed: boolean }) {
-  if (collapsed) {
-    return (
-      <Link
-        href="/dashboard/upgrade"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "text-blue-600",
-        )}
-        aria-label="Upgrade to Pro"
-        title="Upgrade to Pro"
-      >
-        <Sparkles className="h-4 w-4" />
-      </Link>
-    );
-  }
-
-  return (
-    <Link
-      href="/dashboard/upgrade"
-      className={cn(
-        buttonVariants({ variant: "ghost", size: "sm" }),
-        "justify-start px-2 font-medium text-blue-600 hover:text-blue-700",
-      )}
-    >
-      <Sparkles className="mr-2 h-4 w-4 shrink-0" />
-      Upgrade to Pro
-    </Link>
   );
 }
 

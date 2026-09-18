@@ -136,5 +136,50 @@ describe("POST /api/tools/ats-check", () => {
       error: "PDF must be 10 MB or smaller.",
     });
   });
+
+  it("scores without a session and does not return a paywall", async () => {
+    const response = await POST(
+      new Request(endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          resumeText:
+            "Jordan Lee jordan@example.com Experience Software Engineer Education Skills TypeScript",
+          jdText: "TypeScript software engineer",
+          tool: "ats-checker",
+        }),
+      }),
+    );
+
+    const body = (await response.json()) as {
+      result?: { overallScore: number };
+      error?: string;
+      upgradeUrl?: string;
+      code?: string;
+    };
+
+    expect(response.status).toBe(200);
+    expect(body.result?.overallScore).toEqual(expect.any(Number));
+    expect(body.upgradeUrl).toBeUndefined();
+    expect(body.code).not.toBe("USAGE_LIMIT_EXCEEDED");
+    expect(body.code).not.toBe("AUTH_REQUIRED");
+  });
+
+  it("scores resume-score without a session", async () => {
+    const response = await POST(
+      new Request(endpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          resumeText:
+            "Jordan Lee jordan@example.com Experience Software Engineer Education Skills TypeScript",
+          tool: "resume-score",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toHaveProperty("result.overallScore");
+  });
 });
 

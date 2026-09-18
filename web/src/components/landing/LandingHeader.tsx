@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { ResumePilotMark } from "@/components/brand/ResumePilotLogo";
+import { GithubMark } from "@/components/brand/GithubMark";
 import { startGoogleSignIn } from "@/components/auth/GoogleSignInButton";
+import { SITE_GITHUB_URL } from "@/lib/brand";
 
 type LandingHeaderProps = {
   ctaHref?: string;
@@ -13,13 +15,6 @@ type LandingHeaderProps = {
 };
 
 const navGroups = [
-  {
-    label: "Product",
-    links: [
-      { href: "/features", label: "Features" },
-      { href: "/pricing", label: "Pricing" },
-    ],
-  },
   {
     label: "Tools",
     links: [
@@ -106,6 +101,18 @@ export function LandingHeader({
     </Link>
   );
 
+  const githubButton = (
+    <a
+      href={SITE_GITHUB_URL}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-white transition hover:bg-white/10 sm:px-4"
+    >
+      <GithubMark />
+      GitHub
+    </a>
+  );
+
   return (
     <header ref={headerRef} className="relative z-20 border-b border-white/10">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-5">
@@ -118,6 +125,12 @@ export function LandingHeader({
           className="hidden items-center gap-2 text-sm text-zinc-300 lg:flex"
           aria-label="Primary navigation"
         >
+          <Link
+            href="/features"
+            className="rounded-lg px-3 py-2 transition hover:bg-white/5 hover:text-white"
+          >
+            Features
+          </Link>
           {navGroups.map((group) => {
             const isOpen = openDropdown === group.label;
             return (
@@ -142,16 +155,29 @@ export function LandingHeader({
                     id={`nav-${group.label.toLowerCase()}`}
                     className="absolute top-full left-1/2 mt-2 w-48 -translate-x-1/2 rounded-xl border border-white/10 bg-[#0b0e17] p-2"
                   >
-                    {group.links.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setOpenDropdown(null)}
-                        className="block rounded-lg px-3 py-2.5 transition hover:bg-white/5 hover:text-white"
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {group.links.map((link) =>
+                      link.href.startsWith("http") ? (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={() => setOpenDropdown(null)}
+                          className="block rounded-lg px-3 py-2.5 transition hover:bg-white/5 hover:text-white"
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={() => setOpenDropdown(null)}
+                          className="block rounded-lg px-3 py-2.5 transition hover:bg-white/5 hover:text-white"
+                        >
+                          {link.label}
+                        </Link>
+                      ),
+                    )}
                   </div>
                 ) : null}
               </div>
@@ -160,6 +186,7 @@ export function LandingHeader({
         </nav>
 
         <div className="flex items-center gap-2">
+          {githubButton}
           <div className="hidden sm:block">{cta}</div>
           <button
             type="button"
@@ -187,21 +214,46 @@ export function LandingHeader({
             className="grid gap-5 text-sm text-zinc-300 sm:grid-cols-3"
             aria-label="Mobile navigation"
           >
+            <div>
+              <p className="px-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+                Product
+              </p>
+              <div className="mt-1 flex flex-col">
+                <Link
+                  href="/features"
+                  className="rounded-lg px-2 py-2 transition hover:bg-white/5 hover:text-white"
+                >
+                  Features
+                </Link>
+              </div>
+            </div>
             {navGroups.map((group) => (
               <div key={group.label}>
                 <p className="px-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">
                   {group.label}
                 </p>
                 <div className="mt-1 flex flex-col">
-                  {group.links.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="rounded-lg px-2 py-2 transition hover:bg-white/5 hover:text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+                  {group.links.map((link) =>
+                    link.href.startsWith("http") ? (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg px-2 py-2 transition hover:bg-white/5 hover:text-white"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="rounded-lg px-2 py-2 transition hover:bg-white/5 hover:text-white"
+                      >
+                        {link.label}
+                      </Link>
+                    ),
+                  )}
                 </div>
               </div>
             ))}

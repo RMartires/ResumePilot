@@ -55,6 +55,8 @@ export function softwareApplicationJsonLd() {
     operatingSystem: "Web",
     url: SITE_URL,
     description: siteDescription,
+    isAccessibleForFree: true,
+    license: "https://opensource.org/licenses/MIT",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -65,38 +67,6 @@ export function softwareApplicationJsonLd() {
       name: SITE_NAME,
       url: SITE_URL,
     },
-  };
-}
-
-export function pricingOfferJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: `${SITE_NAME} Pro`,
-    description:
-      "Unlimited AI resume writing, ATS checks, and job-description tailoring.",
-    brand: {
-      "@type": "Brand",
-      name: SITE_NAME,
-    },
-    offers: [
-      {
-        "@type": "Offer",
-        name: "Pro Monthly",
-        price: "499",
-        priceCurrency: "INR",
-        url: `${SITE_URL}/pricing`,
-        availability: "https://schema.org/InStock",
-      },
-      {
-        "@type": "Offer",
-        name: "Pro Annual",
-        price: "4491",
-        priceCurrency: "INR",
-        url: `${SITE_URL}/pricing`,
-        availability: "https://schema.org/InStock",
-      },
-    ],
   };
 }
 

@@ -1,6 +1,7 @@
 import { WandSparkles } from "lucide-react";
 import Link from "next/link";
 import { LandingSignInPanel } from "@/components/landing/LandingSignInPanel";
+import { GithubMark } from "@/components/brand/GithubMark";
 import {
   faqs,
   features,
@@ -10,6 +11,7 @@ import {
   steps,
 } from "@/components/landing/landing-data";
 import { ProductDemo } from "@/components/landing/ProductDemo";
+import { SITE_GITHUB_URL } from "@/lib/brand";
 
 const signInPanelClassName = "max-w-lg";
 
@@ -24,7 +26,7 @@ export function LandingPage() {
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-200">
               <WandSparkles className="h-3.5 w-3.5" aria-hidden />
-              AI-powered resume builder
+              FREE AI RESUME BUILDER
             </div>
 
             <h1 className="max-w-xl text-3xl leading-tight font-bold tracking-tight sm:text-4xl lg:text-6xl">
@@ -50,7 +52,17 @@ export function LandingPage() {
             </ul>
 
             <div id="sign-in" className="mt-8 scroll-mt-24 sm:mt-10">
-              <LandingSignInPanel className={signInPanelClassName} />
+              <LandingSignInPanel className={signInPanelClassName}>
+                <a
+                  href={SITE_GITHUB_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 w-full max-w-lg items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 text-sm font-medium text-white transition hover:bg-white/10"
+                >
+                  <GithubMark />
+                  View on GitHub
+                </a>
+              </LandingSignInPanel>
             </div>
           </div>
 
@@ -214,8 +226,8 @@ export function LandingPage() {
             Ready to land your next role?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-zinc-300">
-            Join ResumePilot — AI writing, ATS scoring, job tailoring, and tracking in one
-            place. No credit card required.
+            Join ResumePilot — a free, open-source AI resume builder. AI writing, ATS
+            scoring, job tailoring, and tracking in one place. No credit card required.
           </p>
           <LandingSignInPanel className={`mx-auto mt-8 ${signInPanelClassName}`} />
         </div>

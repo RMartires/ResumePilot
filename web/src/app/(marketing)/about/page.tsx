@@ -6,7 +6,7 @@ import { createMarketingMetadata } from "@/lib/seo/metadata";
 export const metadata = createMarketingMetadata({
   title: "About ResumePilot — AI Resume Builder",
   description:
-    "ResumePilot helps job seekers build ATS-friendly resumes with AI writing, keyword matching, templates, and application tracking — without juggling five tools.",
+    "ResumePilot is a free, open-source AI resume builder. Build ATS-friendly resumes with AI writing, keyword matching, templates, and application tracking — without juggling five tools.",
   path: "/about",
 });
 
@@ -29,8 +29,8 @@ export default function AboutPage() {
   return (
     <MarketingPage
       eyebrow="About"
-      title="An AI resume builder built around how hiring actually works"
-      description="ResumePilot is a web app for people who need a sharper resume this week — not another generic template pack. We focus on ATS readability, role-specific tailoring, and a clear path from draft to applied."
+      title="A free AI resume builder built around how hiring actually works"
+      description="ResumePilot is an open-source web app for people who need a sharper resume this week — not another generic template pack. We focus on ATS readability, role-specific tailoring, and a clear path from draft to applied."
     >
       <div className="grid gap-4 sm:grid-cols-3">
         {principles.map((item) => (

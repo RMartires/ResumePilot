@@ -12,6 +12,7 @@ describe("sitemap", () => {
 
     expect(urls).toEqual(expectedUrls);
     expect(urls).toContain(`${SITE_URL}/press`);
+    expect(urls).not.toContain(`${SITE_URL}/pricing`);
     expect(urls).toHaveLength(PUBLIC_SEO_PATHS.length);
     expect(new Set(urls).size).toBe(urls.length);
   });

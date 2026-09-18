@@ -1,11 +1,13 @@
 import { getAllPublicTemplateSlugs } from "@/lib/seo/public-templates";
 import { getPublishedContentPaths } from "@/lib/seo/content/paths";
+import { SITE_GITHUB_URL } from "@/lib/brand";
 
 export const SITE_URL = "https://www.resumepilot.xyz";
 export const SITE_NAME = "ResumePilot";
+export { SITE_GITHUB_URL };
 
 export const siteDescription =
-  "Build ATS-friendly resumes in minutes. AI writing, job-description tailoring, match scoring, cover letters, and application tracking in one workflow.";
+  "Free AI Resume Builder. Build ATS-friendly resumes with unlimited AI writing, job-description tailoring, match scoring, cover letters, and application tracking.";
 
 const staticPublicPaths = [
   "/",
@@ -13,7 +15,6 @@ const staticPublicPaths = [
   "/tools/ats-checker",
   "/tools/resume-score",
   "/features",
-  "/pricing",
   "/features/cover-letter",
   "/features/job-tracker",
   "/features/linkedin-import",

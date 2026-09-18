@@ -9,7 +9,7 @@ import {
 } from "@/lib/seo/structured-data";
 
 export const metadata = createMarketingMetadata({
-  title: "ResumePilot — AI Resume Builder with ATS Optimization",
+  title: "ResumePilot — Free AI Resume Builder",
   description: siteDescription,
   path: "/",
 });

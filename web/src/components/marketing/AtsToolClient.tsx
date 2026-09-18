@@ -6,7 +6,7 @@ import type { AtsScoreResult } from "@/lib/seo/ats-score";
 import { SignInCta } from "@/components/marketing/SignInCta";
 import { AnalyticsEvent } from "@/lib/analytics/umami";
 import { trackSeoFunnelEvent } from "@/lib/analytics/seo-funnel";
-import { formatUserFacingApiError } from "@/lib/billing/format-api-error";
+import { formatUserFacingApiError } from "@/lib/api/format-api-error";
 import { cn } from "@/lib/utils";
 
 type AtsToolClientProps = {
@@ -24,7 +24,6 @@ export function AtsToolClient({
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [upgradeUrl, setUpgradeUrl] = useState<string | null>(null);
   const [result, setResult] = useState<AtsScoreResult | null>(null);
 
   const isDashboard = variant === "dashboard";
@@ -38,7 +37,6 @@ export function AtsToolClient({
     event.preventDefault();
     setLoading(true);
     setError(null);
-    setUpgradeUrl(null);
     setResult(null);
 
     try {
@@ -55,27 +53,14 @@ export function AtsToolClient({
       const data = (await response.json()) as {
         result?: AtsScoreResult;
         error?: string;
-        code?: string;
-        upgradeUrl?: string;
-        signInUrl?: string;
-        eventType?: string;
       };
 
-      if (response.status === 401) {
-        throw new Error(
-          data.error ??
-            "Sign in to use your free monthly checks, or upgrade to Pro for unlimited access.",
-        );
-      }
-
-      if (response.status === 402) {
-        const friendly = formatUserFacingApiError(JSON.stringify(data));
-        setUpgradeUrl(friendly.upgradeUrl ?? "/dashboard/upgrade");
-        throw new Error(friendly.message);
-      }
-
       if (!response.ok || !data.result) {
-        throw new Error(data.error ?? "Could not score this resume.");
+        throw new Error(
+          formatUserFacingApiError(data.error) ||
+            data.error ||
+            "Could not score this resume.",
+        );
       }
       setResult(data.result);
       trackSeoFunnelEvent(AnalyticsEvent.SeoToolCompleted, {
@@ -187,32 +172,7 @@ export function AtsToolClient({
                 isDashboard ? "text-red-600" : "text-red-400",
               )}
             >
-              {error}{" "}
-              {error.includes("Sign in") ? (
-                <Link
-                  href="/login"
-                  className={cn(
-                    "underline",
-                    isDashboard
-                      ? "text-blue-600 hover:text-blue-700"
-                      : "text-blue-300 hover:text-blue-200",
-                  )}
-                >
-                  Sign in
-                </Link>
-              ) : upgradeUrl || /limit|Upgrade/i.test(error) ? (
-                <Link
-                  href={upgradeUrl ?? "/dashboard/upgrade"}
-                  className={cn(
-                    "underline",
-                    isDashboard
-                      ? "text-blue-600 hover:text-blue-700"
-                      : "text-blue-300 hover:text-blue-200",
-                  )}
-                >
-                  View Pro plans
-                </Link>
-              ) : null}
+              {error}
             </p>
           ) : null}
           <p
@@ -221,9 +181,7 @@ export function AtsToolClient({
               isDashboard ? "text-muted-foreground" : "text-zinc-500",
             )}
           >
-            {isDashboard
-              ? `Counts toward your free monthly allowance (${mode === "ats-checker" ? "3 ATS checks" : "3 resume scores"}). Pro is unlimited.`
-              : `Sign in to use your free monthly allowance (${mode === "ats-checker" ? "3 ATS checks" : "3 resume scores"}). Pro is unlimited.`}
+            Free to use. No account required for this check.
           </p>
         </div>
       </form>
